@@ -1,24 +1,47 @@
+import { PuppeteerNode } from 'puppeteer-core'
 import { CoverGenerator } from '../../lib/cover-generator'
-import htmlToImage from 'node-html-to-image'
-
-jest.mock('node-html-to-image')
+import Chromium from 'chrome-aws-lambda'
 
 describe('cover generator', () => {
   const date = '13 Feb 2021'
-  const output = `kindle_output_dir/${date} cover.png`
-  const generator = new CoverGenerator()
+  const path = '/target/path'
+  const output = `${path}/${date} cover.png`
+  const template = '<body><p>{{ DATE }}</p></body>'
+  const chromiumPath = 'chromium path'
 
-  it('returns the path', async () => {
-    const path = await generator.generate(date)
-    expect(path).toEqual(output)
+  const body = { screenshot: jest.fn() }
+  const page = { setContent: jest.fn(), $: jest.fn(() => body) }
+  const browser = { newPage: jest.fn(() => page) }
+  const chromium = { puppeteer: { launch: jest.fn(() => browser) } as unknown as PuppeteerNode }
+
+  const generator = new CoverGenerator(chromium, path, template, chromiumPath)
+  let result: string
+
+  beforeEach(async () => {
+    result = await generator.generate(date)
   })
 
-  it('calls the renderer', async () => {
-    await generator.generate(date)
-    expect(htmlToImage).toHaveBeenCalledWith({
-      output,
-      content: { date },
-      html: expect.any(String)
+  it('returns the path', async () => {
+    expect(result).toEqual(output)
+  })
+
+  it('launches the browser', async () => {
+    expect(chromium.puppeteer.launch).toHaveBeenCalledWith({
+      args: Chromium.args,
+      defaultViewport: Chromium.defaultViewport,
+      executablePath: chromiumPath,
+      headless: true,
+      ignoreHTTPSErrors: true
     })
+  })
+
+  it('creates a page', () => {
+    expect(browser.newPage).toHaveBeenCalled()
+    expect(page.setContent).toHaveBeenCalledWith('<body><p>13 Feb 2021</p></body>', { waitUntil: 'networkidle0' })
+  })
+
+  it('screenshots the body', () => {
+    expect(page.$).toHaveBeenCalledWith('body')
+    expect(body.screenshot).toHaveBeenCalledWith({ path: output, type: 'png' })
   })
 })

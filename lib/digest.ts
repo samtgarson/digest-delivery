@@ -1,4 +1,4 @@
-import { writeFile } from "fs/promises"
+import { writeFile } from "fs"
 import { Compilable, Article } from "types/digest"
 
 export class Digest implements Compilable {
@@ -33,7 +33,10 @@ export class Digest implements Compilable {
 		const date = str.substr(0, str.indexOf('T'))
 
 		const path = `${dir}/${date}.html`
-		await writeFile(path, this.html)
+		await new Promise<void>((resolve, reject) => writeFile(path, this.html, err => {
+			if (err) return reject(err)
+			return resolve()
+		}))
 
 		return path
 	}

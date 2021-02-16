@@ -1,4 +1,5 @@
-import nodeHtmlToImage from 'node-html-to-image'
+import Chromium from 'chrome-aws-lambda'
+import { PuppeteerNode } from 'puppeteer-core'
 
 const defaultTemplate = `
 <html>
@@ -38,27 +39,45 @@ const defaultTemplate = `
     }
   </style>
   <h1>Sam&rsquo;s daily digest.</h1>
-  <p>{{ date }}</p>
+  <p>{{ DATE }}</p>
 
 </body>
 </html>
 `
 const defaultOutputDir = process.env.OUTPUT_DIR
 
+interface IChromium {
+  puppeteer: PuppeteerNode
+}
+
 export class CoverGenerator {
 	constructor (
+    private chromium: IChromium = Chromium,
 		private outputDir = defaultOutputDir,
-    private template = defaultTemplate
+    private template = defaultTemplate,
+    private fallbackChromiumPath = process.env.CHROMIUM_PATH
   ) {}
 
   async generate (date: string): Promise<string> {
     const path = `${this.outputDir}/${date} cover.png`
+    const awsChromiumPath = await Chromium.executablePath
 
-    await nodeHtmlToImage({
-      html: this.template,
-      output: path,
-      content: { date }
+    const browser = await this.chromium.puppeteer.launch({
+      args: Chromium.args,
+      defaultViewport: Chromium.defaultViewport,
+      executablePath: awsChromiumPath || this.fallbackChromiumPath,
+      headless: true,
+      ignoreHTTPSErrors: true
     })
+
+    const html = this.template.replace('{{ DATE }}', date)
+    const page = await browser.newPage()
+    await page.setContent(html, { waitUntil: 'networkidle0' })
+    const body = await page.$('body')
+
+    if (!body) throw new Error('Could not find body element')
+
+    await body.screenshot({ type: 'png', path })
 
     return path
   }
