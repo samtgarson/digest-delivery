@@ -1,7 +1,7 @@
 service: daily-digest
 # app and org for use with dashboard.serverless.com
-app: daily-digest-app
-org: samtgarson
+# app: daily-digest-app
+# org: samtgarson
 useDotenv: true
 
 frameworkVersion: "2"
@@ -11,6 +11,7 @@ provider:
   runtime: nodejs14.x
   lambdaHashingVersion: 20201221
   region: eu-west-2
+  logRetentionInDays: 3
   environment:
     MAILER_RECIPIENT: ${env:MAILER_RECIPIENT}
     MAILER_SENDER: ${env:MAILER_SENDER}
@@ -20,8 +21,8 @@ provider:
 
 
 plugins:
-  - serverless-plugin-ncc
   - serverless-offline
+  - serverless-bundle
 
 package:
   individually: true
@@ -39,6 +40,7 @@ functions:
       - schedule: cron(0 0 * * ? *)
 
 custom:
-  ncc:
-    minify: true
-    externals: ["aws-sdk"]
+  bundle:
+    linting: false
+    forceExclude:
+      - aws-sdk
