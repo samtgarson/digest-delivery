@@ -12,6 +12,7 @@ provider:
   lambdaHashingVersion: 20201221
   region: eu-west-2
   logRetentionInDays: 3
+  timeout: 10
   environment:
     MAILER_RECIPIENT: ${env:MAILER_RECIPIENT}
     MAILER_SENDER: ${env:MAILER_SENDER}
@@ -21,8 +22,8 @@ provider:
 
 
 plugins:
-  - serverless-offline
   - serverless-bundle
+  - serverless-plugin-optimize
 
 package:
   individually: true
@@ -38,11 +39,18 @@ functions:
     handler: functions/deliver.handler
     layers:
       - arn:aws:lambda:eu-west-2:764866452798:layer:chrome-aws-lambda:20
+      # - arn:aws:lambda:eu-west-2:002535286973:layer:calibre:5
+      - { Ref: CalibreLambdaLayer }
     events:
       - schedule: cron(0 0 * * ? *)
 
+layers:
+  calibre:
+    path: calibre
+
 custom:
   bundle:
+    sourcemaps: true
     linting: false
     forceExclude:
       - aws-sdk

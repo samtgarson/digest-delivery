@@ -13,6 +13,7 @@ declare module 'ebook-convert' {
     cover: string
     smartenPunctuation: boolean
     extraCss: string
+    verbose: boolean
   }
 
   export default function (options: ConvertOptions, callback: (err?: Error) => void): Promise<void>

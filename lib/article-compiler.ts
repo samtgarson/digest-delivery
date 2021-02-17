@@ -46,7 +46,8 @@ export class ArticleCompiler {
 				authors: JSON.stringify('Digest Bot'),
 				cover: JSON.stringify(cover),
 				smartenPunctuation: true,
-				extraCss: JSON.stringify('* { font-family: sans-serif; }')
+				extraCss: JSON.stringify('* { font-family: sans-serif; }'),
+				verbose: true
 			}, (err?: Error) => {
 				if (err) return reject(err)
 				resolve()
