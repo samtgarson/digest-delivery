@@ -1,5 +1,4 @@
-import Chromium from 'chrome-aws-lambda'
-import { PuppeteerNode } from 'puppeteer-core'
+import puppeteer from 'puppeteer'
 
 const defaultTemplate = `
 <html>
@@ -46,28 +45,21 @@ const defaultTemplate = `
 `
 const defaultOutputDir = process.env.OUTPUT_DIR
 
-interface IChromium {
-  puppeteer: PuppeteerNode
-}
-
 export class CoverGenerator {
 	constructor (
-    private chromium: IChromium = Chromium,
 		private outputDir = defaultOutputDir,
     private template = defaultTemplate,
-    private fallbackChromiumPath = process.env.CHROMIUM_PATH
+    private chromePath = process.env.CHROME_PATH
   ) {}
 
   async generate (date: string): Promise<string> {
     const path = `${this.outputDir}/${date} cover.png`
-    const awsChromiumPath = await Chromium.executablePath
 
-    const browser = await this.chromium.puppeteer.launch({
-      args: Chromium.args,
-      defaultViewport: Chromium.defaultViewport,
-      executablePath: awsChromiumPath || this.fallbackChromiumPath,
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox'],
       headless: true,
-      ignoreHTTPSErrors: true
+      ignoreHTTPSErrors: true,
+      executablePath: this.chromePath
     })
 
     const html = this.template.replace('{{ DATE }}', date)

@@ -5,9 +5,8 @@ import * as Mailer from '../../lib/mailer'
 import * as MockMailer from '../../lib/__mocks__/mailer'
 import * as ArticleCompiler from '../../lib/article-compiler'
 import * as MockArticleCompiler from '../../lib/__mocks__/article-compiler'
-import { Article } from '../../types/digest'
+import { Article } from '../../../types/digest'
 import { Digest } from '../../lib/digest'
-import type { ScheduledEvent, Context } from 'aws-lambda'
 
 jest.mock('../../lib/data-client')
 jest.mock('../../lib/mailer')
@@ -20,13 +19,11 @@ const { compileMock } =  ArticleCompiler as unknown as typeof MockArticleCompile
 describe('queue', () => {
   const articles = [{}] as Article[]
   const path = 'path'
-  const event = {} as ScheduledEvent
-  const context = {} as Context
 
   beforeEach(async () => {
     getUnprocessedArticlesMock.mockResolvedValue(articles)
     compileMock.mockReturnValue(path)
-    await handler(event, context, jest.fn())
+    await handler()
   })
 
   it('fetches the unprocessed articles', () => {

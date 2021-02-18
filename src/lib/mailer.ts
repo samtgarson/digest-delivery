@@ -1,5 +1,5 @@
 import { SES } from 'aws-sdk'
-import nodemailer from 'nodemailer'
+import * as nodemailer from 'nodemailer'
 import { basename } from 'path'
 
 const sesClient = new SES({

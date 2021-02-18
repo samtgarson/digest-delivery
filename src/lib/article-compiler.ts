@@ -22,6 +22,8 @@ export class ArticleCompiler {
 		const path = await digest.writeTo(this.outputDir)
 		const cover = await this.generateCover(digest.humanDateString)
 
+		if (process.env.SKIP_CALIBRE) return path
+
 		return await this.convert(path, cover, digest.title)
 	}
 

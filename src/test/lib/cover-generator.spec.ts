@@ -1,23 +1,31 @@
-import { PuppeteerNode } from 'puppeteer-core'
+import mockPuppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
 import { CoverGenerator } from '../../lib/cover-generator'
-import Chromium from 'chrome-aws-lambda'
+
+jest.mock('puppeteer', () => {
+  const body = { screenshot: jest.fn() }
+  const page = { setContent: jest.fn(), $: jest.fn(() => body) }
+  const browser = { newPage: jest.fn(() => page) }
+  return { launch: jest.fn(() => browser) }
+})
 
 describe('cover generator', () => {
   const date = '13 Feb 2021'
   const path = '/target/path'
   const output = `${path}/${date} cover.png`
   const template = '<body><p>{{ DATE }}</p></body>'
-  const chromiumPath = 'chromium path'
+  let browser: Browser
+  let page: Page
+  let body: ElementHandle | null
 
-  const body = { screenshot: jest.fn() }
-  const page = { setContent: jest.fn(), $: jest.fn(() => body) }
-  const browser = { newPage: jest.fn(() => page) }
-  const chromium = { puppeteer: { launch: jest.fn(() => browser) } as unknown as PuppeteerNode }
-
-  const generator = new CoverGenerator(chromium, path, template, chromiumPath)
+  const generator = new CoverGenerator(path, template)
   let result: string
 
   beforeEach(async () => {
+    browser = await mockPuppeteer.launch()
+    page = await browser.newPage()
+    body = await page.$('foo')
+
+    jest.clearAllMocks()
     result = await generator.generate(date)
   })
 
@@ -26,12 +34,10 @@ describe('cover generator', () => {
   })
 
   it('launches the browser', async () => {
-    expect(chromium.puppeteer.launch).toHaveBeenCalledWith({
-      args: Chromium.args,
-      defaultViewport: Chromium.defaultViewport,
-      executablePath: chromiumPath,
+    expect(mockPuppeteer.launch).toHaveBeenCalledWith({
       headless: true,
-      ignoreHTTPSErrors: true
+      ignoreHTTPSErrors: true,
+      args: ['--no-sandbox']
     })
   })
 
@@ -42,6 +48,6 @@ describe('cover generator', () => {
 
   it('screenshots the body', () => {
     expect(page.$).toHaveBeenCalledWith('body')
-    expect(body.screenshot).toHaveBeenCalledWith({ path: output, type: 'png' })
+    expect(body?.screenshot).toHaveBeenCalledWith({ path: output, type: 'png' })
   })
 })
