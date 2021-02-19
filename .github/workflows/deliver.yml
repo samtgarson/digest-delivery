@@ -1,0 +1,23 @@
+name: deliver
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Deliver digests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run delivery
+        uses: ./
+        env:
+          MAILER_RECIPIENT: ${{ secrets.MAILER_RECIPIENT }}
+          MAILER_SENDER: robot@samgarson.com
+          OUTPUT_DIR: /tmp/digest-delivery
+          SUPABASE_URL: https://qwnvlmfrzjuqisaxiyky.supabase.co
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+

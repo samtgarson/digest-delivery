@@ -30,19 +30,19 @@ package:
 
 functions:
   saveArticle:
-    handler: functions/save.handler
+    handler: src/functions/save.handler
     events:
       - httpApi:
           path: /articles
           method: POST
-  deliverDigest:
-    handler: functions/deliver.handler
-    layers:
-      - arn:aws:lambda:eu-west-2:764866452798:layer:chrome-aws-lambda:20
-      # - arn:aws:lambda:eu-west-2:002535286973:layer:calibre:5
-      - { Ref: CalibreLambdaLayer }
-    events:
-      - schedule: cron(0 0 * * ? *)
+  # deliverDigest:
+  #   handler: functions/deliver.handler
+  #   layers:
+  #     - arn:aws:lambda:eu-west-2:764866452798:layer:chrome-aws-lambda:20
+  #     # - arn:aws:lambda:eu-west-2:002535286973:layer:calibre:5
+  #     - { Ref: CalibreLambdaLayer }
+  #   events:
+  #     - schedule: cron(0 0 * * ? *)
 
 layers:
   calibre:

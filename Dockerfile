@@ -1,5 +1,6 @@
 FROM node:15 AS builder
 
+# === Install Calibre ===
 RUN mkdir -p /opt/calibre
 WORKDIR /opt/calibre
 
@@ -15,23 +16,29 @@ RUN tar -xf calibre-*.txz \
 RUN mkdir /app
 WORKDIR /app
 
-COPY package.json package-lock.json .
+# === Install Node deps ===
+COPY package.json package-lock.json ./
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 RUN npm ci
 
-COPY . .
-RUN node_modules/.bin/ncc build ./fargate/entrypoint.ts -s -m
+# === Build function ===
+COPY . ./
+RUN node_modules/.bin/ncc build ./infra/entrypoint.ts -s -m
 
-FROM timbru31/node-chrome:14-slim
+# === Production Image ===
+FROM node:15-slim AS worker
+
+# === Install dependencies ===
+RUN apt-get update && apt-get install -y chromium libgl1-mesa-glx
 
 RUN mkdir /app
 WORKDIR /app
 
-RUN mkdir /opt/bin
-COPY --from=builder /opt/calibre/* /opt/bin/
+# === Copy build files over
+COPY --from=builder /opt/calibre /opt/calibre
 COPY --from=builder /app/dist/index.js /app/dist/index.js.map /app/dist/sourcemap-register.js ./
 
-ENV PATH=/opt/bin:$PATH
-ENV CHROME_PATH=/usr/bin/google-chrome
+ENV PATH=/opt/calibre:$PATH
+ENV CHROME_PATH=chromium
 
-CMD node ./index.js
+CMD node /app/index.js
