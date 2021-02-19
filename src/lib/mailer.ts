@@ -1,5 +1,6 @@
 import { SES } from 'aws-sdk'
 import * as nodemailer from 'nodemailer'
+import { Options } from 'nodemailer/lib/mailer'
 import { basename } from 'path'
 
 const sesClient = new SES({
@@ -17,20 +18,27 @@ export class Mailer {
 	constructor (
 		private transport = defaultMailer,
 		private sender = senderEmail,
-		private recipient = recipientEmail
+		private recipient = recipientEmail,
+		private cc: boolean = !!process.env.SEND_CC
 	) {}
 
 	async sendEmail (path: string): Promise<void> {
-		return this.transport.sendMail({
+		const mailOpts = this.options(path)
+
+		if (this.cc) mailOpts.cc = this.sender
+		return this.transport.sendMail(mailOpts)
+	}
+
+	options (path: string): Options {
+		return {
 			to: this.recipient,
-			cc: this.sender,
 			from: this.sender,
 			subject: 'convert',
 			text: "This is an automated message",
 			attachments: [
 				{ path, filename: basename(path), contentType: 'image/png' }
 			]
-		})
+		}
 	}
 }
 

@@ -3,6 +3,9 @@ import { Mailer } from '../../lib/mailer'
 
 describe('Mailer', () => {
   const mockTransport = { sendMail: jest.fn() } as unknown as jest.Mocked<Mail>
+  const sender = "sender"
+  const recipient = "recipient"
+  const path = 'path/filename.png'
 
   it('instantiates with default dependencies', () => {
     const mailer = new Mailer()
@@ -13,10 +16,27 @@ describe('Mailer', () => {
   })
 
   it('sends a mail', () => {
-    const sender = "sender"
-    const recipient = "recipient"
     const mailer = new Mailer(mockTransport, sender, recipient)
-    const path = 'path/filename.png'
+
+    mailer.sendEmail(path)
+
+    expect(mockTransport.sendMail).toHaveBeenCalledWith({
+      attachments: [
+        {
+          contentType: "image/png",
+          filename: 'filename.png',
+          path
+        }
+      ],
+      from: sender,
+      text: expect.any(String),
+      subject: "convert",
+      to: recipient
+    })
+  })
+
+  it('can include CC', () => {
+    const mailer = new Mailer(mockTransport, sender, recipient, true)
 
     mailer.sendEmail(path)
 
