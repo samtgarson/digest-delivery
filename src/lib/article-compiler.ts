@@ -2,6 +2,7 @@ import { mkdirSync } from 'fs'
 import convert from 'ebook-convert'
 import { CoverGenerator } from './cover-generator'
 import { Digest } from './digest'
+import { log } from './logger'
 
 const defaultOutputDir = process.env.OUTPUT_DIR as string
 const defaultMkrDir = (path: string) => mkdirSync(path, { recursive: true })
@@ -20,7 +21,9 @@ export class ArticleCompiler {
 
 	async compile (digest: Digest): Promise<string> {
 		const path = await digest.writeTo(this.outputDir)
+		log('generating cover')
 		const cover = await this.generateCover(digest.humanDateString)
+		log('generated cover')
 
 		if (process.env.SKIP_CALIBRE) return path
 
@@ -34,6 +37,7 @@ export class ArticleCompiler {
 	private async convert (input: string, cover: string, title: string) {
 		const output = input.replace(/\.html$/, '.mobi')
 
+		log('converting html')
 		await new Promise<void>((resolve, reject) => {
 			convert({
 				input: JSON.stringify(input),
@@ -55,6 +59,7 @@ export class ArticleCompiler {
 				resolve()
 			})
 		})
+		log('converted html')
 
 		return output
 	}

@@ -1,3 +1,4 @@
+import { log } from "../lib/logger"
 import { ArticleCompiler } from "../lib/article-compiler"
 import { DataClient } from "../lib/data-client"
 import { Digest } from "../lib/digest"
@@ -8,16 +9,20 @@ const compiler = new ArticleCompiler()
 const mailer = new Mailer()
 
 export const handler = async (): Promise<void> => {
+  log('beginning delivery')
   const articles = await data.getUnprocessedArticles()
 
   if (!articles.length) {
     console.log("No articles today")
     return
   }
+  log(`delivering ${articles.length} articles`)
 
   const digest = new Digest(articles, new Date())
   const path = await compiler.compile(digest)
 
   await mailer.sendEmail(path)
+  log('email sent')
   await data.destroyProcessedArticles(articles)
+  log('destroyed processed articles')
 }
