@@ -16,8 +16,11 @@ RUN tar -xf calibre-*.txz \
 RUN mkdir /app
 WORKDIR /app
 
+RUN mkdir delivery
+
 # === Install Node deps ===
 COPY package.json package-lock.json ./
+COPY delivery/package.json delivery/package-lock.json ./delivery/
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 RUN npm ci
 
