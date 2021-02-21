@@ -1,9 +1,9 @@
 name: main
 on: [push]
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-    name: Build and test
+    name: Test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -12,3 +12,41 @@ jobs:
       - uses: bahmutov/npm-install@v1
       - run: npm run lint
       - run: npm run test
+
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Deploy
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-args: '--prod'
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
+          working-directory: ./app
+
+  build-action:
+    name: Build Action
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GitHub Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/samtgarson/digest-delivery:latest
+          cache-from: type=registry,ref=ghcr.io/samtgarson/digest-delivery:latest
+          cache-to: type=inline

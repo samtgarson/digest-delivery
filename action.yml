@@ -1,6 +1,0 @@
-name: 'Deliverer'
-description: 'Delivers the digest'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
-
