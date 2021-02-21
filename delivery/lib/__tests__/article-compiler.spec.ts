@@ -3,7 +3,7 @@ import * as CoverGenerator from '../cover-generator'
 import * as MockCoverGenerator from '../__mocks__/cover-generator'
 import { Digest } from '../digest'
 
-jest.mock('ebook-convert')
+jest.mock('node-ebook-converter')
 jest.mock('../cover-generator')
 const { generateMock } = CoverGenerator as unknown as typeof MockCoverGenerator
 
@@ -45,7 +45,7 @@ describe('compile articles', () => {
   })
 
   it('has a default value for output dir', () => {
-    const compiler = new ArticleCompiler()
+    const compiler = new ArticleCompiler(undefined, mkdir)
 
     expect(compiler).toHaveProperty('outputDir', process.env.OUTPUT_DIR)
   })

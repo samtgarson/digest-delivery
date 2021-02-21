@@ -1,5 +1,5 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
-import { handler } from '../src/functions/deliver'
+import { handler } from './app'
 
 handler()
   .then(() => process.exit(0))
