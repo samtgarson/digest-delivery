@@ -1,9 +1,0 @@
-{
-  "name": "@digest-delivery/common",
-  "description": "Digests delivered daily",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@supabase/supabase-js": "^1.3.4"
-  }
-}

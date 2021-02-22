@@ -21,8 +21,6 @@ RUN mkdir delivery
 # === Install Node deps ===
 COPY package.json package-lock.json ./
 COPY delivery/package.json ./delivery/
-COPY common/package.json ./common/
-COPY app/package.json ./app/
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 RUN npm ci
 

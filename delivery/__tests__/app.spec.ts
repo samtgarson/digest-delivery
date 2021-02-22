@@ -1,6 +1,6 @@
 import { handler } from '../app'
-import * as DataClient from '@digest-delivery/common/data-client'
-import * as MockDataClient from '@digest-delivery/common/__mocks__/data-client'
+import * as DataClient from '../../common/data-client'
+import * as MockDataClient from '../../common/__mocks__/data-client'
 import * as Mailer from '../lib/mailer'
 import * as MockMailer from '../lib/__mocks__/mailer'
 import * as ArticleCompiler from '../lib/article-compiler'
@@ -8,7 +8,7 @@ import * as MockArticleCompiler from '../lib/__mocks__/article-compiler'
 import type { Article } from 'types/digest'
 import { Digest } from '../lib/digest'
 
-jest.mock('@digest-delivery/common/data-client')
+jest.mock('../../common/data-client')
 jest.mock('../lib/mailer')
 jest.mock('../lib/article-compiler')
 

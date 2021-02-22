@@ -12,9 +12,6 @@
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "paths": {
-      "@delivery-digest/*": [ "./*" ]
-    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
@@ -27,6 +24,9 @@
   ],
   "include": [
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
+
   ]
 }

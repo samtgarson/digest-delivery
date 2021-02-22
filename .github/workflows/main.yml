@@ -19,6 +19,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
+      - run: rm -rf delivery
       - name: Deploy
         uses: amondnet/vercel-action@v20
         with:

@@ -1,10 +1,10 @@
 import { validateRequest } from '../../lib/request-validator'
-import { DataClient } from '@digest-delivery/common/data-client'
+import { DataClient } from '../../../common/data-client'
 import type { NextApiHandler } from 'next'
 
 const data = new DataClient()
 
-export const handler: NextApiHandler = async (req, res) => {
+const handler: NextApiHandler = async (req, res) => {
   const result = validateRequest(req)
 
   if (!result.success) return res.status(result.status).json({ error: result.message })
@@ -20,3 +20,4 @@ export const handler: NextApiHandler = async (req, res) => {
   }
 }
 
+export default handler

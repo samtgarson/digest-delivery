@@ -1,5 +1,5 @@
-import { log } from "@digest-delivery/common/logger"
-import { DataClient } from "@digest-delivery/common/data-client"
+import { log } from "../common/logger"
+import { DataClient } from "../common/data-client"
 import { ArticleCompiler } from "./lib/article-compiler"
 import { Digest } from "./lib/digest"
 import { Mailer } from "./lib/mailer"

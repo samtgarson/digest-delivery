@@ -1,12 +1,12 @@
-import { handler } from '../articles'
+import handler from '../articles'
 import { validateRequest } from '../../../lib/request-validator'
 import { mocked } from 'ts-jest/utils'
-import * as DataClient from '@digest-delivery/common/data-client'
-import * as MockDataClient from '@digest-delivery/common/__mocks__/data-client'
+import * as DataClient from '../../../../common/data-client'
+import * as MockDataClient from '../../../../common/__mocks__/data-client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 jest.mock('../../../lib/request-validator')
-jest.mock('@digest-delivery/common/data-client')
+jest.mock('../../../../common/data-client')
 
 const mockValidator = mocked(validateRequest)
 const { createArticleMock } =  DataClient as unknown as typeof MockDataClient

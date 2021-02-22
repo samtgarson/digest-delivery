@@ -2,7 +2,7 @@ import { mkdirSync } from 'fs'
 import { convert } from 'node-ebook-converter'
 import { CoverGenerator } from './cover-generator'
 import { Digest } from './digest'
-import { log } from '@digest-delivery/common/logger'
+import { log } from '../../common/logger'
 
 const defaultOutputDir = process.env.OUTPUT_DIR as string
 const defaultMkrDir = (path: string) => mkdirSync(path, { recursive: true })
