@@ -2,6 +2,7 @@
   "name": "@digest-delivery/base",
   "version": "0.1.0",
   "description": "Digests delivery daily",
+  "private": true,
   "scripts": {
     "lint": "eslint .",
     "test": "DOTENV_CONFIG_PATH=.env.example jest"
