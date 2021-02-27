@@ -1,3 +1,3 @@
-FROM ghcr.io/samtarson/digest-delivery
+FROM ghcr.io/samtgarson/digest-delivery:latest
 
-ENTRYPOINT /app/index.js
+ENTRYPOINT node /app/index.js
