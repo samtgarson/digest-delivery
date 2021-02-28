@@ -1,0 +1,11 @@
+@use '../vars';
+
+.button {
+  background-color: var(--accent);
+  padding: 12px 24px;
+  border: none;
+  text-align: center;
+  font-family: vars.$font-family;
+  color: var(--body);
+  @include vars.label;
+}
