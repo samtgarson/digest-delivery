@@ -3,6 +3,11 @@
   max-width: 400px;
   width: 90vw;
   margin: 20vh auto;
+  position: relative;
+}
+
+.content {
+  position: relative;
 }
 
 .title {
@@ -18,4 +23,12 @@
 
 .icon {
   margin-bottom: 20px;
+}
+
+.blob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -160px;
+  margin-left: -200px;
 }
