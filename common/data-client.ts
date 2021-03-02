@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { Article } from 'types/digest'
 
 const supabaseUrl = process.env.SUPABASE_URL
@@ -10,6 +11,8 @@ export class DataClient {
 	constructor (
 		private supabase: SupabaseClient = client
 	) {}
+
+	get auth (): SupabaseAuthClient { return this.supabase.auth }
 
 	async createArticle (title: string, content: string, author?: string): Promise<void> {
 		const { error } = await this.supabase

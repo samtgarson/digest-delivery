@@ -1,30 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
-import App, { AppContext, AppProps } from 'next/app'
+import { AppProps } from 'next/app'
 import getConfig from 'next/config'
 import { useRouter } from 'next/dist/client/router'
-import { FC, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Nav } from 'src/components/nav'
-import { useAuth } from 'src/lib/use-auth'
 import { SupabaseContextProvider } from 'use-supabase'
 import '../styles/global.scss'
 
 const { publicRuntimeConfig } = getConfig()
 const supabase = createClient(publicRuntimeConfig.supabaseUrl, publicRuntimeConfig.supabaseKey)
 
-const AppContent: FC = ({ children }) => {
+export default function CustomApp ({ Component, pageProps }: AppProps): ReactNode {
   const router = useRouter()
-  useAuth()
 
-  return <>
-    { router.route === '/' || <Nav hideLogo={router.pathname === '/'} /> }
-    { children }
-  </>
+  return <SupabaseContextProvider client={supabase}>
+    <Nav hideLogo={router.pathname === '/'} />
+    <Component {...pageProps} />
+  </SupabaseContextProvider>
 }
 
-export default function CustomApp ({ Component, pageProps }: AppProps): ReactNode {
-  return <SupabaseContextProvider client={supabase}>
-    <AppContent>
-      <Component {...pageProps} />
-    </AppContent>
-  </SupabaseContextProvider>
+CustomApp.getInitialProps = async (appContext: AppContext) => {
+
 }

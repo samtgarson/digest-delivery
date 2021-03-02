@@ -1,0 +1,20 @@
+.wrapper {
+  text-align: center;
+  max-width: 400px;
+  width: 90vw;
+  margin: 20vh auto;
+  position: relative;
+}
+
+.blob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -160px;
+  margin-left: -200px;
+}
+
+.content {
+  position: relative;
+}
+

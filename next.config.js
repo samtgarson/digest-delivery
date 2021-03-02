@@ -6,5 +6,9 @@ module.exports = {
 
     // Important: return the modified config
     return config
+  },
+  publicRuntimeConfig: {
+    supabaseKey: process.env.SUPABASE_KEY,
+    supabaseUrl: process.env.SUPABASE_URL
   }
 }
