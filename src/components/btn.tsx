@@ -1,11 +1,22 @@
-import { FC, HTMLAttributes } from "react"
-import styles from '../styles/components/button.module.scss'
+import { forwardRef } from "react"
+import styles from '../styles/components/btn.module.scss'
 
-export const Btn: FC<HTMLAttributes<HTMLButtonElement>> = ({ children, ...attrs }) => (
-  <button {...attrs} className={styles.button}>{ children }</button>
-)
+type BaseProps = { naked?: boolean, small?: boolean }
+type BtnProps = BaseProps & React.ComponentPropsWithoutRef<'button'>
+type AnchorProps = BaseProps & React.ComponentPropsWithoutRef<'a'>
 
-export const Anchor: FC<HTMLAttributes<HTMLAnchorElement>> = ({ children, ...attrs }) => (
-  <a {...attrs} className={styles.button}>{ children }</a>
-)
+const classNames = (classes = '', naked: boolean, small: boolean) => [
+  classes,
+  styles.button,
+  naked && styles.naked,
+  small && styles.small
+].join(' ')
+
+export const Btn = forwardRef<HTMLButtonElement, BtnProps>(({ children, naked = false, small = false, className, ...attrs }, ref) => (
+  <button {...attrs} className={classNames(className, naked, small)} ref={ref}>{ children }</button>
+))
+
+export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(({ children, naked = false, small = false, className, ...attrs }, ref) => (
+  <a {...attrs} className={classNames(className, naked, small)} ref={ref}>{ children }</a>
+))
 

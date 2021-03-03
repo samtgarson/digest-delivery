@@ -1,7 +1,8 @@
 import { useSupabase, useUser } from "use-supabase"
 import Link from 'next/link'
-import { FC, useCallback } from "react"
-import styles from '../styles/components/nav.module.scss'
+import React, { FC, useCallback } from "react"
+import { PageWrapper } from "./page-wrapper"
+import { Anchor, Btn } from "./btn"
 
 type NavProps = {
   hideLogo: boolean
@@ -15,15 +16,15 @@ export const Nav: FC<NavProps> = () => {
     supabase.auth.signOut()
   }, [])
 
-  return <nav className={styles.nav}>
-    <Link href="/app">
-      <a className={styles.logo}>Digest Delivery</a>
+  return <PageWrapper tag="nav">
+    <Link href="/app" passHref>
+      <Anchor naked small className="uppercase">Digest Delivery</Anchor>
     </Link>
     { user &&
-      <span className={styles.name}>
-        <button onClick={signOut}>Sign Out</button>
-        <img className={styles.avatar} src={user?.user_metadata.avatar_url} />
-      </span>
+      <Btn naked small onClick={signOut} className="flex items-center text-sm">
+        Sign Out
+        <img className="h-6 rounded-sm ml-2" src={user?.user_metadata.avatar_url} />
+      </Btn>
     }
-  </nav>
+  </PageWrapper>
 }

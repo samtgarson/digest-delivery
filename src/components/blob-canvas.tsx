@@ -37,7 +37,7 @@ const renderBlob = (ctx: CanvasRenderingContext2D) => {
   return () => { goAgain = false }
 }
 
-export const BlobCanvas: FC<HTMLAttributes<HTMLCanvasElement>> = ({ className }) => {
+export const BlobCanvas: FC<HTMLAttributes<HTMLCanvasElement>> = attrs => {
   const [render, setRender] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -58,5 +58,5 @@ export const BlobCanvas: FC<HTMLAttributes<HTMLCanvasElement>> = ({ className })
 
   if (!render) return null
 
-  return <canvas width={SIZE} height={SIZE} className={className} ref={canvasRef} />
+  return <canvas width={SIZE} height={SIZE} {...attrs} ref={canvasRef} />
 }

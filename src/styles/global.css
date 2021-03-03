@@ -1,0 +1,38 @@
+:root {
+  --green: #73F9BD;
+  --blue: #2714FF;
+  --pink: #ff66d8;
+  --white: #white;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'custom';
+    font-style: normal;
+    font-weight: normal;
+    font-display: swap;
+    src: url("/fonts/font-book.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: 'custom';
+    font-style: normal;
+    font-weight: bold;
+    font-display: swap;
+    src: url("/fonts/font-medium.woff") format("woff");
+  }
+
+  body {
+    font-size: 20px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: theme('colors.green');
+    color: theme('colors.blue');
+  }
+}

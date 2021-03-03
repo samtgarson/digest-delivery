@@ -1,10 +1,10 @@
-import { createClient } from "@supabase/supabase-js"
 import { DataClient } from "common/data-client"
 import { GetServerSideProps, NextPage } from "next"
-import getConfig from 'next/config'
+import React from "react"
+import { PageWrapper } from "src/components/page-wrapper"
 
 const App: NextPage = () => {
-  return <p>App</p>
+  return <PageWrapper>App</PageWrapper>
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
