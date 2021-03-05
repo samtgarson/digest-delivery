@@ -1,16 +1,18 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
-import { Article } from 'types/digest'
+import { Article, User } from 'types/digest'
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_KEY
-if (!supabaseKey || !supabaseUrl) throw new Error('Missing supabase credentials')
-const client = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = process.env.SUPABASE_URL as string
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
 
 export class DataClient {
+	private supabase: SupabaseClient
+
 	constructor (
-		private supabase: SupabaseClient = client
-	) {}
+		client?: SupabaseClient
+	) {
+		this.supabase = client ?? createClient(supabaseUrl, supabaseKey)
+	}
 
 	get auth (): SupabaseAuthClient { return this.supabase.auth }
 
@@ -39,6 +41,28 @@ export class DataClient {
 			.from('articles')
 			.delete({ returning: "minimal" })
 			.in('id', articles.map(a => a.id))
+
+		if (error) throw error
+	}
+
+	async getUser (id: string): Promise<User | null> {
+		const { data, error } = await this.supabase
+			.from<User>('users')
+			.select('*')
+			.eq('id', id)
+			.single()
+
+		if (error) throw error
+
+		return data
+	}
+
+	async updateUser (id: string, payload: Partial<Omit<User, 'id'>>): Promise<void> {
+		const { error } = await this.supabase
+			.from<User>('users')
+			.update(payload, { returning: 'minimal' })
+			.eq('id', id)
+			.single()
 
 		if (error) throw error
 	}

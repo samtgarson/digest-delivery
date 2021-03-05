@@ -10,7 +10,7 @@ const Home: NextPage = () => {
     <Icon className="mx-auto mb-4" />
     <h1 className="mb-4 text-5xl uppercase">Digest Delivery</h1>
     <p className="my-6">Get your feeds, articles and newsletters delivered to your Kindle.</p>
-    <Link href="/login" passHref>
+    <Link href="/app" passHref>
       <Anchor>Start reading easier</Anchor>
     </Link>
   </BlobWrapper>

@@ -1,22 +1,35 @@
+import cn from 'classnames'
 import { forwardRef } from "react"
 import styles from '../styles/components/btn.module.scss'
 
-type BaseProps = { naked?: boolean, small?: boolean }
-type BtnProps = BaseProps & React.ComponentPropsWithoutRef<'button'>
+type BaseProps = { naked?: boolean, small?: boolean, secondary?: boolean }
+type BtnProps = BaseProps & React.ComponentPropsWithoutRef<'button'> & { type?: string }
 type AnchorProps = BaseProps & React.ComponentPropsWithoutRef<'a'>
 
-const classNames = (classes = '', naked: boolean, small: boolean) => [
+export const btnClasses = (
+  naked: boolean,
+  small: boolean,
+  secondary: boolean,
+  classes?: string | string[]
+): string => cn([
   classes,
   styles.button,
-  naked && styles.naked,
-  small && styles.small
-].join(' ')
+  {
+    [styles.naked]: naked,
+    [styles.small]: small,
+    [styles.secondary]: secondary
+  }
+])
 
-export const Btn = forwardRef<HTMLButtonElement, BtnProps>(({ children, naked = false, small = false, className, ...attrs }, ref) => (
-  <button {...attrs} className={classNames(className, naked, small)} ref={ref}>{ children }</button>
-))
+export const Btn = forwardRef<HTMLButtonElement, BtnProps>(
+  ({ children, naked = false, small = false, secondary = false, className, ...attrs }, ref) => (
+    <button {...attrs} className={btnClasses(naked, small, secondary, className)} ref={ref}>{ children }</button>
+  )
+)
 
-export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(({ children, naked = false, small = false, className, ...attrs }, ref) => (
-  <a {...attrs} className={classNames(className, naked, small)} ref={ref}>{ children }</a>
-))
+export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(
+  ({ children, naked = false, small = false, secondary = false, className, ...attrs }, ref) => (
+    <a {...attrs} className={btnClasses(naked, small, secondary, className)} ref={ref}>{ children }</a>
+  )
+)
 

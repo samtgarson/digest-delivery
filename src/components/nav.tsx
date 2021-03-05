@@ -16,15 +16,15 @@ export const Nav: FC<NavProps> = () => {
     supabase.auth.signOut()
   }, [])
 
-  return <PageWrapper tag="nav">
+  return <nav className="px-3 py-3 flex justify-between mb-6">
     <Link href="/app" passHref>
-      <Anchor naked small className="uppercase">Digest Delivery</Anchor>
+    <Anchor naked small className="uppercase">Digest Delivery</Anchor>
     </Link>
     { user &&
-      <Btn naked small onClick={signOut} className="flex items-center text-sm">
-        Sign Out
-        <img className="h-6 rounded-sm ml-2" src={user?.user_metadata.avatar_url} />
-      </Btn>
+      <Btn naked small onClick={signOut} className="flex items-center">
+    Sign Out
+    <img className="h-7 rounded-sm ml-3" src={user?.user_metadata.avatar_url} />
+    </Btn>
     }
-  </PageWrapper>
+  </nav>
 }

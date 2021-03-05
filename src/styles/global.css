@@ -2,7 +2,8 @@
   --green: #73F9BD;
   --blue: #2714FF;
   --pink: #ff66d8;
-  --white: #white;
+  --white: white;
+  --white-fade: rgba(255, 255, 255, 0.2);
 }
 
 
@@ -27,6 +28,7 @@
     src: url("/fonts/font-medium.woff") format("woff");
   }
 
+  html,
   body {
     font-size: 20px;
     line-height: 1.5;
@@ -34,5 +36,15 @@
     -moz-osx-font-smoothing: grayscale;
     background-color: theme('colors.green');
     color: theme('colors.blue');
+  }
+}
+
+@layer utilities {
+  .rtl {
+    direction: rtl;
+  }
+
+  .ltr {
+    direction: ltr;
   }
 }
