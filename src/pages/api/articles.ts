@@ -1,5 +1,5 @@
 import type { NextApiHandler } from 'next'
-import { protectWithApiKey } from 'src/lib/api-authenticator'
+import { protectWithApiKey } from '../../lib/api-authenticator'
 import { DataClient } from '../../../common/data-client'
 import { validateArticlesRequest } from '../../lib/request-validator'
 

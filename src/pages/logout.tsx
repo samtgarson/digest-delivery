@@ -1,6 +1,6 @@
-import { NextPage } from "next";
-import { useEffect } from "react";
-import { useSupabase } from "use-supabase";
+import { NextPage } from "next"
+import { useEffect } from "react"
+import { useSupabase } from "use-supabase"
 
 
 const Logout: NextPage = () => {

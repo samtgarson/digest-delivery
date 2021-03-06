@@ -11,7 +11,7 @@ describe('validate request', () => {
     it('returns the content', () => {
       const result = validateArticlesRequest(req)
 
-      expect(result).toEqual({ success: true, content, title, author })
+      expect(result).toEqual({ success: true, article: { content, title, author } })
     })
   })
 

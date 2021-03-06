@@ -3,6 +3,7 @@ import { Digest } from '../../lib/digest'
 
 const article1: Article = {
   id: '1',
+  user_id: 'user id',
   created_at:  new Date(),
   content: 'content 1',
   title: 'title 1',
@@ -11,6 +12,7 @@ const article1: Article = {
 
 const article2: Article = {
   id: '2',
+  user_id: 'user id',
   created_at:  new Date(),
   content: 'content 2',
   title: 'title 2'

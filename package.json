@@ -75,6 +75,10 @@
     "preset": "ts-jest",
     "setupFiles": [
       "dotenv/config"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^common/(.*)": "<rootDir>/common/$1",
+      "^src/(.*)": "<rootDir>/src/$1"
+    }
   }
 }
