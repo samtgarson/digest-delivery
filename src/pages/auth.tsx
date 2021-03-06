@@ -11,6 +11,6 @@ const Auth: NextPage<{ redirect: string }> = ({ redirect }) => {
   return null
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query: { redirect = '/app' } }) => ({ props: { redirect } })
+export const getServerSideProps: GetServerSideProps = async ({ query: { redirect = 'dashboard' } }) => ({ props: { redirect } })
 
 export default Auth

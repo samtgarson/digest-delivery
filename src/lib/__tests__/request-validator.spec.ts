@@ -1,5 +1,5 @@
 import { NextApiRequest } from 'next'
-import { validateRequest } from '../request-validator'
+import { validateArticlesRequest } from '../request-validator'
 
 describe('validate request', () => {
   const content = 'content'
@@ -9,7 +9,7 @@ describe('validate request', () => {
 
   describe('when valid', () => {
     it('returns the content', () => {
-      const result = validateRequest(req)
+      const result = validateArticlesRequest(req)
 
       expect(result).toEqual({ success: true, content, title, author })
     })
@@ -17,7 +17,7 @@ describe('validate request', () => {
 
   describe('when invalid', () => {
     it('has the correct status code', () => {
-      const result = validateRequest({ body: { title: 'foo' } } as NextApiRequest)
+      const result = validateArticlesRequest({ body: { title: 'foo' } } as NextApiRequest)
 
       expect(result).toEqual({ success: false, status: 400, message: 'Missing required params' })
     })

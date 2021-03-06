@@ -1,17 +1,20 @@
-import { validateRequest } from '../../lib/request-validator'
-import { DataClient } from '../../../common/data-client'
 import type { NextApiHandler } from 'next'
+import { protectWithApiKey } from 'src/lib/api-authenticator'
+import { DataClient } from '../../../common/data-client'
+import { validateArticlesRequest } from '../../lib/request-validator'
 
 const data = new DataClient()
 
 const handler: NextApiHandler = async (req, res) => {
-  const result = validateRequest(req)
+  const user = await protectWithApiKey(req.headers['authorization'])
+  if (!user) return res.status(401).end()
+
+  const result = validateArticlesRequest(req)
 
   if (!result.success) return res.status(result.status).json({ error: result.message })
-  const { content, title, author } = result
 
   try {
-    await data.createArticle(title, content, author)
+    await data.createArticle(user.id, result.article)
 
     res.status(201).end()
   } catch (err) {

@@ -30,7 +30,7 @@ const App: NextPage<{ user: User }> = ({ user: u }) => {
       setUser({ ...user, ...payload })
     } catch (e) {
       const msg = errorMessageFor(e.code, payload)
-      toast(msg)
+      toast.error(msg, { icon: null })
     }
   }
 

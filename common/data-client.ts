@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
-import { Article, User } from 'types/digest'
+import { ApiKey } from 'src/lib/api-key'
+import { Article, User, ApiKeyModel, ArticleAttributes } from 'types/digest'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
@@ -16,12 +17,13 @@ export class DataClient {
 
 	get auth (): SupabaseAuthClient { return this.supabase.auth }
 
-	async createArticle (title: string, content: string, author?: string): Promise<void> {
+	async createArticle (
+		user_id: string,
+		attrs: ArticleAttributes
+	): Promise<void> {
 		const { error } = await this.supabase
 			.from('articles')
-			.insert([
-				{ title, content, author }
-			], { returning: 'minimal' })
+			.insert({ ...attrs, user_id }, { returning: 'minimal' })
 
 		if (error) throw error
 	}
@@ -65,5 +67,36 @@ export class DataClient {
 			.single()
 
 		if (error) throw error
+	}
+
+	async createApiKey (key: ApiKey): Promise<void> {
+		const { error, data } = await this.supabase
+			.from('api_keys')
+			.insert({
+				user_id: key.userId,
+				key: key.encrypted()
+			})
+			.single()
+
+		if (error || !data) throw error
+
+		const { error: expireError } = await this.supabase
+			.from<ApiKeyModel>('api_keys')
+			.update({ expired_at: new Date() }, { returning: 'minimal' })
+			.eq('user_id', key.userId)
+			.neq('id', data.id)
+
+		if (expireError) throw expireError
+	}
+
+	async validateApiKey (key: string): Promise<string | void> {
+		const { data } = await this.supabase
+			.from<ApiKeyModel>('api_keys')
+			.select('user_id')
+			.eq('key', key)
+			.is('expired_at', null)
+			.single()
+
+		if (data) return data.user_id
 	}
 }

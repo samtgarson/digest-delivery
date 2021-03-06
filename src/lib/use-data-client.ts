@@ -1,18 +1,14 @@
 import { DataClient } from 'common/data-client'
-import { useRouter } from 'next/dist/client/router'
 import { useSupabase } from "use-supabase"
+import { useAuth } from './use-auth'
 
 function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
   return key in target
 }
 
-// function isFunction (target: any): target is Function {
-//   return 'apply' in target
-// }
-
 export const useDataClient = (): DataClient => {
   const supabase = useSupabase()
-  const router = useRouter()
+  const { reauth } = useAuth()
 
   const client = new DataClient(supabase)
 
@@ -26,8 +22,7 @@ export const useDataClient = (): DataClient => {
           const result = Reflect.apply(method, thisArg, args)
           if (result instanceof Promise) return result.catch(e => {
             if (e.message !== 'JWT expired') throw e
-
-            router.push('/login')
+            reauth()
           })
 
           return result

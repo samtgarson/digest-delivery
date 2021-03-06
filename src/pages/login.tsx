@@ -18,17 +18,17 @@ const Login: NextPage<{ redirect: string }> = ({ redirect }) => {
     <h1 className="mb-4 text-3xl">Sign In</h1>
     <p className="mb-4">Use your Google account to access your Digest Delivery dashboard.</p>
     <Btn onClick={signUp}>
-      <img src={googleIcon} className="p-1 bg-white rounded-full h-7 mr-2" />
+      <img src={googleIcon} className="p-1 bg-white rounded-full h-7 w-7 mr-2" />
       <span>Continue with Google</span>
     </Btn>
   </BlobWrapper>
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query: { redirect = '/app' } }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, query: { redirect = '/dashboard' } }) => {
   const client = new DataClient()
   const { user } = await client.auth.api.getUserByCookie(req)
 
-  if (user) return { redirect: { destination: '/app', permanent: false } }
+  if (user) return { redirect: { destination: '/dashboard', permanent: false } }
 
   return { props: { redirect } }
 }

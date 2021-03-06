@@ -12,14 +12,18 @@ export const authenticated = <Props>(fn?: AuthedGSSP<Props>) => async (ctx: GetS
 
   if (!auth) return { redirect: { destination: `/login?redirect=${resolvedUrl}`, permanent: false } }
 
-  const user = await client.getUser(auth.id)
+  let user: User | null
+  try {
+    user = await client.getUser(auth.id)
+  } catch (e) {
+    return { redirect: { destination: '/logout', permanent: false } }
+  }
 
-  if (!user) return { notFound: true }
+  if (!user) return { redirect: { destination: '/logout', permanent: false } }
 
   if (!fn) return { props: { user } }
 
   const pageResult = await fn(ctx, user)
-
   if (!('props' in pageResult)) return pageResult
 
   return { props: { ...pageResult.props, user } }

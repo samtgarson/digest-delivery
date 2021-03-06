@@ -1,8 +1,9 @@
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 import { useSupabase } from "use-supabase"
+import { toast } from 'react-hot-toast'
 
-export const useAuth = (): void => {
+export const useAuth = (): { reauth: () => void } => {
   const supabase = useSupabase()
   const router = useRouter()
 
@@ -22,4 +23,11 @@ export const useAuth = (): void => {
       authListener?.unsubscribe()
     }
   }, [])
+
+  const reauth = () => {
+    toast('Please login again')
+    router.push(`/login?redirect=${router.asPath}`)
+  }
+
+  return { reauth }
 }

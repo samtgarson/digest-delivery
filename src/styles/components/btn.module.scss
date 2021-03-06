@@ -29,4 +29,12 @@
     @extend .naked;
     @apply bg-whiteFade;
   }
+
+  .inverted {
+    @apply border-2 border-blue focus:border-transparent hover:border-pink;
+
+    &:hover:focus {
+      @apply border-pink;
+    }
+  }
 }
