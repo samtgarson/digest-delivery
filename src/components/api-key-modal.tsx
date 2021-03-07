@@ -30,7 +30,7 @@ export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, cl
     close()
   }
 
-  return <Dialog className="rounded-sm text-center" isOpen={open} onDismiss={close}>
+  return <Dialog aria-label="Generate an API key" className="rounded-sm text-center" isOpen={open} onDismiss={close}>
     { loading
       ? <p>Crunching numbers...</p>
       : key

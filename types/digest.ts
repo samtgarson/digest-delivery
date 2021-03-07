@@ -16,12 +16,12 @@ export type ArticleAttributes = {
 	original_url?: string
 }
 
-export type Article = {
+export type Article = ArticleAttributes & {
 	id: string
 	created_at: Date
-	processed_at?: Date
+	digest_id?: Date
 	user_id: string
-} & ArticleAttributes
+}
 
 export type User = {
 	id: string
@@ -30,9 +30,15 @@ export type User = {
 	frequency: Frequency
 }
 
-export type ApiKeyModel = {
+export type ApiKeyEntity = {
 	id: string
 	key: string
 	user_id: string
 	expired_at?: Date
+}
+
+export type DigestEntity = {
+	id: string
+	delivered_at: Date
+	user_id: string
 }

@@ -44,7 +44,7 @@ const ApiKeyRegen: FC = () => {
 
   return <>
     <p className='mb-3 sm:mb-0'>Your API Key</p>
-    <Btn type="button" onClick={() => setConfirm(true)} secondary>Generate an API Key</Btn>
+    <Btn type="button" onClick={() => setConfirm(true)} secondary className="sm:w-60">Generate an API Key</Btn>
     <ApiKeyModal open={confirm} close={close} />
   </>
 }
