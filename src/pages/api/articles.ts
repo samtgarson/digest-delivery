@@ -16,7 +16,7 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     await data.createArticle(user.id, result.article)
 
-    res.status(201).end()
+    res.status(204).end()
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: { body: err.message } })

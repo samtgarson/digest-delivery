@@ -12,7 +12,7 @@
     "test": "DOTENV_CONFIG_PATH=.env.example jest",
     "dev": "next dev -p 5000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 5000"
   },
   "dependencies": {
     "@reach/dialog": "^0.13.2",

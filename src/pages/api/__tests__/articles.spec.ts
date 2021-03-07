@@ -31,7 +31,7 @@ describe('index', () => {
     await handler(req, res)
 
     expect(createArticleMock).toHaveBeenCalledWith('user id', { title, content, author })
-    expect(res.status).toHaveBeenCalledWith(201)
+    expect(res.status).toHaveBeenCalledWith(204)
   })
 
   describe('when db fails', () => {

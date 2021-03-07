@@ -1,11 +1,16 @@
 @layer components {
   .button {
-    @apply py-2 rounded-sm px-7 cursor-pointer inline-flex overflow-hidden no-underline focus:ring-2 focus:ring-pink focus:outline-none items-center;
+    @apply py-2 rounded-sm px-7 cursor-pointer overflow-hidden no-underline focus:ring-2 focus:ring-pink focus:outline-none items-center justify-center;
     background-image: linear-gradient(to left, theme('colors.white') 0, theme('colors.white') 50%,  50%, theme('colors.pink') 100%);
     background-position: right -2px center;
     background-repeat: no-repeat;
     background-size: 210% 100%;
     transition: color .2s ease, background .2s ease, border .2s ease;
+    display: inline-flex;
+
+    & + & {
+      display: flex;
+    }
 
     &:hover {
       @apply text-white;

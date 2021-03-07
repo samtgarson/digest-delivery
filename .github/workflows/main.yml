@@ -55,4 +55,4 @@ jobs:
             ghcr.io/samtgarson/digest-delivery:${{ github.sha }}
           labels: ${{ steps.docker-meta.outputs.labels }}
           cache-from: type=registry,ref=ghcr.io/samtgarson/digest-delivery:latest
-          cache-to: type=inline
+          cache-to: type=registry,ref=ghcr.io/samtgarson/digest-delivery:latest
