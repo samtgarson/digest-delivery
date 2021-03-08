@@ -6,7 +6,8 @@
     "aws-sdk": "^2.840.0",
     "node-ebook-converter": "^1.0.11",
     "nodemailer": "^6.4.17",
-    "puppeteer": "^7.0.x"
+    "puppeteer": "^7.0.x",
+    "threads": "^1.6.3"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0"

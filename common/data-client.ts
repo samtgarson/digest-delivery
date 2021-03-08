@@ -101,4 +101,14 @@ export class DataClient {
 
 		if (data) return data.user_id
 	}
+
+	async getDueUsers (): Promise<string[]> {
+		const { data, error } = await this.supabase
+			.from<{ id: string }>('due_users')
+			.select('id')
+
+		if (error) throw error
+
+		return data ? data.map(d => d.id) : []
+	}
 }

@@ -1,5 +1,6 @@
 import { writeFile } from "fs"
 import { Compilable, Article } from "types/digest"
+import { humaniseDate } from "./util"
 
 export class Digest implements Compilable {
 	constructor (private articles: Article[], private date: Date) {}
@@ -21,11 +22,7 @@ export class Digest implements Compilable {
 	}
 
 	get humanDateString (): string {
-		return this.date.toLocaleString('en-GB', {
-			day: 'numeric',
-			month: 'short',
-			year: 'numeric'
-		})
+		return humaniseDate(this.date)
 	}
 
 	async writeTo (dir: string): Promise<string> {

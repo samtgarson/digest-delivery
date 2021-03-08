@@ -1,13 +1,9 @@
 import { mkdirSync } from 'fs'
 import { convert } from 'node-ebook-converter'
-import { CoverGenerator } from './cover-generator'
 import { Digest } from './digest'
-import { log } from '../../common/logger'
 
 const defaultOutputDir = process.env.OUTPUT_DIR as string
 const defaultMkrDir = (path: string) => mkdirSync(path, { recursive: true })
-
-const coverGenerator = new CoverGenerator()
 
 if (!defaultOutputDir) throw new Error('missing OUTPUT_DIR')
 
@@ -19,25 +15,17 @@ export class ArticleCompiler {
 		mkDir(outputDir)
 	}
 
-	async compile (digest: Digest): Promise<string> {
+	async compile (digest: Digest, coverPath: string): Promise<string> {
 		const path = await digest.writeTo(this.outputDir)
-		log('generating cover')
-		const cover = await this.generateCover(digest.humanDateString)
-		log('generated cover')
 
 		if (process.env.SKIP_CALIBRE) return path
 
-		return await this.convert(path, cover, digest.title)
+		return await this.convert(path, coverPath, digest.title)
 	}
 
-	private async generateCover (date: string) {
-		return coverGenerator.generate(date)
-	}
-
-	private async convert (input: string, cover: string, title: string) {
+	private async convert (input: string, coverPath: string, title: string) {
 		const output = input.replace(/\.html$/, '.mobi')
 
-		log('converting html')
 		await convert({
 			input: JSON.stringify(input),
 			output: JSON.stringify(output),
@@ -49,12 +37,11 @@ export class ArticleCompiler {
 			minimumLineHeight: 180,
 			tocFilter: JSON.stringify('Digest .+'),
 			authors: JSON.stringify('Digest Bot'),
-			cover: JSON.stringify(cover),
+			cover: JSON.stringify(coverPath),
 			smartenPunctuation: true,
 			extraCss: JSON.stringify('* { font-family: sans-serif; }'),
 			verbose: true
 		})
-		log('converted html')
 
 		return output
 	}

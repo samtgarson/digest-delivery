@@ -256,4 +256,28 @@ describe('data client', () => {
       })
     })
   })
+
+  describe('getDueUsers', () => {
+    const users = [{ id: 'foo' }]
+
+    it('fetches due users', async () => {
+      select.mockResolvedValue({ data: users })
+      const result = await sut.getDueUsers()
+
+      expect(from).toHaveBeenCalledWith('due_users')
+      expect(select).toHaveBeenCalledWith('id')
+
+      expect(result).toEqual(users.map(u => u.id))
+    })
+
+    describe('when there is an error', () => {
+      const error = new Error('foo')
+
+      it('throws the error', () => {
+        select.mockResolvedValue({ error })
+
+        return expect(() => sut.getDueUsers()).rejects.toEqual(error)
+      })
+    })
+  })
 })

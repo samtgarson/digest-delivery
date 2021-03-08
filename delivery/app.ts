@@ -1,29 +1,31 @@
-import { log } from "../common/logger"
+import type { DeliveryWorker } from "types/worker"
 import { DataClient } from "../common/data-client"
-import { ArticleCompiler } from "./lib/article-compiler"
-import { Digest } from "./lib/digest"
-import { Mailer } from "./lib/mailer"
+import { log } from "../common/logger"
+import { CoverGenerator } from "./lib/cover-generator"
+import { humaniseDate } from "./lib/util"
 
 const data = new DataClient()
-const compiler = new ArticleCompiler()
-const mailer = new Mailer()
+const coverGenerator = new CoverGenerator()
 
-export const handler = async (): Promise<void> => {
+export const handler = async (deliver: DeliveryWorker): Promise<void> => {
   log('beginning delivery')
-  const articles = await data.getUnprocessedArticles()
 
-  if (!articles.length) {
-    console.log("No articles today")
+  const users = await data.getDueUsers()
+  if (users.length === 0) {
+    log('no due users today')
     return
   }
-  log(`delivering ${articles.length} articles`)
 
-  const digest = new Digest(articles, new Date())
-  const path = await compiler.compile(digest)
+  log(`Found ${users.length} users`)
 
-  await mailer.sendEmail(path)
-  log('email sent')
-  await data.destroyProcessedArticles(articles)
-  log('destroyed processed articles')
+  const date = humaniseDate(new Date())
+  const coverPath = await coverGenerator.generate(date)
+  log('generated cover')
+
+  const jobs = users.map(userId => deliver(userId, coverPath))
+
+  await Promise.all(jobs)
+
+  log('completed delivery')
 }
 
