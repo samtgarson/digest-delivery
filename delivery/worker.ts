@@ -26,8 +26,8 @@ export const deliver: Deliver = async (userId: string, coverPath: string) => {
 	logger('converted html')
 	await mailer.sendEmail(path)
 	logger('email sent')
-	await data.destroyProcessedArticles(articles)
-	logger('destroyed processed articles')
+	await data.createDigest(userId, articles)
+	logger('created digest')
 }
 
 expose(deliver)

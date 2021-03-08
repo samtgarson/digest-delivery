@@ -13,7 +13,7 @@ jest.mock('../../common/data-client')
 jest.mock('../lib/mailer')
 jest.mock('../lib/article-compiler')
 
-const { getUnprocessedArticlesMock, destroyProcessedArticlesMock } =  DataClient as unknown as typeof MockDataClient
+const { getUnprocessedArticlesMock, createDigestMock } =  DataClient as unknown as typeof MockDataClient
 const { sendEmailMock } =  Mailer as unknown as typeof MockMailer
 const { compileMock } =  ArticleCompiler as unknown as typeof MockArticleCompiler
 
@@ -41,7 +41,7 @@ describe('queue', () => {
     expect(sendEmailMock).toHaveBeenCalledWith(path)
   })
 
-  it('destroys the articles', () => {
-    expect(destroyProcessedArticlesMock).toHaveBeenCalledWith(articles)
+  it('creates the digest', () => {
+    expect(createDigestMock).toHaveBeenCalledWith(userId, articles)
   })
 })

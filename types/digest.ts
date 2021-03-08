@@ -19,7 +19,7 @@ export type ArticleAttributes = {
 export type Article = ArticleAttributes & {
 	id: string
 	created_at: Date
-	digest_id?: Date
+	digest_id?: string
 	user_id: string
 }
 

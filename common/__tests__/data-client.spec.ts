@@ -97,29 +97,57 @@ describe('data client', () => {
 
   })
 
-  describe('destroyProcessedArticles', () => {
+  describe('createDigest', () => {
     const articles = [{ id: 'id1' }, { id: 'id2' }] as Article[]
+    const digestId = 'digest id'
+    const userId = 'user id'
+    const digest = { id: digestId }
 
     beforeEach(() => {
-      inFilter.mockResolvedValue({})
+      single.mockResolvedValue({ data: digest })
     })
 
-    it('destroys the articles', async () => {
-      await sut.destroyProcessedArticles(articles)
+    it('creates the digest', async () => {
+      await sut.createDigest(userId, articles)
+
+      expect(from).toHaveBeenCalledWith('digests')
+      expect(insert).toHaveBeenCalledWith({ user_id: userId })
+      expect(single).toHaveBeenCalled()
+    })
+
+    it('updates the articles', async () => {
+      await sut.createDigest(userId, articles)
 
       expect(from).toHaveBeenCalledWith('articles')
-      expect(destroy).toHaveBeenCalled()
+      expect(update).toHaveBeenCalledWith({ digest_id: digestId })
       expect(inFilter).toHaveBeenCalledWith('id', ['id1', 'id2'])
     })
 
-    describe('when it fails', () => {
+    it('returns the digest', async () => {
+      const result = await sut.createDigest(userId, articles)
+
+      expect(result).toEqual(digest)
+    })
+
+    describe('when it fails to create the digest', () => {
+      const error = new Error('foo')
+      beforeEach(() => {
+        single.mockResolvedValue({ error })
+      })
+
+      it('throws the error', () => {
+        return expect(() => sut.createDigest(userId, articles)).rejects.toEqual(error)
+      })
+    })
+
+    describe('when it fails to update the articles', () => {
       const error = new Error('foo')
       beforeEach(() => {
         inFilter.mockResolvedValue({ error })
       })
 
       it('throws the error', () => {
-        return expect(() => sut.destroyProcessedArticles(articles)).rejects.toEqual(error)
+        return expect(() => sut.createDigest(userId, articles)).rejects.toEqual(error)
       })
     })
   })

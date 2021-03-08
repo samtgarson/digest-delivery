@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
-import { Article, User, ApiKeyEntity, ArticleAttributes } from 'types/digest'
+import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity } from 'types/digest'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
@@ -40,13 +40,23 @@ export class DataClient {
 		return data ?? []
 	}
 
-	async destroyProcessedArticles (articles: Article[]): Promise<void> {
+	async createDigest (userId: string, articles: Article[]): Promise<DigestEntity> {
+		const { data: digest, error: digestError } = await this.supabase
+			.from<DigestEntity>('digests')
+			.insert({ user_id: userId })
+			.single()
+
+		if (digestError) throw digestError
+		if (!digest) throw new Error('Could not create digest')
+
 		const { error } = await this.supabase
-			.from('articles')
-			.delete({ returning: "minimal" })
+			.from<Article>('articles')
+			.update({ digest_id: digest.id })
 			.in('id', articles.map(a => a.id))
 
 		if (error) throw error
+
+		return digest
 	}
 
 	async getUser (id: string): Promise<User | null> {
