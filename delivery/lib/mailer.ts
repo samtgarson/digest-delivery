@@ -8,30 +8,27 @@ const sesClient = new SES({
 })
 
 const defaultMailer = nodemailer.createTransport({ SES: sesClient })
-const recipientEmail = process.env.MAILER_RECIPIENT
 const senderEmail = process.env.MAILER_SENDER
 
-if (!recipientEmail) throw new Error('Missing RECIPIENT')
 if (!senderEmail) throw new Error('Missing SENDER')
 
 export class Mailer {
 	constructor (
 		private transport = defaultMailer,
 		private sender = senderEmail,
-		private recipient = recipientEmail,
 		private cc: boolean = !!process.env.SEND_CC
 	) {}
 
-	async sendEmail (path: string): Promise<void> {
-		const mailOpts = this.options(path)
+	async sendEmail (path: string, to: string): Promise<void> {
+		const mailOpts = this.options(path, to)
 
 		if (this.cc) mailOpts.cc = this.sender
 		return this.transport.sendMail(mailOpts)
 	}
 
-	options (path: string): Options {
+	options (path: string, to: string): Options {
 		return {
-			to: this.recipient,
+			to,
 			from: this.sender,
 			subject: 'convert',
 			text: "This is an automated message",

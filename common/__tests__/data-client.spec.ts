@@ -40,6 +40,10 @@ describe('data client', () => {
     sut = new DataClient(mockSupabase)
   })
 
+  it('proxies the auth object', () => {
+    expect(sut.auth).toEqual(mockSupabase.auth)
+  })
+
   describe('createArticle', () => {
     it('creates the resource', async () => {
       await sut.createArticle(userId, { title, content, author })
@@ -286,16 +290,16 @@ describe('data client', () => {
   })
 
   describe('getDueUsers', () => {
-    const users = [{ id: 'foo' }]
+    const users = [{ id: 'foo', kindle_address: 'bar' }]
 
     it('fetches due users', async () => {
       select.mockResolvedValue({ data: users })
       const result = await sut.getDueUsers()
 
       expect(from).toHaveBeenCalledWith('due_users')
-      expect(select).toHaveBeenCalledWith('id')
+      expect(select).toHaveBeenCalledWith('*')
 
-      expect(result).toEqual(users.map(u => u.id))
+      expect(result).toEqual(users)
     })
 
     describe('when there is an error', () => {

@@ -22,7 +22,7 @@ export const handler = async (deliver: DeliveryWorker): Promise<void> => {
   const coverPath = await coverGenerator.generate(date)
   log('generated cover')
 
-  const jobs = users.map(userId => deliver(userId, coverPath))
+  const jobs = users.map(user => deliver(user, coverPath))
 
   await Promise.all(jobs)
 

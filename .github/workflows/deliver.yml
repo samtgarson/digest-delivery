@@ -1,6 +1,10 @@
 name: deliver
 on:
   workflow_dispatch:
+    debug:
+      description: Show debug logs
+      required: false
+      default: false
   schedule:
     - cron:  '0 0 * * *'
 jobs:
@@ -20,5 +24,5 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          DEBUG: true
+          DEBUG: ${{ github.event.inputs.debug == 'true' }}
 

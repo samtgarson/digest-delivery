@@ -12,13 +12,12 @@ describe('Mailer', () => {
 
     expect(mailer['transport']).toBeInstanceOf(Mail)
     expect(mailer['sender']).toEqual(process.env.MAILER_SENDER)
-    expect(mailer['recipient']).toEqual(process.env.MAILER_RECIPIENT)
   })
 
   it('sends a mail', () => {
-    const mailer = new Mailer(mockTransport, sender, recipient)
+    const mailer = new Mailer(mockTransport, sender)
 
-    mailer.sendEmail(path)
+    mailer.sendEmail(path, recipient)
 
     expect(mockTransport.sendMail).toHaveBeenCalledWith({
       attachments: [
@@ -36,9 +35,9 @@ describe('Mailer', () => {
   })
 
   it('can include CC', () => {
-    const mailer = new Mailer(mockTransport, sender, recipient, true)
+    const mailer = new Mailer(mockTransport, sender, true)
 
-    mailer.sendEmail(path)
+    mailer.sendEmail(path, recipient)
 
     expect(mockTransport.sendMail).toHaveBeenCalledWith({
       attachments: [

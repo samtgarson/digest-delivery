@@ -1,4 +1,5 @@
 import mockPuppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
+import { mocked } from 'ts-jest/utils'
 import { CoverGenerator } from '../../lib/cover-generator'
 
 jest.mock('puppeteer', () => {
@@ -49,5 +50,16 @@ describe('cover generator', () => {
   it('screenshots the body', () => {
     expect(page.$).toHaveBeenCalledWith('body')
     expect(body?.screenshot).toHaveBeenCalledWith({ path: output, type: 'png' })
+  })
+
+  describe('when for some reason body is not found', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mocked(page.$).mockResolvedValue(null)
+    })
+
+    it('throws an error', async () => {
+      return expect(() => generator.generate(date)).rejects.toEqual(expect.any(Error))
+    })
   })
 })

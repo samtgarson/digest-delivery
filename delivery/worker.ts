@@ -5,29 +5,37 @@ import { Digest } from "./lib/digest"
 import { Mailer } from "./lib/mailer"
 import { expose } from "threads/worker"
 import type { Deliver } from 'types/worker'
+import { User } from "types/digest"
 
 const compiler = new ArticleCompiler()
 const mailer = new Mailer()
 const data = new DataClient()
 
-export const deliver: Deliver = async (userId: string, coverPath: string) => {
-	const logger = withPrefix(userId)
-	const articles = await data.getUnprocessedArticles(userId)
-
-	if (!articles.length) {
-		logger("no articles")
+export const deliver: Deliver = async (user: User, coverPath: string) => {
+	const logger = withPrefix(user.id)
+	if (!user.kindle_address) {
+		logger.error('No kindle_address')
 		return
 	}
-	logger(`delivering ${articles.length} articles`)
 
-	const digest = new Digest(articles, new Date())
+	const articles = await data.getUnprocessedArticles(user.id)
+
+	if (!articles.length) {
+		logger.log("no articles")
+		return
+	}
+	logger.log(`delivering ${articles.length} articles`)
+
+	const digest = new Digest(user.id, articles, new Date())
 
 	const path = await compiler.compile(digest, coverPath)
-	logger('converted html')
-	await mailer.sendEmail(path)
-	logger('email sent')
-	await data.createDigest(userId, articles)
-	logger('created digest')
+	logger.log('converted html')
+
+	await mailer.sendEmail(path, user.kindle_address)
+	logger.log('email sent')
+
+	await data.createDigest(user.id, articles)
+	logger.log('created digest')
 }
 
 expose(deliver)

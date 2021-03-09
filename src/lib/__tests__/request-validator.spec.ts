@@ -21,6 +21,12 @@ describe('validate request', () => {
 
       expect(result).toEqual({ success: false, status: 400, message: 'Missing required params' })
     })
+
+    it('has the correct status code', () => {
+      const result = validateArticlesRequest({} as NextApiRequest)
+
+      expect(result).toEqual({ success: false, status: 400, message: 'Missing request body' })
+    })
   })
 })
 
