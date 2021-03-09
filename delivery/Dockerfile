@@ -26,8 +26,7 @@ RUN npm ci
 
 # === Build function ===
 COPY . ./
-RUN node_modules/.bin/ncc build ./delivery/entrypoint.ts -sm
-RUN node_modules/.bin/ncc build ./delivery/worker.ts -smo worker
+RUN ./delivery/build
 
 # === Production Image ===
 FROM node:15-slim AS worker
@@ -40,11 +39,9 @@ WORKDIR /app
 
 # === Copy build files over
 COPY --from=builder /opt/calibre /opt/calibre
-COPY --from=builder /app/dist/index.js /app/dist/index.js.map /app/dist/sourcemap-register.js ./
-COPY --from=builder /app/worker/index.js ./worker.js
-COPY --from=builder /app/worker/index.js.map ./worker.js.map
+COPY --from=builder /app/dist ./
 
 ENV PATH=/opt/calibre:$PATH
 ENV CHROME_PATH=chromium
 
-CMD node /app/index.js
+CMD node /app/entry

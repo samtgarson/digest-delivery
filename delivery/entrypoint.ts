@@ -1,11 +1,11 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
 import { handler } from './app'
 import { spawn, Worker } from 'threads'
-import { deliver } from './worker'
 import { Thread } from 'threads'
+import { Deliver } from 'types/worker'
 
 const main = async () => {
-  const worker = await spawn<typeof deliver>(new Worker('./worker.js'))
+  const worker = await spawn<Deliver>(new Worker('../worker'))
   await handler(worker)
   await Thread.terminate(worker)
 }

@@ -1,7 +1,8 @@
 import { ArticleCompiler } from '../article-compiler'
 import { Digest } from '../digest'
 
-jest.mock('node-ebook-converter')
+// eslint-disable-next-line promise/prefer-await-to-callbacks
+jest.mock('ebook-convert', () => jest.fn((_: string, cb: (err?: Error) => void) => cb()))
 
 describe('compile articles', () => {
   const htmlPath = '/foo/path.html'

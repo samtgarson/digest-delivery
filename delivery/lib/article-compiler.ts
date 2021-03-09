@@ -1,5 +1,5 @@
 import { mkdirSync } from 'fs'
-import { convert } from 'node-ebook-converter'
+import convert from 'ebook-convert'
 import { Digest } from './digest'
 
 const defaultOutputDir = process.env.OUTPUT_DIR as string
@@ -26,11 +26,11 @@ export class ArticleCompiler {
 	private async convert (input: string, coverPath: string, title: string) {
 		const output = input.replace(/\.html$/, '.mobi')
 
-		await convert({
+		await new Promise<void>((resolve, reject) => convert({
 			input: JSON.stringify(input),
 			output: JSON.stringify(output),
 			title: JSON.stringify(title),
-			pageBreaksBefore: "'//h:h1'",
+			pageBreaksBefore: JSON.stringify('//*[@class="page"]'),
 			chapter: "'//h:h1'",
 			insertBlankLine: true,
 			insertBlankLineSize: 1,
@@ -41,7 +41,10 @@ export class ArticleCompiler {
 			smartenPunctuation: true,
 			extraCss: JSON.stringify('* { font-family: sans-serif; }'),
 			verbose: true
-		})
+		}, err => {
+			if (err) reject(err)
+			resolve()
+		}))
 
 		return output
 	}

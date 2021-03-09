@@ -80,6 +80,7 @@
       "^common/(.*)": "<rootDir>/common/$1",
       "^src/(.*)": "<rootDir>/src/$1"
     },
+    "coverageDirectory": ".coverage",
     "coverageThreshold": {
       "global": {
         "branches": 80,

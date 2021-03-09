@@ -1,4 +1,4 @@
-declare module 'node-ebook-converter' {
+declare module 'ebook-convert' {
   export interface ConvertOptions {
     input: string
     output: string
@@ -16,5 +16,6 @@ declare module 'node-ebook-converter' {
     verbose: boolean
   }
 
-  export function convert (options: ConvertOptions): Promise<void>
+  function convert (options: ConvertOptions, cb: (err?: Error) => void)
+  export default convert
 }

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+tmp_dir=$(mktemp -d -t digest-delivery-XXXXXXXXXX)
+
+node_modules/.bin/ncc build ./delivery/entrypoint.ts -smo "$tmp_dir/entry"
+node_modules/.bin/ncc build ./delivery/worker.ts -smo "$tmp_dir/worker"
+
+rm -rf dist
+mkdir dist
+mv "$tmp_dir/entry" ./dist/entry
+mv "$tmp_dir/worker" ./dist/worker
+
