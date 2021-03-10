@@ -1,5 +1,5 @@
 import { HTMLAttributes, ReactElement } from "react"
-import { btnClasses } from "../btn"
+import { btnClasses } from "../atoms/btn"
 
 type RadioListProps<KeyType extends string> = HTMLAttributes<HTMLDivElement> & {
   value: string

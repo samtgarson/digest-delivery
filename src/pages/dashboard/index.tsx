@@ -1,11 +1,14 @@
+import { DataClient } from 'common/data-client'
 import { NextPage } from 'next'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { PageWrapper } from 'src/components/page-wrapper'
+import { PageWrapper } from 'src/components/atoms/page-wrapper'
+import { DigestItem } from 'src/components/list/digest-item'
+import { List } from 'src/components/list/list'
 import { UserForm } from 'src/components/user-form'
 import { authenticated } from 'src/lib/page-authenticator'
 import { useDataClient } from 'src/lib/use-data-client'
-import { User } from 'types/digest'
+import { DigestEntityWithMeta, User } from 'types/digest'
 
 const errorMessageFor = (code: string, payload: Partial<User>) => {
   if (code === '23514' && !!payload.kindle_address) return (
@@ -19,7 +22,7 @@ const errorMessageFor = (code: string, payload: Partial<User>) => {
   return 'Something went wrong'
 }
 
-const App: NextPage<{ user: User }> = ({ user: u }) => {
+const App: NextPage<{ user: User, digests: DigestEntityWithMeta[] }> = ({ user: u, digests }) => {
   const client = useDataClient()
   const [user, setUser] = useState(u)
 
@@ -35,10 +38,16 @@ const App: NextPage<{ user: User }> = ({ user: u }) => {
   }
 
   return <PageWrapper>
-    <h1 className="text-4xl mb-5 px-7 font-bold">Your Digest</h1>
+    <h1 className="text-4xl mb-5 font-bold">Your Digest</h1>
     <UserForm user={user} updateUser={updateUser} />
+    <h2 className="text-2xl font-bold mt-14 mb-4">Recent Digests</h2>
+    <List className="" data={digests} item={DigestItem} />
   </PageWrapper>
 }
 
-export const getServerSideProps = authenticated()
+export const getServerSideProps = authenticated(async (_ctx, user) => {
+ const client = new DataClient()
+ const digests = await client.getDigests(user.id, { count: 3 })
+ return { props: { digests } }
+})
 export default App

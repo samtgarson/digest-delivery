@@ -9,6 +9,14 @@ const checkedSiblingPlugin = plugin(function ({ addVariant }) {
   })
 })
 
+const placeholderShownPlugin = plugin(function ({ addVariant, e }) {
+  addVariant('placeholder-shown', ({ modifySelectors, separator }) => {
+    modifySelectors(({ className }) => {
+      return `.${e(`placeholder-shown${separator}${className}`)}:placeholder-shown`
+    })
+  })
+})
+
 module.exports = {
   purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
   darkMode: false, // or 'media' or 'class'
@@ -22,17 +30,20 @@ module.exports = {
       white: 'var(--white)',
       whiteFade: 'var(--white-fade)'
     },
+    placeholderColor: {
+      blue: 'var(--blue-fade)'
+    },
     fontFamily: {
       sans: ['custom', 'BlinkMacSystemFont', '-apple-system', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif']
     }
   },
   variants: {
     extend: {
-      textDecoration: ['checked'],
+      textDecoration: ['checked', 'placeholder-shown'],
       fontWeight: ['checked'],
       pointerEvents: ['checked'],
-      margin: ['first']
+      margin: ['first', 'last']
     }
   },
-  plugins: [checkedSiblingPlugin]
+  plugins: [checkedSiblingPlugin, placeholderShownPlugin]
 }

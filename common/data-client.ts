@@ -1,10 +1,15 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
-import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity } from 'types/digest'
+import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta } from 'types/digest'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
+
+type PaginationOptions = {
+	count?: number
+	offset?: number
+}
 
 export class DataClient {
 	private supabase: SupabaseClient
@@ -116,6 +121,18 @@ export class DataClient {
 		const { data, error } = await this.supabase
 			.from<User>('due_users')
 			.select('id,kindle_address')
+
+		if (error) throw error
+
+		return data ?? []
+	}
+
+	async getDigests (userId: string, { count = 10, offset = 0 }: PaginationOptions): Promise<DigestEntityWithMeta[]> {
+		const { data, error } = await this.supabase
+			.from<DigestEntityWithMeta>('digests_with_meta')
+			.select('*', { count: 'exact' })
+			.eq('user_id', userId)
+			.range(offset * count, (offset + 1) * count)
 
 		if (error) throw error
 
