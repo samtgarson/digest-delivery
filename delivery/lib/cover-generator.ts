@@ -37,7 +37,7 @@ const defaultTemplate = `
       font-size: 160;
     }
   </style>
-  <h1>Sam&rsquo;s daily digest.</h1>
+  <h1>Digest delivered.</h1>
   <p>{{ DATE }}</p>
 
 </body>

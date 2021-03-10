@@ -2,7 +2,7 @@ import { DataClient } from "common/data-client"
 import { GetServerSideProps, NextPage } from "next"
 import Link from "next/link"
 import { BlobWrapper } from "src/components/blob-wrapper"
-import { Anchor } from "src/components/btn"
+import { Anchor } from "src/components/atoms/btn"
 
 const googleIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png"
 

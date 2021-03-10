@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
-import { Anchor } from 'src/components/btn'
+import { Anchor } from 'src/components/atoms/btn'
 import { BlobWrapper } from 'src/components/blob-wrapper'
-import { Icon } from 'src/components/icon'
+import { Icon } from 'src/components/atoms/icon'
 import React from 'react'
 import Link from 'next/link'
 

@@ -1,6 +1,6 @@
 import cn from 'classnames/bind'
 import { forwardRef } from "react"
-import styles from '../styles/components/btn.module.scss'
+import styles from 'src/styles/components/btn.module.scss'
 
 type BaseProps = { naked?: boolean, small?: boolean, secondary?: boolean, inverted?: boolean }
 type BtnProps = BaseProps & React.ComponentPropsWithoutRef<'button'> & { type?: string }

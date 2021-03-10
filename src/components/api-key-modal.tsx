@@ -2,7 +2,7 @@ import React, { FC, useState, useCallback } from "react"
 import { Dialog } from "@reach/dialog"
 import { toast } from 'react-hot-toast'
 import "@reach/dialog/styles.css"
-import { Btn } from "./btn"
+import { Btn } from "./atoms/btn"
 import { useAuth } from "src/lib/use-auth"
 
 export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, close }) => {
