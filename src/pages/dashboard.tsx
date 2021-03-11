@@ -4,11 +4,13 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { PageWrapper } from 'src/components/atoms/page-wrapper'
 import { DigestItem } from 'src/components/list/digest-item'
-import { List } from 'src/components/list/list'
+import { List } from 'src/components/list'
 import { UserForm } from 'src/components/user-form'
 import { authenticated } from 'src/lib/page-authenticator'
 import { useDataClient } from 'src/lib/use-data-client'
 import { DigestEntityWithMeta, User } from 'types/digest'
+import Link from 'next/link'
+import { Anchor } from 'src/components/atoms/btn'
 
 const errorMessageFor = (code: string, payload: Partial<User>) => {
   if (code === '23514' && !!payload.kindle_address) return (
@@ -38,16 +40,22 @@ const App: NextPage<{ user: User, digests: DigestEntityWithMeta[] }> = ({ user: 
   }
 
   return <PageWrapper>
-    <h1 className="text-4xl mb-5 font-bold">Your Digest</h1>
+    <h1 className="title">Your Digest</h1>
     <UserForm user={user} updateUser={updateUser} />
-    <h2 className="text-2xl font-bold mt-14 mb-4">Recent Digests</h2>
+    <h2 className="subtitle mt-14">
+      Recent Digests
+      <Link passHref href="/digests">
+        <Anchor naked small className="float-right text-sm uppercase">See all</Anchor>
+      </Link>
+    </h2>
     <List className="" data={digests} item={DigestItem} />
   </PageWrapper>
 }
 
 export const getServerSideProps = authenticated(async (_ctx, user) => {
- const client = new DataClient()
- const digests = await client.getDigests(user.id, { count: 3 })
- return { props: { digests } }
+  const client = new DataClient()
+  const { data: digests } = await client.getDigests(user.id, { perPage: 3 })
+  return { props: { digests } }
 })
+
 export default App

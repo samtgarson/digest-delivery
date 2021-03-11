@@ -1,14 +1,14 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
-import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta } from 'types/digest'
+import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta, DigestEntityWithArticles } from 'types/digest'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
 
 type PaginationOptions = {
-	count?: number
-	offset?: number
+	perPage?: number
+	page?: number
 }
 
 export class DataClient {
@@ -99,7 +99,7 @@ export class DataClient {
 
 		const { error: expireError } = await this.supabase
 			.from<ApiKeyEntity>('api_keys')
-			.update({ expired_at: new Date() }, { returning: 'minimal' })
+			.update({ expired_at: new Date().toISOString() }, { returning: 'minimal' })
 			.eq('user_id', key.userId)
 			.neq('id', data.id)
 
@@ -127,15 +127,30 @@ export class DataClient {
 		return data ?? []
 	}
 
-	async getDigests (userId: string, { count = 10, offset = 0 }: PaginationOptions): Promise<DigestEntityWithMeta[]> {
-		const { data, error } = await this.supabase
+	async getDigests (userId: string, { perPage = 10, page = 0 }: PaginationOptions = { perPage: 10, page: 0 }):
+		Promise<{ data: DigestEntityWithMeta[], total: number }>
+	{
+		const { data, error, count: total } = await this.supabase
 			.from<DigestEntityWithMeta>('digests_with_meta')
-			.select('*', { count: 'exact' })
+			.select('*', { count: 'estimated' })
 			.eq('user_id', userId)
-			.range(offset * count, (offset + 1) * count)
+			.range(page * perPage, (page + 1) * perPage)
+
+		if (error && error instanceof Error) throw error
+
+		return { data: data || [], total: total || 0 }
+	}
+
+	async getDigest (userId: string, digestId: string): Promise<DigestEntityWithArticles | null> {
+		const { data, error } = await this.supabase
+			.from<DigestEntityWithArticles>('digests')
+			.select('*, articles(*)')
+			.eq('id', digestId)
+			.eq('user_id', userId)
+			.single()
 
 		if (error) throw error
 
-		return data ?? []
+		return data
 	}
 }

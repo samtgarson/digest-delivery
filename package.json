@@ -8,7 +8,7 @@
     "./delivery"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --ignore-path .gitignore",
     "test": "DOTENV_CONFIG_PATH=.env.example jest",
     "dev": "next dev -p 5000",
     "build": "next build",
@@ -25,6 +25,7 @@
     "react-dom": "17.0.1",
     "react-feather": "^2.0.9",
     "react-hot-toast": "^1.0.2",
+    "superjson": "^1.7.2",
     "use-supabase": "^1.0.3",
     "uuid-apikey": "^1.5.1"
   },
@@ -48,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "autoprefixer": "^10.2.4",
+    "babel-plugin-superjson-next": "^0.2.3",
     "dotenv": "^8.2.0",
     "eslint": "^7.20.0",
     "eslint-plugin-import": "^2.22.1",
@@ -68,7 +70,13 @@
       "project": "./tsconfig.json"
     },
     "rules": {
-      "import/no-extraneous-dependencies": 0
+      "import/no-extraneous-dependencies": 0,
+      "import/extensions": [
+        "error",
+        {
+          "scss": "always"
+        }
+      ]
     }
   },
   "jest": {
@@ -92,6 +100,14 @@
     "coveragePathIgnorePatterns": [
       "node_modules",
       "<rootDir>/common/logger"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "next/babel"
+    ],
+    "plugins": [
+      "superjson-next"
     ]
   }
 }

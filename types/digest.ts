@@ -46,3 +46,7 @@ export type DigestEntity = {
 export type DigestEntityWithMeta = DigestEntity & {
 	articles_count: number
 }
+
+export type DigestEntityWithArticles = DigestEntity & {
+	articles: Article[]
+}

@@ -23,8 +23,13 @@ export const authenticated = <Props>(fn?: AuthedGSSP<Props>) => async (ctx: GetS
 
   if (!fn) return { props: { user } }
 
-  const pageResult = await fn(ctx, user)
-  if (!('props' in pageResult)) return pageResult
+  try {
+    const pageResult = await fn(ctx, user)
+    if (!('props' in pageResult)) return pageResult
 
-  return { props: { ...pageResult.props, user } }
+    return { props: { ...pageResult.props, user } }
+  } catch (error) {
+    ctx.res.statusCode = 500
+    return { props: { _error: error } }
+  }
 }

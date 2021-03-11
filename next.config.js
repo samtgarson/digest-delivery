@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config()
+
 module.exports = {
   webpack: (config, { webpack }) => {
     // Note: we provide webpack above so you should not `require` it

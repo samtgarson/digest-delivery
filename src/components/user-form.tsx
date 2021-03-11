@@ -1,6 +1,6 @@
 import { Frequency, User } from 'types/digest'
 import React, { FC, useState } from 'react'
-import { CheckCircle, XCircle } from 'react-feather'
+import { CheckCircle, RefreshCw, XCircle } from 'react-feather'
 import { Btn } from './atoms/btn'
 import { Form } from './form'
 import { FieldSet } from './form/field-set'
@@ -44,7 +44,7 @@ const ApiKeyRegen: FC = () => {
 
   return <>
     <p className='mb-3 sm:mb-0'>Your API Key</p>
-    <Btn type="button" onClick={() => setConfirm(true)} secondary className="sm:w-60">Generate an API Key</Btn>
+    <Btn type="button" onClick={() => setConfirm(true)} secondary className="sm:w-60"><RefreshCw height="1em" className="mr-3" />Generate an API Key</Btn>
     <ApiKeyModal open={confirm} close={close} />
   </>
 }

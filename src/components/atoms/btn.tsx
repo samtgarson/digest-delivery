@@ -9,9 +9,9 @@ type AnchorProps = BaseProps & React.ComponentPropsWithoutRef<'a'>
 const cx = cn.bind(styles)
 
 export const btnClasses = (props: BaseProps, classes?: string | string[]): string => cx(
-  classes,
   'button',
-  props
+  props,
+  classes
 )
 
 export const Btn = forwardRef<HTMLButtonElement, BtnProps>(

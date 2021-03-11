@@ -31,7 +31,10 @@ const AppContent: FC = ({ children }) => {
 export default function CustomApp ({ Component, pageProps }: AppProps): ReactNode {
   return <SupabaseContextProvider client={supabase}>
     <AppContent>
-      <Component {...pageProps} />
+      { pageProps._error
+        ? <p>{ pageProps._error.message }</p>
+        : <Component {...pageProps} />
+      }
     </AppContent>
     <Toaster toastOptions={toastOptions} />
   </SupabaseContextProvider>

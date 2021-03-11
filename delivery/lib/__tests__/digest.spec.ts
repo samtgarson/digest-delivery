@@ -11,7 +11,7 @@ jest.mock('fs')
 const article1: Article = {
   id: '1',
   user_id: userId,
-  created_at:  new Date(),
+  created_at: '2021-03-01T12:00:00Z',
   content: 'content 1',
   title: 'title 1',
   author: 'author 1'
@@ -20,17 +20,16 @@ const article1: Article = {
 const article2: Article = {
   id: '2',
   user_id: userId,
-  created_at:  new Date(),
+  created_at: '2021-03-01T12:00:00Z',
   content: 'content 2',
   title: 'title 2'
 }
 
 describe('digest', () => {
   const isoDate = 'iso date'
-  const date = {
-    toLocaleString: jest.fn(() => 'locale string'),
-    toISOString: jest.fn(() => `${isoDate}T time`)
-  } as unknown as Date
+  const date = new Date()
+  date.toLocaleString = jest.fn(() => 'locale string')
+  date.toISOString = jest.fn(() => `${isoDate}T time`)
 
   const digest = new Digest(userId, [article1, article2], date)
 

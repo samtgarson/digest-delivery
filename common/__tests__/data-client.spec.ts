@@ -13,6 +13,7 @@ const eqFilter = jest.fn()
 const neqFilter = jest.fn()
 const single = jest.fn()
 const isFilter = jest.fn()
+const rangeFilter = jest.fn()
 
 let mockSupabase: SupabaseClient
 
@@ -24,6 +25,7 @@ describe('data client', () => {
   const author = 'i am a author'
 
   beforeEach(() => {
+    jest.clearAllMocks()
     mockSupabase = {
       from: from.mockReturnThis(),
       select: select.mockReturnThis(),
@@ -34,6 +36,7 @@ describe('data client', () => {
       eq: eqFilter.mockReturnThis(),
       is: isFilter.mockReturnThis(),
       neq: neqFilter,
+      range: rangeFilter,
       single
     } as unknown as SupabaseClient
 
@@ -233,7 +236,7 @@ describe('data client', () => {
 
     it('expires the other api keys', () => {
       expect(from).toHaveBeenCalledWith('api_keys')
-      expect(update).toHaveBeenCalledWith({ expired_at: expect.any(Date) }, { returning: 'minimal' })
+      expect(update).toHaveBeenCalledWith({ expired_at: expect.any(String) }, { returning: 'minimal' })
       expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
       expect(neqFilter).toHaveBeenCalledWith('id', id)
     })
@@ -297,7 +300,7 @@ describe('data client', () => {
       const result = await sut.getDueUsers()
 
       expect(from).toHaveBeenCalledWith('due_users')
-      expect(select).toHaveBeenCalledWith('*')
+      expect(select).toHaveBeenCalledWith('id,kindle_address')
 
       expect(result).toEqual(users)
     })
@@ -309,6 +312,72 @@ describe('data client', () => {
         select.mockResolvedValue({ error })
 
         return expect(() => sut.getDueUsers()).rejects.toEqual(error)
+      })
+    })
+  })
+
+  describe('getDigests', () => {
+    const digests = [{ id: 'foo' }]
+    const userId = 'user id'
+    const total = 10
+
+    it('fetches digests', async () => {
+      rangeFilter.mockResolvedValue({ data: digests, count: total })
+      const result = await sut.getDigests(userId)
+
+      expect(from).toHaveBeenCalledWith('digests_with_meta')
+      expect(select).toHaveBeenCalledWith('*', { count: 'estimated' })
+      expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
+      expect(rangeFilter).toHaveBeenCalledWith(0, 10)
+
+      expect(result).toEqual({ data: digests, total })
+    })
+
+    describe('when there is an error', () => {
+      const error = new Error('foo')
+
+      it('throws the error', () => {
+        rangeFilter.mockResolvedValue({ error })
+
+        return expect(() => sut.getDigests(userId)).rejects.toEqual(error)
+      })
+    })
+
+    describe('with pagination options supplied', () => {
+      it('calculates the range', async () => {
+        rangeFilter.mockResolvedValue({ data: digests, count: total })
+        await sut.getDigests(userId, { perPage: 20, page: 3 })
+
+        expect(rangeFilter).toHaveBeenCalledWith(60, 80)
+      })
+    })
+  })
+
+  describe('getDigest', () => {
+    const digest = { id: 'foo', kindle_address: 'bar' }
+    const userId = 'user id'
+    const id = 'digest id'
+
+    it('fetches digest with articles', async () => {
+      single.mockResolvedValue({ data: digest })
+      const result = await sut.getDigest(userId, id)
+
+      expect(from).toHaveBeenCalledWith('digests')
+      expect(select).toHaveBeenCalledWith('*, articles(*)')
+      expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
+      expect(eqFilter).toHaveBeenCalledWith('id', id)
+      expect(single).toHaveBeenCalled()
+
+      expect(result).toEqual(digest)
+    })
+
+    describe('when there is an error', () => {
+      const error = new Error('foo')
+
+      it('throws the error', () => {
+        single.mockResolvedValue({ error })
+
+        return expect(() => sut.getDigest(userId, id)).rejects.toEqual(error)
       })
     })
   })

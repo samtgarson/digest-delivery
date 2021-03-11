@@ -1,8 +1,8 @@
 import type { DeliveryWorker } from "types/worker"
-import { DataClient } from "../common/data-client"
-import { log } from "../common/logger"
+import { DataClient } from "common/data-client"
+import { log } from "common/logger"
 import { CoverGenerator } from "./lib/cover-generator"
-import { humaniseDate } from "./lib/util"
+import { humaniseDate } from "common/util"
 
 const data = new DataClient()
 const coverGenerator = new CoverGenerator()

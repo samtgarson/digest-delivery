@@ -3,7 +3,7 @@ import * as DataClient from 'common/data-client'
 import * as MockDataClient from 'common/__mocks__/data-client'
 import * as CoverGenerator from '../lib/cover-generator'
 import * as MockCoverGenerator from '../lib/__mocks__/cover-generator'
-import { humaniseDate } from '../lib/util'
+import { humaniseDate } from 'common/util'
 import { DeliveryWorker } from 'types/worker'
 import { mocked } from 'ts-jest/utils'
 
@@ -11,7 +11,7 @@ jest.mock('../../common/data-client')
 jest.mock('../lib/mailer')
 jest.mock('../lib/article-compiler')
 jest.mock('../lib/cover-generator')
-jest.mock('../lib/util')
+jest.mock('common/util')
 
 const mockHumaniseDate = mocked(humaniseDate)
 const { getDueUsersMock } = DataClient as unknown as typeof MockDataClient

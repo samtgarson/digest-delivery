@@ -40,6 +40,16 @@
   }
 }
 
+@layer components {
+  .title {
+    @apply text-4xl mb-5 font-bold;
+  }
+
+  .subtitle {
+    @apply text-2xl font-bold mb-4;
+  }
+}
+
 @layer utilities {
   .rtl {
     direction: rtl;
