@@ -1,6 +1,6 @@
 import { DataClient } from 'common/data-client'
 import { useSupabase } from "use-supabase"
-import { useAuth } from './use-auth'
+import { reauth } from './use-auth'
 
 function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
   return key in target
@@ -8,7 +8,6 @@ function validKey (target: DataClient, key: string | number | symbol): key is ke
 
 export const useDataClient = (): DataClient => {
   const supabase = useSupabase()
-  const { reauth } = useAuth()
 
   const client = new DataClient(supabase)
 

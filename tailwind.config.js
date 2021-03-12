@@ -19,7 +19,8 @@ const placeholderShownPlugin = plugin(function ({ addVariant, e }) {
 
 module.exports = {
   purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
+  important: '#main',
   theme: {
     colors: {
       current: 'currentColor',

@@ -3,12 +3,11 @@ import { Dialog } from "@reach/dialog"
 import { toast } from 'react-hot-toast'
 import "@reach/dialog/styles.css"
 import { Btn } from "./atoms/btn"
-import { useAuth } from "src/lib/use-auth"
+import { reauth } from "src/lib/use-auth"
 
 export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, close }) => {
   const [loading, setLoading] = useState(false)
   const [key, setKey] = useState<string>()
-  const { reauth } = useAuth()
 
   const run = useCallback(async () => {
     setLoading(true)

@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { AppProps } from 'next/app'
+import Head from 'next/head'
 import getConfig from 'next/config'
 import { useRouter } from 'next/dist/client/router'
-import { FC, ReactNode } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { Nav } from 'src/components/atoms/nav'
 import { useAuth } from 'src/lib/use-auth'
@@ -29,13 +30,18 @@ const AppContent: FC = ({ children }) => {
 }
 
 export default function CustomApp ({ Component, pageProps }: AppProps): ReactNode {
-  return <SupabaseContextProvider client={supabase}>
-    <AppContent>
-      { pageProps._error
-        ? <p>{ pageProps._error.message }</p>
-        : <Component {...pageProps} />
-      }
-    </AppContent>
-    <Toaster toastOptions={toastOptions} />
-  </SupabaseContextProvider>
+  return <div id="main">
+    <SupabaseContextProvider client={supabase}>
+      <Head>
+        <link rel="shortcut icon" href="/favicon.png" />
+      </Head>
+      <AppContent>
+        { pageProps._error
+          ? <p>{ pageProps._error.message }</p>
+          : <Component {...pageProps} />
+        }
+      </AppContent>
+      <Toaster toastOptions={toastOptions} />
+    </SupabaseContextProvider>
+  </div>
 }

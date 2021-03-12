@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React, { FC } from "react"
 import { useUser } from "use-supabase"
 import { Anchor, Btn } from "./btn"
+import { Icon } from './icon'
 
 type NavProps = {
   hideLogo: boolean
@@ -12,7 +13,10 @@ export const Nav: FC<NavProps> = () => {
 
   return <nav className="px-3 py-3 flex justify-between mb-6">
     <Link href="/dashboard" passHref>
-    <Anchor naked small className="uppercase font-bold">Digest Delivery</Anchor>
+    <Anchor naked small className="uppercase font-bold">
+      <Icon height="1em" className="mr-3" />
+      <span className="hidden sm:inline-block">Digest Delivery</span>
+    </Anchor>
     </Link>
     { user && <Link passHref href="/logout">
       <Btn naked small className="flex items-center font-bold">
