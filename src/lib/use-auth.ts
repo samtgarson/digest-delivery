@@ -9,7 +9,7 @@ export const reauth = (): void => {
   location.assign(`/login?redirect=${location.pathname}${location.search}`)
 }
 
-const setSession = (event: AuthChangeEvent, session: Session | null) => fetch('/api/auth', {
+export const setSession = (event: AuthChangeEvent, session: Session | null): Promise<Response> => fetch('/api/auth', {
   method: 'POST',
   headers: new Headers({ 'Content-Type': 'application/json' }),
   credentials: 'same-origin',
