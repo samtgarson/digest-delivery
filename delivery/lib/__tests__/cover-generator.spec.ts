@@ -1,6 +1,7 @@
 import mockPuppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
 import { mocked } from 'ts-jest/utils'
 import { CoverGenerator } from '../../lib/cover-generator'
+import { svg } from 'blobs/v2'
 
 jest.mock('puppeteer', () => {
   const body = { screenshot: jest.fn() }
@@ -9,11 +10,20 @@ jest.mock('puppeteer', () => {
   return { launch: jest.fn(() => browser) }
 })
 
+jest.mock('blobs/v2', () => ({
+  svg: jest.fn(() => '<svg blob />')
+}))
+
+jest.mock('common/util', () => ({
+  humaniseDate: jest.fn(() => 'human date'),
+  dateString: jest.fn(() => 'date string')
+}))
+
 describe('cover generator', () => {
-  const date = '13 Feb 2021'
+  const date = new Date()
   const path = '/target/path'
-  const output = `${path}/${date} cover.png`
-  const template = '<body><p>{{ DATE }}</p></body>'
+  const output = `${path}/cover-date string.png`
+  const template = '<body><p>{{ DATE }}</p>{{ SVG }}</body>'
   let browser: Browser
   let page: Page
   let body: ElementHandle | null
@@ -30,6 +40,18 @@ describe('cover generator', () => {
     result = await generator.generate(date)
   })
 
+  it('creates a blob', () => {
+    expect(mocked(svg)).toHaveBeenCalledWith({
+      'extraPoints': 2,
+      'randomness': 8,
+      'seed': expect.any(Number),
+      'size': 500
+    },
+    {
+      'fill': '#73F9BD'
+    })
+  })
+
   it('returns the path', async () => {
     expect(result).toEqual(output)
   })
@@ -44,7 +66,7 @@ describe('cover generator', () => {
 
   it('creates a page', () => {
     expect(browser.newPage).toHaveBeenCalled()
-    expect(page.setContent).toHaveBeenCalledWith('<body><p>13 Feb 2021</p></body>', { waitUntil: 'networkidle0' })
+    expect(page.setContent).toHaveBeenCalledWith('<body><p>human date</p><svg blob /></body>', { waitUntil: 'networkidle0' })
   })
 
   it('screenshots the body', () => {

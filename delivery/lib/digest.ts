@@ -1,6 +1,6 @@
 import { writeFile } from "fs"
 import { Compilable, Article } from "types/digest"
-import { humaniseDate } from "common/util"
+import { dateString, humaniseDate } from "common/util"
 
 export class Digest implements Compilable {
 	constructor (private userId: string, private articles: Article[], private date: Date) {}
@@ -26,8 +26,7 @@ export class Digest implements Compilable {
 	}
 
 	async writeTo (dir: string): Promise<string> {
-		const str = this.date.toISOString()
-		const date = str.substr(0, str.indexOf('T'))
+		const date = dateString(this.date)
 
 		const path = `${dir}/${this.userId}-${date}.html`
 		await new Promise<void>((resolve, reject) => writeFile(path, this.html, err => {

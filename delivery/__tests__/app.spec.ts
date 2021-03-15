@@ -3,25 +3,24 @@ import * as DataClient from 'common/data-client'
 import * as MockDataClient from 'common/__mocks__/data-client'
 import * as CoverGenerator from '../lib/cover-generator'
 import * as MockCoverGenerator from '../lib/__mocks__/cover-generator'
-import { humaniseDate } from 'common/util'
+import * as CoverUploader from '../lib/cover-uploader'
+import * as MockCoverUploader from '../lib/__mocks__/cover-uploader'
 import { DeliveryWorker } from 'types/worker'
-import { mocked } from 'ts-jest/utils'
 
-jest.mock('../../common/data-client')
 jest.mock('../lib/mailer')
 jest.mock('../lib/article-compiler')
 jest.mock('../lib/cover-generator')
-jest.mock('common/util')
+jest.mock('../lib/cover-uploader')
+jest.mock('common/data-client')
 
-const mockHumaniseDate = mocked(humaniseDate)
 const { getDueUsersMock } = DataClient as unknown as typeof MockDataClient
 const { generateMock } = CoverGenerator as unknown as typeof MockCoverGenerator
+const { uploadMock } = CoverUploader as unknown as typeof MockCoverUploader
 const worker = jest.fn() as unknown as DeliveryWorker
 
 describe('queue', () => {
   const userIds = ['123', '456']
-  const coverPath = 'cover path'
-  const humanDate = 'human date'
+  const coverPath = '/Users/sam/Documents/Profile 2.png'
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -31,7 +30,6 @@ describe('queue', () => {
     beforeEach(async () => {
       getDueUsersMock.mockResolvedValue(userIds)
       generateMock.mockResolvedValue(coverPath)
-      mockHumaniseDate.mockReturnValue(humanDate)
       await handler(worker)
     })
 
@@ -40,8 +38,11 @@ describe('queue', () => {
     })
 
     it('generates a cover', () => {
-      expect(mockHumaniseDate).toHaveBeenCalledWith(expect.any(Date))
-      expect(generateMock).toHaveBeenCalledWith(humanDate)
+      expect(generateMock).toHaveBeenCalledWith(expect.any(Date))
+    })
+
+    it('uploads the cover', () => {
+      expect(uploadMock).toHaveBeenCalledWith(coverPath)
     })
 
     it('delivers a digest for each user', () => {
