@@ -43,7 +43,8 @@ module.exports = {
       textDecoration: ['checked', 'placeholder-shown'],
       fontWeight: ['checked'],
       pointerEvents: ['checked'],
-      margin: ['first', 'last']
+      margin: ['first', 'last'],
+      animation: ['hover']
     }
   },
   plugins: [checkedSiblingPlugin, placeholderShownPlugin]

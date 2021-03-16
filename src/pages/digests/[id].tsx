@@ -24,11 +24,16 @@ const DigestShow: NextPage<{ digest: DigestEntityWithArticles }> = ({ digest }) 
 export const getServerSideProps = authenticated(async ({ params }, user) => {
   const client = new DataClient()
   const { id } = params as { id: string }
-  const digest = await client.getDigest(user.id, id)
 
-  if (!digest) return { notFound: true }
+  try {
+    const digest = await client.getDigest(user.id, id)
+    if (!digest) return { notFound: true }
 
-  return { props: { digest } }
+    return { props: { digest } }
+  } catch (err) {
+    if (err.code === '22P02') return { notFound: true }
+    throw err
+  }
 })
 
 export default DigestShow

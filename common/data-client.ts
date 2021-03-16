@@ -37,6 +37,7 @@ export class DataClient {
 		const { data, error } = await this.supabase
 			.from<Article>('articles')
 			.select('*')
+			.order('created_at')
 			.eq('user_id', userId)
 			.is('digest_id', null)
 
@@ -130,15 +131,16 @@ export class DataClient {
 	async getDigests (userId: string, { perPage = 10, page = 0 }: PaginationOptions = { perPage: 10, page: 0 }):
 		Promise<{ data: DigestEntityWithMeta[], total: number }>
 	{
-		const { data, error, count: total } = await this.supabase
+		const { data, error, count } = await this.supabase
 			.from<DigestEntityWithMeta>('digests_with_meta')
 			.select('*', { count: 'estimated' })
 			.eq('user_id', userId)
+			.order('delivered_at')
 			.range(page * perPage, (page + 1) * perPage)
 
 		if (error && error instanceof Error) throw error
 
-		return { data: data || [], total: total || 0 }
+		return { data: data || [], total: count || 0 }
 	}
 
 	async getDigest (userId: string, digestId: string): Promise<DigestEntityWithArticles | null> {

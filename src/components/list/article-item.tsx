@@ -11,12 +11,13 @@ type ArticleItemProps = {
 }
 
 export const ArticleItem: FC<ArticleItemProps> = ({ data: { title, author, source, original_url } }) => {
-  const credit = [author, source].filter(t => !!t).join(', from ')
-
   return <li className="mb-5 flex">
     <div className="mr-auto">
       <p className={ cn("font-bold", styles.countable) }>{ title }</p>
-      <p>{ credit }</p>
+      { author
+        ? <p>{ author } { source && <span>({ source })</span> }</p>
+        : source && <p>{ source }</p>
+      }
     </div>
     { original_url && <Link passHref href={original_url}>
       <Anchor target="_blank" naked small className="px-3"><LinkIcon /></Anchor>

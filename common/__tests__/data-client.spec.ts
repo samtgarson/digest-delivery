@@ -12,6 +12,7 @@ const inFilter = jest.fn()
 const eqFilter = jest.fn()
 const neqFilter = jest.fn()
 const single = jest.fn()
+const order = jest.fn()
 const isFilter = jest.fn()
 const rangeFilter = jest.fn()
 
@@ -35,6 +36,7 @@ describe('data client', () => {
       in: inFilter.mockReturnThis(),
       eq: eqFilter.mockReturnThis(),
       is: isFilter.mockReturnThis(),
+      order: order.mockReturnThis(),
       neq: neqFilter,
       range: rangeFilter,
       single
@@ -81,6 +83,7 @@ describe('data client', () => {
       expect(from).toHaveBeenCalledWith('articles')
       expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
       expect(isFilter).toHaveBeenCalledWith('digest_id', null)
+      expect(order).toHaveBeenCalledWith('created_at')
       expect(select).toHaveBeenCalledWith('*')
     })
 
@@ -328,6 +331,7 @@ describe('data client', () => {
       expect(from).toHaveBeenCalledWith('digests_with_meta')
       expect(select).toHaveBeenCalledWith('*', { count: 'estimated' })
       expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
+      expect(order).toHaveBeenCalledWith('delivered_at')
       expect(rangeFilter).toHaveBeenCalledWith(0, 10)
 
       expect(result).toEqual({ data: digests, total })

@@ -12,8 +12,11 @@ type ListProps<Item> = HTMLAttributes<HTMLUListElement> & {
   ordered?: boolean
 }
 
-export function List<Item extends Listable> ({ data, item: Item, ordered = false, className, ...attrs }: ListProps<Item>): ReactElement {
+export function List<Item extends Listable> ({ data, item: Item, ordered = false, className, children, ...attrs }: ListProps<Item>): ReactElement {
   const Tag = ordered ? 'ol' : 'ul'
   const listClass = ordered ? styles.orderedList : null
-  return <Tag {...attrs} className={ cn(listClass, className) }>{ data.map(d => <Item data={d} key={d.id} />) }</Tag>
+  return <Tag {...attrs} className={ cn(listClass, className) }>
+    { children }
+    { data.map(d => <Item data={d} key={d.id} />) }
+  </Tag>
 }
