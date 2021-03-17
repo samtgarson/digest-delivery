@@ -30,7 +30,7 @@ export class ArticleCompiler {
 			input: JSON.stringify(input),
 			output: JSON.stringify(output),
 			title: JSON.stringify(title),
-			pageBreaksBefore: JSON.stringify('//*[@class="page"]'),
+			pageBreaksBefore: JSON.stringify('//*[@class=page]'),
 			chapter: "'//h:h1'",
 			insertBlankLine: true,
 			insertBlankLineSize: 1,

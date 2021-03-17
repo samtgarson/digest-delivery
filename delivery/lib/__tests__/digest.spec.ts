@@ -7,6 +7,10 @@ const userId = 'user id'
 
 const writeFileMock = mocked(writeFile)
 jest.mock('fs')
+jest.mock('common/util', () => ({
+  humaniseDate: jest.fn(() => 'locale string'),
+  dateString: jest.fn(() => 'iso date')
+}))
 
 const article1: Article = {
   id: '1',
@@ -26,10 +30,7 @@ const article2: Article = {
 }
 
 describe('digest', () => {
-  const isoDate = 'iso date'
   const date = new Date()
-  date.toLocaleString = jest.fn(() => 'locale string')
-  date.toISOString = jest.fn(() => `${isoDate}T time`)
 
   const digest = new Digest(userId, [article1, article2], date)
 
@@ -69,7 +70,7 @@ content 2
 
   describe('writeTo', () => {
     const dir = 'dir'
-    const path = `${dir}/${userId}-${isoDate}.html`
+    const path = `${dir}/${userId}-iso date.html`
 
     it('writes the file', async () => {
       await digest.writeTo(dir)

@@ -1,5 +1,7 @@
 import { ArticleCompiler } from '../article-compiler'
 import { Digest } from '../digest'
+import convert from 'ebook-convert'
+import { mocked } from 'ts-jest/utils'
 
 // eslint-disable-next-line promise/prefer-await-to-callbacks
 jest.mock('ebook-convert', () => jest.fn((_: string, cb: (err?: Error) => void) => cb()))
@@ -39,6 +41,25 @@ describe('compile articles', () => {
     const compiler = new ArticleCompiler(undefined, mkdir)
 
     expect(compiler).toHaveProperty('outputDir', process.env.OUTPUT_DIR)
+  })
+
+  it('uses the correct options for converting', () => {
+    expect(mocked(convert)).toHaveBeenCalledWith({
+			authors: '"Digest Bot"',
+			chapter: "'//h:h1'",
+			cover: JSON.stringify(coverPath),
+			extraCss: '"* { font-family: sans-serif; }"',
+			input: JSON.stringify('/foo/path.html'),
+			insertBlankLine: true,
+			insertBlankLineSize: 1,
+			minimumLineHeight: 180,
+			output: '"/foo/path.mobi"',
+			pageBreaksBefore: '"//*[@class=page]"',
+			smartenPunctuation: true,
+			title: JSON.stringify(digest.title),
+			tocFilter: '"Digest .+"',
+			verbose: true
+		}, expect.any(Function))
   })
 })
 
