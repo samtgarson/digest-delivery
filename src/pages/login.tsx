@@ -1,12 +1,21 @@
 import { DataClient } from "common/data-client"
 import { GetServerSideProps, NextPage } from "next"
 import Link from "next/link"
+import { useEffect } from "react"
 import { Anchor } from "src/components/atoms/btn"
 import { BlobWrapper } from "src/components/blob-wrapper"
+import { setSession } from "src/lib/use-auth"
+import { useSupabase } from "use-supabase"
 
 const googleIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png"
 
-const Login: NextPage<{ authUrl: string, redirect: string }> = ({ authUrl }) => {
+const Login: NextPage<{ authUrl: string, redirect: string }> = ({ authUrl, redirect }) => {
+  const supabase = useSupabase()
+  useEffect(() => {
+    const session = supabase.auth.session()
+    setSession('SIGNED_IN', session)
+    location.assign(redirect)
+  })
   return <BlobWrapper>
     <h1 className="mb-4 text-3xl">Sign In</h1>
     <p className="mb-4">Use your Google account to access your Digest Delivery dashboard.</p>
