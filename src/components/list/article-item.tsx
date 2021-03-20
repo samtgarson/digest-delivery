@@ -16,7 +16,7 @@ export const ArticleItem: FC<ArticleItemProps> = ({ data: { title, author, sourc
     <div className="mr-auto">
       <h4 className={ cn("font-bold text-lg", styles.countable) }>{ decode(title) }</h4>
       { author
-        ? <p>{ author } { source && <span>({ source })</span> }</p>
+        ? <p>{ decode(author) } { source && <span>({ source })</span> }</p>
         : source && <p>{ source }</p>
       }
     </div>
