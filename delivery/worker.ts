@@ -18,7 +18,7 @@ export const deliver: Deliver = async (user: User, coverPath: string) => {
 		return
 	}
 
-	const articles = await data.getUnprocessedArticles(user.id)
+	const articles = await data.getArticles(user.id, { unprocessed: true })
 
 	if (!articles.length) {
 		logger.log("no articles")

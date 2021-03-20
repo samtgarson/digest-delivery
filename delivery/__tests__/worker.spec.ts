@@ -13,7 +13,7 @@ jest.mock('../../common/data-client')
 jest.mock('../lib/mailer')
 jest.mock('../lib/article-compiler')
 
-const { getUnprocessedArticlesMock, createDigestMock } =  DataClient as unknown as typeof MockDataClient
+const { getArticlesMock, createDigestMock } =  DataClient as unknown as typeof MockDataClient
 const { sendEmailMock } =  Mailer as unknown as typeof MockMailer
 const { compileMock } =  ArticleCompiler as unknown as typeof MockArticleCompiler
 
@@ -29,13 +29,13 @@ describe('queue', () => {
 
   describe('when there are articles', () => {
     beforeEach(async () => {
-      getUnprocessedArticlesMock.mockResolvedValue(articles)
+      getArticlesMock.mockResolvedValue(articles)
       compileMock.mockReturnValue(path)
       await deliver(user, coverPath)
     })
 
     it('fetches the unprocessed articles', () => {
-      expect(getUnprocessedArticlesMock).toHaveBeenCalled()
+      expect(getArticlesMock).toHaveBeenCalled()
     })
 
     it('compiles the articles', () => {
@@ -53,7 +53,7 @@ describe('queue', () => {
 
   describe('when there are no articles', () => {
     beforeEach(async () => {
-      getUnprocessedArticlesMock.mockResolvedValue([])
+      getArticlesMock.mockResolvedValue([])
       await deliver(user, coverPath)
     })
 
@@ -70,7 +70,7 @@ describe('queue', () => {
     })
 
     it('does not proceed', async () => {
-      expect(getUnprocessedArticlesMock).not.toHaveBeenCalled()
+      expect(getArticlesMock).not.toHaveBeenCalled()
       expect(compileMock).not.toHaveBeenCalled()
       expect(sendEmailMock).not.toHaveBeenCalled()
       expect(createDigestMock).not.toHaveBeenCalled()

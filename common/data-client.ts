@@ -33,13 +33,16 @@ export class DataClient {
 		if (error) throw error
 	}
 
-	async getUnprocessedArticles (userId: string): Promise<Article[]> {
-		const { data, error } = await this.supabase
+	async getArticles (userId: string, { unprocessed }: { unprocessed?: boolean } = {}): Promise<Article[]> {
+		let query = this.supabase
 			.from<Article>('articles')
 			.select('*')
 			.order('created_at')
 			.eq('user_id', userId)
-			.is('digest_id', null)
+
+		if (unprocessed) query = query.is('digest_id', null)
+
+		const { data, error } = await query
 
 		if (error) throw error
 
@@ -128,12 +131,17 @@ export class DataClient {
 		return data ?? []
 	}
 
-	async getDigests (userId: string, { perPage = 10, page = 0 }: PaginationOptions = { perPage: 10, page: 0 }):
+	async getDigests (
+		userId: string, { perPage = 10, page = 0, includeArticles = false }:
+		PaginationOptions & { includeArticles?: boolean }
+		= { perPage: 10, page: 0 }
+	):
 		Promise<{ data: DigestEntityWithMeta[], total: number }>
 	{
+		const select = includeArticles ? '*, articles(*)' : '*'
 		const { data, error, count } = await this.supabase
 			.from<DigestEntityWithMeta>('digests_with_meta')
-			.select('*', { count: 'estimated' })
+			.select(select, { count: 'estimated' })
 			.eq('user_id', userId)
 			.order('delivered_at')
 			.range(page * perPage, (page + 1) * perPage)

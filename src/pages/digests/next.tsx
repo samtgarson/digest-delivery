@@ -10,10 +10,10 @@ import { Article } from "types/digest"
 
 const calculator = new DeliveryDateCalculator()
 
-const DigestShow: NextPage<{ articles: Article[], nextDeliveryDate: Date }> = ({ articles, nextDeliveryDate }) => {
+const DigestShow: NextPage<{ articles: Article[], nextDeliveryDate: Date, active: boolean }> = ({ articles, nextDeliveryDate, active }) => {
   return <PageWrapper>
     <h1 className="title">Your Next Digest</h1>
-    <h2 className="subtitle">Delivering { relativeDate(nextDeliveryDate) }</h2>
+    { active && <h2 className="subtitle">Delivering { relativeDate(nextDeliveryDate) }</h2> }
     <h3 className="font-bold mb-2 text-xl">Articles</h3>
     { articles.length === 0
       ? <p>No articles yet!</p>
@@ -22,14 +22,14 @@ const DigestShow: NextPage<{ articles: Article[], nextDeliveryDate: Date }> = ({
   </PageWrapper>
 }
 
-export const getServerSideProps = authenticated(async (_ctx, user) => {
+export const getServerSideProps = authenticated(async (_ctx, { id, active }) => {
   const client = new DataClient()
   const [articles, nextDeliveryDate] = await Promise.all([
-    client.getUnprocessedArticles(user.id),
-    calculator.calculate(user.id)
+    client.getArticles(id, { unprocessed: true }),
+    calculator.calculate(id)
   ])
 
-  return { props: { articles, nextDeliveryDate } }
+  return { props: { articles, nextDeliveryDate, active } }
 })
 
 export default DigestShow

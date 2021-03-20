@@ -1,14 +1,12 @@
 import { errorLog } from 'common/logger'
 import type { NextApiHandler } from 'next'
+import { AuthedHandler } from 'types/digest'
 import { DataClient } from '../../../common/data-client'
 import { protectWithApiKey } from '../../lib/api-authenticator'
 
 const data = new DataClient()
 
-const postHandler: NextApiHandler = async (req, res) => {
-  const user = await protectWithApiKey(req.headers['authorization'])
-  if (!user) return res.status(401).end()
-
+const postHandler: AuthedHandler = async (req, res, user) => {
   const hookUrl = req.body.hookUrl as string | undefined
   if (!hookUrl) return res.status(400).end()
 
@@ -22,10 +20,7 @@ const postHandler: NextApiHandler = async (req, res) => {
   }
 }
 
-const deleteHandler: NextApiHandler = async (req, res) => {
-  const user = await protectWithApiKey(req.headers['authorization'])
-  if (!user) return res.status(401).end()
-
+const deleteHandler: AuthedHandler = async (req, res, user) => {
   const hookUrl = req.body.hookUrl as string | undefined
   if (!hookUrl) return res.status(400).end()
 
@@ -40,11 +35,14 @@ const deleteHandler: NextApiHandler = async (req, res) => {
 }
 
 const handler: NextApiHandler = async (req, res) => {
+  const user = await protectWithApiKey(req.headers['authorization'])
+  if (!user) return res.status(401).end()
+
   switch (req.method) {
     case 'POST':
-      return postHandler(req, res)
+      return postHandler(req, res, user)
     case 'DELETE':
-      return deleteHandler(req, res)
+      return deleteHandler(req, res, user)
     default:
       return res.status(405).end()
   }

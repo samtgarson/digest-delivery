@@ -70,26 +70,26 @@ describe('data client', () => {
     })
   })
 
-  describe('getUnprocessedArticles', () => {
+  describe('getArticles', () => {
     const articles = ['foo']
     const userId = 'user id'
 
     beforeEach(() => {
-      isFilter.mockResolvedValue({ data: articles })
+      eqFilter.mockResolvedValue({ data: articles })
     })
 
-    it('fetches the unprocessed articles', async () => {
-      await sut.getUnprocessedArticles(userId)
+    it('fetches the articles', async () => {
+      await sut.getArticles(userId)
 
       expect(from).toHaveBeenCalledWith('articles')
       expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
-      expect(isFilter).toHaveBeenCalledWith('digest_id', null)
+      // expect(isFilter).toHaveBeenCalledWith('digest_id', null)
       expect(order).toHaveBeenCalledWith('created_at')
       expect(select).toHaveBeenCalledWith('*')
     })
 
     it('returns the articles', async () => {
-      const result = await sut.getUnprocessedArticles(userId)
+      const result = await sut.getArticles(userId)
 
       expect(result).toEqual(articles)
     })
@@ -98,14 +98,30 @@ describe('data client', () => {
       const error = new Error('foo')
 
       beforeEach(() => {
-        isFilter.mockResolvedValue({ error })
+        eqFilter.mockResolvedValue({ error })
       })
 
       it('throws the error', () => {
-        return expect(() => sut.getUnprocessedArticles(userId)).rejects.toEqual(error)
+        return expect(() => sut.getArticles(userId)).rejects.toEqual(error)
       })
     })
 
+    describe('when fetching unprocessed articles only', () => {
+      beforeEach(() => {
+        eqFilter.mockReturnThis()
+        inFilter.mockResolvedValue({ data: articles })
+      })
+
+      it('fetches the articles', async () => {
+        await sut.getArticles(userId, { unprocessed: true })
+
+        expect(from).toHaveBeenCalledWith('articles')
+        expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
+        expect(isFilter).toHaveBeenCalledWith('digest_id', null)
+        expect(order).toHaveBeenCalledWith('created_at')
+        expect(select).toHaveBeenCalledWith('*')
+      })
+    })
   })
 
   describe('createDigest', () => {
@@ -354,6 +370,14 @@ describe('data client', () => {
         await sut.getDigests(userId, { perPage: 20, page: 3 })
 
         expect(rangeFilter).toHaveBeenCalledWith(60, 80)
+      })
+    })
+
+    describe('when including articles', () => {
+      it('returns the articles too', async () => {
+        await sut.getDigests(userId, { includeArticles: true })
+
+        expect(select).toHaveBeenCalledWith('*, articles(*)', { count: 'estimated' })
       })
     })
   })

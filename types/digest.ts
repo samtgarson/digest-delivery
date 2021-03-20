@@ -1,3 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next"
+
+export type AuthedHandler<T = unknown> = (req: NextApiRequest, res: NextApiResponse<T>, user: User) => void | Promise<void>
+
 export interface Compilable {
 	html: string
 	title: string

@@ -49,7 +49,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextD
     <h1 className="title">Your Digest</h1>
     <UserForm user={user} updateUser={updateUser} />
     <h2 className="subtitle mt-14">Your Next Digest</h2>
-    <NextDigestItem delivery={nextDeliveryDate} count={articles.length} />
+    <NextDigestItem delivery={nextDeliveryDate} count={articles.length} active={user.active} />
     <h2 className="subtitle mt-14">
       Recent Digests
       <Link passHref href="/digests">
@@ -64,7 +64,7 @@ export const getServerSideProps = authenticated(async (_ctx, user) => {
   const client = new DataClient()
   const [{ data: digests }, articles, nextDeliveryDate] = await Promise.all([
     client.getDigests(user.id, { perPage: 3 }),
-    client.getUnprocessedArticles(user.id),
+    client.getArticles(user.id, { unprocessed: true }),
     calculator.calculate(user.id)
   ])
 
