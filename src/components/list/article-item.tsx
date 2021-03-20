@@ -23,7 +23,7 @@ export const ArticleItem: FC<ArticleItemProps> = ({ data: { title, author, sourc
     { original_url && <Link passHref href={original_url}>
       <Anchor target="_blank" naked small className="px-3">
         <LinkIcon />
-        <span className="ml-1 overflow-hidden w-0 link-hover:w-auto whitespace-nowrap">Read original article</span>
+        <span className="ml-2 overflow-hidden w-0 link-hover:w-36 transition-all whitespace-nowrap">Read original article</span>
       </Anchor>
     </Link>}
   </li>

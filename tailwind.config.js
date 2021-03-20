@@ -4,7 +4,7 @@ const plugin = require("tailwindcss/plugin")
 const linkHoverPlugin = plugin(function ({ addVariant }) {
   addVariant("link-hover", ({ container }) => {
     container.walkRules(rule => {
-      rule.selector = `a:hover + .link-hover\\:${rule.selector.slice(1)}`
+      rule.selector = `a:hover .link-hover\\:${rule.selector.slice(1)}`
     })
   })
 })
