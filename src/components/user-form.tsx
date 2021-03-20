@@ -34,8 +34,8 @@ const FrequencyToggle: FC<UserFormProps> = ({ updateUser, user: { frequency } })
 </>
 
 const AddressField: FC<UserFormProps> = ({ updateUser, user: { kindle_address: address } }) => <>
-  <p className='mb-3 sm:mb-0'>Your Send to Kindle email is</p>
-  <TextInput placeholder="bob@kindle.com" value={address} update={kindle_address => updateUser({ kindle_address })} className='w-full sm:w-60' />
+  <label htmlFor="kindle-address-input" className='mb-3 sm:mb-0'>Your Send to Kindle email is</label>
+  <TextInput id="kindle-address-input" placeholder="bob@kindle.com" value={address} update={kindle_address => updateUser({ kindle_address })} className='w-full sm:w-60' />
 </>
 
 const ApiKeyRegen: FC = () => {

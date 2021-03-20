@@ -30,7 +30,7 @@ const AppContent: FC = ({ children }) => {
 }
 
 export default function CustomApp ({ Component, pageProps }: AppProps): ReactNode {
-  return <div id="main">
+  return <div>
     <SupabaseContextProvider client={supabase}>
       <Head>
         <link rel="shortcut icon" href="/favicon.png" />

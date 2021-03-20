@@ -13,8 +13,10 @@ const Login: NextPage<{ authUrl: string, redirect: string }> = ({ authUrl, redir
   const supabase = useSupabase()
   useEffect(() => {
     const session = supabase.auth.session()
-    setSession('SIGNED_IN', session)
-    location.assign(redirect)
+    if (session) {
+      setSession('SIGNED_IN', session)
+      location.assign(redirect)
+    }
   })
   return <BlobWrapper>
     <h1 className="mb-4 text-3xl">Sign In</h1>

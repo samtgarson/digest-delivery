@@ -155,4 +155,22 @@ export class DataClient {
 
 		return data
 	}
+
+	async createSubscription (user_id: string, hook_url: string): Promise<void> {
+		const { error } = await this.supabase
+			.from('subscriptions')
+			.insert({ user_id, hook_url }, { returning: 'minimal' })
+
+		if (error) throw error
+	}
+
+	async deleteSubscription (userId: string, hookUrl: string): Promise<void> {
+		const { error } = await this.supabase
+			.from('subscriptions')
+			.delete({ returning: 'minimal' })
+			.eq('user_id', userId)
+			.eq('hook_url', hookUrl)
+
+		if (error) throw error
+	}
 }

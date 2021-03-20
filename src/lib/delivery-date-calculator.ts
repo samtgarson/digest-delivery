@@ -1,5 +1,5 @@
 import { DataClient } from "common/data-client"
-import { addDays } from "date-fns"
+import { addDays, isFuture } from "date-fns"
 import { Frequency } from "types/digest"
 
 const dataClient = new DataClient()
@@ -8,7 +8,8 @@ export class DeliveryDateCalculator {
   constructor (
     private client = dataClient,
     private today = new Date(),
-    private add: (d: Date, a: number) => Date = addDays
+    private add: (d: Date, a: number) => Date = addDays,
+    private future: (d: Date) => boolean = isFuture
   ) {}
 
   async calculate (userId: string): Promise<Date> {
@@ -23,6 +24,8 @@ export class DeliveryDateCalculator {
 
     const days = account?.frequency === Frequency.Weekly ? 7 : 1
 
-    return this.add(lastDelivered, days)
+    const scheduled = this.add(lastDelivered, days)
+
+    return this.future(scheduled) ? scheduled : this.add(new Date(), 1)
   }
 }

@@ -29,7 +29,13 @@ export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, cl
     close()
   }
 
-  return <Dialog aria-label="Generate an API key" className="rounded-sm text-center" isOpen={open} onDismiss={close}>
+  return <Dialog
+    aria-label="Generate an API key"
+    className="rounded-sm text-center px-2 py-4 sm:p-8"
+    style={{ minWidth: 300, maxWidth: 400 }}
+    isOpen={open}
+    onDismiss={close}
+  >
     { loading
       ? <p>Crunching numbers...</p>
       : key
@@ -41,8 +47,8 @@ export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, cl
         </>
         : <>
           <p>Are you sure? This will invalidate any old API keys</p>
-          <Btn inverted type="button" className="block w-64 mx-auto mt-5 mb-3" onClick={run}>Yes, do it</Btn>
-          <Btn type="button" className="block w-64 mx-auto" onClick={close}>Never mind</Btn>
+          <Btn inverted type="button" className="block w-48 mx-auto mt-5 mb-3" onClick={run}>Yes, do it</Btn>
+          <Btn type="button" className="block w-48 mx-auto" onClick={close}>Never mind</Btn>
         </>
     }
   </Dialog>

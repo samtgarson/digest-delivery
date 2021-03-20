@@ -1,6 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require("tailwindcss/plugin")
 
+const linkHoverPlugin = plugin(function ({ addVariant }) {
+  addVariant("link-hover", ({ container }) => {
+    container.walkRules(rule => {
+      rule.selector = `a:hover + .link-hover\\:${rule.selector.slice(1)}`
+    })
+  })
+})
+
+
 const checkedSiblingPlugin = plugin(function ({ addVariant }) {
   addVariant("checked", ({ container }) => {
     container.walkRules(rule => {
@@ -44,8 +53,9 @@ module.exports = {
       fontWeight: ['checked'],
       pointerEvents: ['checked'],
       margin: ['first', 'last'],
-      animation: ['hover']
+      animation: ['hover'],
+      width: ['link-hover']
     }
   },
-  plugins: [checkedSiblingPlugin, placeholderShownPlugin]
+  plugins: [checkedSiblingPlugin, placeholderShownPlugin, linkHoverPlugin]
 }

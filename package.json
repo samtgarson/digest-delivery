@@ -21,6 +21,7 @@
     "blobs": "^2.2.0",
     "classnames": "^2.2.6",
     "date-fns": "^2.19.0",
+    "html-entities": "^2.1.1",
     "next": "canary",
     "react": "17.0.1",
     "react-dom": "17.0.1",

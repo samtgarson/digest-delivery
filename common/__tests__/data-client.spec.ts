@@ -20,10 +20,6 @@ let mockSupabase: SupabaseClient
 
 describe('data client', () => {
   let sut: DataClient
-  const userId = 'user id'
-  const title = 'i am a title'
-  const content = 'i am a content'
-  const author = 'i am a author'
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -50,6 +46,11 @@ describe('data client', () => {
   })
 
   describe('createArticle', () => {
+    const userId = 'user id'
+    const title = 'i am a title'
+    const content = 'i am a content'
+    const author = 'i am a author'
+
     it('creates the resource', async () => {
       await sut.createArticle(userId, { title, content, author })
 
@@ -382,6 +383,56 @@ describe('data client', () => {
         single.mockResolvedValue({ error })
 
         return expect(() => sut.getDigest(userId, id)).rejects.toEqual(error)
+      })
+    })
+  })
+
+  describe('createSubscription', () => {
+    const userId = 'user id'
+    const hookUrl = 'hook url'
+
+    it('creates the resource', async () => {
+      await sut.createSubscription(userId, hookUrl)
+
+      expect(from).toHaveBeenCalledWith('subscriptions')
+      expect(insert).toHaveBeenCalledWith({ hook_url: hookUrl, user_id: userId }, { returning: 'minimal' })
+    })
+
+    describe('when it fails', () => {
+      const error = new Error('foo')
+      beforeEach(() => {
+        insert.mockResolvedValue({ error })
+      })
+
+      it('throws the error', () => {
+        return expect(() => sut.createSubscription(userId, hookUrl)).rejects.toEqual(error)
+      })
+    })
+  })
+
+  describe('deleteSubscription', () => {
+    const userId = 'user id'
+    const hookUrl = 'hook url'
+
+    it('destroys the resource', async () => {
+      await sut.deleteSubscription(userId, hookUrl)
+
+      expect(from).toHaveBeenCalledWith('subscriptions')
+      expect(destroy).toHaveBeenCalledWith({ returning: 'minimal' })
+      expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
+      expect(eqFilter).toHaveBeenCalledWith('hook_url', hookUrl)
+    })
+
+    describe('when it fails', () => {
+      const error = new Error('foo')
+
+      beforeEach(() => {
+        eqFilter.mockImplementationOnce(() => mockSupabase)
+        eqFilter.mockImplementationOnce(() => { throw error })
+      })
+
+      it('throws the error', () => {
+        return expect(() => sut.deleteSubscription(userId, hookUrl)).rejects.toEqual(error)
       })
     })
   })
