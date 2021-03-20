@@ -1,18 +1,16 @@
 import { DataClient } from "common/data-client"
-import { addDays, isFuture } from "date-fns"
+import { addDays, isFuture, isToday, startOfDay } from "date-fns"
 import { Frequency } from "types/digest"
 
 const dataClient = new DataClient()
 
 export class DeliveryDateCalculator {
   constructor (
-    private client = dataClient,
-    private today = new Date(),
-    private add: (d: Date, a: number) => Date = addDays,
-    private future: (d: Date) => boolean = isFuture
+    private client = dataClient
   ) {}
 
   async calculate (userId: string): Promise<Date> {
+    const today = startOfDay(new Date())
     const [lastDigests, account] = await Promise.all([
       this.client.getDigests(userId, { perPage: 1 }),
       this.client.getUser(userId)
@@ -20,12 +18,12 @@ export class DeliveryDateCalculator {
 
     const lastDelivered = lastDigests.total > 0
       ? new Date(lastDigests.data[0].delivered_at)
-      : this.add(this.today, -1)
+      : addDays(today, -1)
 
     const days = account?.frequency === Frequency.Weekly ? 7 : 1
 
-    const scheduled = this.add(lastDelivered, days)
+    const scheduled = startOfDay(addDays(lastDelivered, days))
 
-    return this.future(scheduled) ? scheduled : this.add(new Date(), 1)
+    return isFuture(scheduled) || isToday(scheduled) ? scheduled : addDays(today, 1)
   }
 }
