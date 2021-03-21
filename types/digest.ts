@@ -22,7 +22,7 @@ export type ArticleAttributes = {
 
 export type Article = ArticleAttributes & {
 	id: string
-	created_at: string
+	created_at: Date
 	digest_id?: string
 	user_id: string
 }
@@ -38,12 +38,12 @@ export type ApiKeyEntity = {
 	id: string
 	key: string
 	user_id: string
-	expired_at?: string
+	expired_at?: Date
 }
 
 export type DigestEntity = {
 	id: string
-	delivered_at: string
+	delivered_at: Date
 	user_id: string
 }
 

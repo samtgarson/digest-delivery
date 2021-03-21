@@ -2,6 +2,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
 import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta, DigestEntityWithArticles, Subscription } from 'types/digest'
+import { hydrate } from './util'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
@@ -11,6 +12,10 @@ type PaginationOptions = {
 	page?: number
 }
 
+function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
+  return key in target
+}
+
 export class DataClient {
 	private supabase: SupabaseClient
 
@@ -18,6 +23,20 @@ export class DataClient {
 		client?: SupabaseClient
 	) {
 		this.supabase = client ?? createClient(supabaseUrl, supabaseKey)
+
+		return new Proxy(this, {
+			get (target, property) {
+				if (!validKey(target, property)) return undefined
+				if (!(target[property] instanceof Function) || property === 'auth') return target[property]
+
+				return new Proxy(target[property], {
+					async apply (method, thisArg, args) {
+						const result = await Reflect.apply(method, thisArg, args)
+						return hydrate(result)
+					}
+				})
+			}
+		})
 	}
 
 	get auth (): SupabaseAuthClient { return this.supabase.auth }
@@ -46,7 +65,7 @@ export class DataClient {
 
 		if (error) throw error
 
-		return data ?? []
+		return data ? data : []
 	}
 
 	async createDigest (userId: string, articles: Article[]): Promise<DigestEntity> {

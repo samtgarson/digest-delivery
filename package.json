@@ -103,6 +103,10 @@
     "coveragePathIgnorePatterns": [
       "node_modules",
       "<rootDir>/common/logger"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/\\.next/"
     ]
   },
   "babel": {

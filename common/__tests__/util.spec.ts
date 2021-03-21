@@ -1,4 +1,5 @@
-import { dateString, humaniseDate, relativeDate } from "common/util"
+import { DataClient } from "common/data-client"
+import { dateString, humaniseDate, hydrate, relativeDate } from "common/util"
 import { addDays, startOfDay } from "date-fns"
 
 describe('utils', () => {
@@ -38,6 +39,27 @@ describe('utils', () => {
     ].forEach(date => {
       it(`formats a ${typeof date}`, () => {
         expect(dateString(date)).toEqual('2021-03-01')
+      })
+    })
+  })
+
+  describe('hydrate', () => {
+    const complex = new DataClient()
+
+    const cases = {
+      null: [null, null],
+      strings: ['1234', '1234'],
+      arrays: [['1234', { a: [1, 2] }], ['1234', { a: [1, 2] }]],
+      objects_with_dates: [
+        { a: complex, b: '2021-01-01T12:00:00' },
+        { a: complex, b: new Date('2021-01-01T12:00:00' ) }
+      ]
+    }
+
+    Object.entries(cases).forEach(([type, [input, expected]]) => {
+      it(`hydrates ${type}`, () => {
+        const result = hydrate(input)
+        expect(result).toEqual(expected)
       })
     })
   })

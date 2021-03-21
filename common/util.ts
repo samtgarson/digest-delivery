@@ -1,4 +1,4 @@
-import { formatISO, formatRelative } from "date-fns"
+import { formatISO, formatRelative, parseISO } from "date-fns"
 
 export const stringToDate = (date: string | Date): Date => date instanceof Date ? date : new Date(date)
 
@@ -17,4 +17,20 @@ export const relativeDate = (date: Date | string): string => {
 	return split.length > 1
 		? split[0]
 		: humaniseDate(date)
+}
+
+const dateRegex = /^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}/
+export function hydrate (obj: unknown): unknown {
+	if (Array.isArray(obj)) return obj.map(hydrate)
+	if (typeof obj !== 'object') return obj
+	if (!obj) return obj
+
+	return Object.entries(obj).reduce((hsh, [k, v]) => ({
+		...hsh,
+		[k]: obj.constructor.name === 'object'
+			? hydrate(v)
+			: typeof v === 'string' && dateRegex.exec(v)
+				? parseISO(v)
+				: v
+	}), {})
 }
