@@ -54,3 +54,9 @@ export type DigestEntityWithMeta = DigestEntity & {
 export type DigestEntityWithArticles = DigestEntity & {
 	articles: Article[]
 }
+
+export type Subscription = {
+	id: string
+	hook_url: string
+	user_id: string
+}

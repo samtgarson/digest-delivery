@@ -414,12 +414,22 @@ describe('data client', () => {
   describe('createSubscription', () => {
     const userId = 'user id'
     const hookUrl = 'hook url'
+    const subscription = { id: 'foo' }
+
+    beforeEach(() => {
+      insert.mockResolvedValue({ data: [subscription] })
+    })
 
     it('creates the resource', async () => {
       await sut.createSubscription(userId, hookUrl)
 
       expect(from).toHaveBeenCalledWith('subscriptions')
-      expect(insert).toHaveBeenCalledWith({ hook_url: hookUrl, user_id: userId }, { returning: 'minimal' })
+      expect(insert).toHaveBeenCalledWith({ hook_url: hookUrl, user_id: userId })
+    })
+
+    it('returns the resource', async () => {
+      const result = await sut.createSubscription(userId, hookUrl)
+      expect(result).toEqual(subscription)
     })
 
     describe('when it fails', () => {

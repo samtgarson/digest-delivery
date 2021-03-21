@@ -11,9 +11,9 @@ const postHandler: AuthedHandler = async (req, res, user) => {
   if (!hookUrl) return res.status(400).end()
 
   try {
-    await data.createSubscription(user.id, hookUrl)
+    const subscription = await data.createSubscription(user.id, hookUrl)
 
-    res.status(204).end()
+    res.status(200).json(subscription)
   } catch (err) {
     errorLog(err)
     res.status(500).json({ error: { body: err.message } })
@@ -27,7 +27,7 @@ const deleteHandler: AuthedHandler = async (req, res, user) => {
   try {
     await data.deleteSubscription(user.id, hookUrl)
 
-    res.status(204).end()
+    res.status(200).json({})
   } catch (err) {
     errorLog(err)
     res.status(500).json({ error: { body: err.message } })

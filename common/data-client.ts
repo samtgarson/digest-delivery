@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
-import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta, DigestEntityWithArticles } from 'types/digest'
+import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta, DigestEntityWithArticles, Subscription } from 'types/digest'
 
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
@@ -164,12 +164,14 @@ export class DataClient {
 		return data
 	}
 
-	async createSubscription (user_id: string, hook_url: string): Promise<void> {
-		const { error } = await this.supabase
-			.from('subscriptions')
-			.insert({ user_id, hook_url }, { returning: 'minimal' })
+	async createSubscription (user_id: string, hook_url: string): Promise<Subscription | null> {
+		const { error, data } = await this.supabase
+			.from<Subscription>('subscriptions')
+			.insert({ user_id, hook_url })
 
 		if (error) throw error
+
+		return data && data[0]
 	}
 
 	async deleteSubscription (userId: string, hookUrl: string): Promise<void> {
