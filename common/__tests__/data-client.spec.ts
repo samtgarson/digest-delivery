@@ -256,7 +256,7 @@ describe('data client', () => {
 
     it('expires the other api keys', () => {
       expect(from).toHaveBeenCalledWith('api_keys')
-      expect(update).toHaveBeenCalledWith({ expired_at: expect.any(String) }, { returning: 'minimal' })
+      expect(update).toHaveBeenCalledWith({ expired_at: expect.any(Date) }, { returning: 'minimal' })
       expect(eqFilter).toHaveBeenCalledWith('user_id', userId)
       expect(neqFilter).toHaveBeenCalledWith('id', id)
     })

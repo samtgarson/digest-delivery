@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { AppProps } from 'next/app'
-import Head from 'next/head'
 import getConfig from 'next/config'
-import { useRouter } from 'next/dist/client/router'
+import Head from 'next/head'
 import React, { FC, ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { Nav } from 'src/components/atoms/nav'
@@ -20,17 +19,19 @@ const toastOptions = {
 }
 
 const AppContent: FC = ({ children }) => {
-  const router = useRouter()
   useAuth()
 
   return <>
-    { router.route === '/' || <Nav hideLogo={router.pathname === '/'} /> }
+    <Nav />
     { children }
   </>
 }
 
 export default function CustomApp ({ Component, pageProps }: AppProps): ReactNode {
   return <div>
+    <Head>
+      <title>Digest Delivery</title>
+    </Head>
     <SupabaseContextProvider client={supabase}>
       <Head>
         <link rel="shortcut icon" href="/favicon.png" />

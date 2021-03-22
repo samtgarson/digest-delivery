@@ -1,5 +1,6 @@
 import { DataClient } from "common/data-client"
 import { GetServerSideProps, NextPage } from "next"
+import Head from "next/head"
 import Link from "next/link"
 import { useEffect } from "react"
 import { Anchor } from "src/components/atoms/btn"
@@ -19,6 +20,7 @@ const Login: NextPage<{ authUrl: string, redirect: string }> = ({ authUrl, redir
     }
   })
   return <BlobWrapper>
+    <Head><title>Login | Digest Delivery</title></Head>
     <h1 className="mb-4 text-3xl">Sign In</h1>
     <p className="mb-4">Use your Google account to access your Digest Delivery dashboard.</p>
     <Link passHref href={authUrl}>

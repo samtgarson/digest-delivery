@@ -11,7 +11,7 @@ import { Article } from "types/digest"
 const calculator = new DeliveryDateCalculator()
 
 const DigestShow: NextPage<{ articles: Article[], nextDeliveryDate: Date, active: boolean }> = ({ articles, nextDeliveryDate, active }) => {
-  return <PageWrapper>
+  return <PageWrapper title="Next Digest">
     <h1 className="title">Your Next Digest</h1>
     { active && <h2 className="subtitle">Delivering { relativeDate(nextDeliveryDate) }</h2> }
     <h3 className="font-bold mb-2 text-xl">Articles</h3>

@@ -45,7 +45,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextD
     }
   }
 
-  return <PageWrapper>
+  return <PageWrapper title="Dashboard">
     <h1 className="title">Your Digest</h1>
     <UserForm user={user} updateUser={updateUser} />
     <h2 className="subtitle mt-14">Your Next Digest</h2>

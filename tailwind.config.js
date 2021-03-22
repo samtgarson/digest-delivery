@@ -53,6 +53,7 @@ module.exports = {
       fontWeight: ['checked'],
       pointerEvents: ['checked'],
       margin: ['first', 'last'],
+      padding: ['first', 'last'],
       animation: ['hover'],
       width: ['link-hover']
     }

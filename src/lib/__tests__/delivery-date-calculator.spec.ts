@@ -32,7 +32,7 @@ describe('Delivery date calculator', () => {
   })
 
   describe('when there is a previous delivery', () => {
-    const delivered_at = addDays(new Date(), -1).toISOString()
+    const delivered_at = addDays(new Date(), -1)
 
     beforeEach(async () => {
       getDigests.mockResolvedValueOnce({ total: 1, data: [{ delivered_at } as DigestEntityWithMeta] })
@@ -45,7 +45,7 @@ describe('Delivery date calculator', () => {
     })
 
     describe('but its much older', () => {
-      const delivered_at = addDays(new Date(), -3).toISOString()
+      const delivered_at = addDays(new Date(), -3)
 
       beforeEach(async () => {
         getDigests.mockResolvedValueOnce({ total: 1, data: [{ delivered_at } as DigestEntityWithMeta] })
@@ -60,7 +60,7 @@ describe('Delivery date calculator', () => {
   })
 
   describe('when the user has chosen weekly', () => {
-    const delivered_at = addDays(new Date(), -3).toISOString()
+    const delivered_at = addDays(new Date(), -3)
 
     beforeEach(async () => {
       getDigests.mockResolvedValueOnce({ total: 1, data: [{ delivered_at } as DigestEntityWithMeta] })

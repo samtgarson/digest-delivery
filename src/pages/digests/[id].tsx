@@ -8,7 +8,7 @@ import { authenticated } from "src/lib/page-authenticator"
 import { DigestEntityWithArticles } from "types/digest"
 
 const DigestShow: NextPage<{ digest: DigestEntityWithArticles }> = ({ digest }) => {
-  return <PageWrapper>
+  return <PageWrapper title={`Digest ${humaniseDate(digest.delivered_at)}`}>
     <h1 className="title">Digest</h1>
     <div className="flex mt-6">
       <img src={`/api/covers/${dateString(digest.delivered_at)}.png`} className="h-64 mr-5 rounded" />

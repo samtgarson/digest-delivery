@@ -122,7 +122,7 @@ export class DataClient {
 
 		const { error: expireError } = await this.supabase
 			.from<ApiKeyEntity>('api_keys')
-			.update({ expired_at: new Date().toISOString() }, { returning: 'minimal' })
+			.update({ expired_at: new Date() }, { returning: 'minimal' })
 			.eq('user_id', key.userId)
 			.neq('id', data.id)
 

@@ -15,7 +15,7 @@ type DigestsIndexProps = {
 }
 
 const DigestsIndex: NextPage<DigestsIndexProps> = ({ digests }) => {
-  return <PageWrapper>
+  return <PageWrapper title='Digests'>
     <h1 className="title">Past Digests</h1>
     { digests.length
       ? <List data={digests} item={DigestItem} />
