@@ -32,6 +32,7 @@ export type User = {
 	active: boolean
 	kindle_address: string | null
 	frequency: Frequency
+	email: string
 }
 
 export type ApiKeyEntity = {

@@ -31,7 +31,7 @@ export const deliver: Deliver = async (user: User, coverPath: string) => {
 	const path = await compiler.compile(digest, coverPath)
 	logger.log('converted html')
 
-	await mailer.sendEmail(path, user.kindle_address)
+	await mailer.sendEmail(path, user.kindle_address, user.email)
 	logger.log('email sent')
 
 	await data.createDigest(user.id, articles)

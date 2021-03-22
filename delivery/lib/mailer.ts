@@ -19,16 +19,17 @@ export class Mailer {
 		private cc: boolean = !!process.env.SEND_CC
 	) {}
 
-	async sendEmail (path: string, to: string): Promise<void> {
-		const mailOpts = this.options(path, to)
+	async sendEmail (path: string, to: string, replyTo: string): Promise<void> {
+		const mailOpts = this.options(path, to, replyTo)
 
 		if (this.cc) mailOpts.cc = this.sender
 		return this.transport.sendMail(mailOpts)
 	}
 
-	options (path: string, to: string): Options {
+	options (path: string, to: string, replyTo: string): Options {
 		return {
 			to,
+			replyTo: replyTo,
 			from: this.sender,
 			subject: 'convert',
 			text: "This is an automated message",

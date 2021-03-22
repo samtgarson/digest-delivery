@@ -12,7 +12,7 @@ type ArticleItemProps = {
 }
 
 export const ArticleItem: FC<ArticleItemProps> = ({ data: { title, author, source, original_url } }) => {
-  return <li className="mb-5 relative">
+  return <li className="mb-8 relative">
     <h4 className={ cn("font-bold text-lg", styles.countable) }>{ decode(title) }</h4>
     { author
       ? <p>{ decode(author) } { source && <span>({ source })</span> }</p>

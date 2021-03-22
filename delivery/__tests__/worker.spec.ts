@@ -22,7 +22,8 @@ describe('queue', () => {
   const path = 'path'
   const userId = 'user id'
   const kindleAddress = 'kindle address'
-  const user = { id: userId, kindle_address: kindleAddress } as User
+  const email = 'email'
+  const user = { id: userId, kindle_address: kindleAddress, email } as User
   const coverPath = 'cover path'
 
   beforeEach(() => jest.clearAllMocks())
@@ -43,7 +44,7 @@ describe('queue', () => {
     })
 
     it('sends the email', () => {
-      expect(sendEmailMock).toHaveBeenCalledWith(path, kindleAddress)
+      expect(sendEmailMock).toHaveBeenCalledWith(path, kindleAddress, email)
     })
 
     it('creates the digest', () => {
