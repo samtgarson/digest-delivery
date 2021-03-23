@@ -1,11 +1,11 @@
 import { errorLog } from 'common/logger'
 import { AuthedHandler } from 'types/digest'
-import { DataClient } from '../../../common/data-client'
+import { DataClient } from 'common/data-client'
 
 const data = new DataClient()
 
 const handler: AuthedHandler = async (req, res, user) => {
-  if (req.method !== 'POST') return req.status(405).end()
+  if (req.method !== 'POST') return res.status(405).end()
 
   const hookUrl = req.body.hookUrl as string | undefined
   if (!hookUrl) return res.status(400).end()
