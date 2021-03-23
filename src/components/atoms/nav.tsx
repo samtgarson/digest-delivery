@@ -30,7 +30,7 @@ export const Nav: FC = () => {
       </NavLink>
       : <>
         <NavLink href="/#about">About</NavLink>
-        <NavLink href="login">Sign In</NavLink>
+        <NavLink href="/login">Sign In</NavLink>
       </>
     }
   </nav>

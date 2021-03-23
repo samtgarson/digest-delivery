@@ -9,15 +9,15 @@ import { DigestEntityWithArticles } from "types/digest"
 
 const DigestShow: NextPage<{ digest: DigestEntityWithArticles }> = ({ digest }) => {
   return <PageWrapper title={`Digest ${humaniseDate(digest.delivered_at)}`}>
-    <h1 className="title">Digest</h1>
     <div className="flex mt-6">
-      <img src={`/api/covers/${dateString(digest.delivered_at)}.png`} className="h-64 mr-5 rounded" />
+      <img src={`https://assets.digest.delivery/cover-${dateString(digest.delivered_at)}.png`} className="h-48 mr-5 mb-5 rounded" />
       <div className="flex-grow">
+        <h1 className="title mb-4">Digest</h1>
         <h2 className="subtitle">{ humaniseDate(digest.delivered_at) }</h2>
-        <h3 className="font-bold mb-4 text-xl">Articles</h3>
-        <List ordered data={digest.articles} item={ArticleItem} />
       </div>
     </div>
+    <h3 className="font-bold mb-4 text-xl">Articles</h3>
+    <List ordered data={digest.articles} item={ArticleItem} />
   </PageWrapper>
 }
 

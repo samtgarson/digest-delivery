@@ -2,23 +2,12 @@ import { DataClient } from "common/data-client"
 import { GetServerSideProps, NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
-import { useEffect } from "react"
 import { Anchor } from "src/components/atoms/btn"
 import { BlobWrapper } from "src/components/blob-wrapper"
-import { setSession } from "src/lib/use-auth"
-import { useSupabase } from "use-supabase"
 
 const googleIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png"
 
-const Login: NextPage<{ authUrl: string, redirect: string }> = ({ authUrl, redirect }) => {
-  const supabase = useSupabase()
-  useEffect(() => {
-    const session = supabase.auth.session()
-    if (session) {
-      setSession('SIGNED_IN', session)
-      location.assign(redirect)
-    }
-  })
+const Login: NextPage<{ authUrl: string, redirect: string }> = ({ authUrl }) => {
   return <BlobWrapper>
     <Head><title>Login | Digest Delivery</title></Head>
     <h1 className="mb-4 text-3xl">Sign In</h1>
@@ -41,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query: { red
   const host = `${process.env.BASE_SCHEME}://${process.env.BASE_URL}`
   const redirectTo = new URL(`/auth?redirect=${redirect}`, host).toString()
   const authUrl = client.auth.api.getUrlForProvider('google', { redirectTo })
-  return { props: { authUrl, redirect } }
+  return { props: { authUrl } }
 }
 
 export default Login

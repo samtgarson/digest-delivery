@@ -28,7 +28,7 @@ describe('Cover uploader', () => {
     await sut.upload(path)
     expect(s3Client.upload).toHaveBeenCalledWith({
       Bucket: bucketName,
-      Key: `covers/${filename}`,
+      Key: filename,
       Body: mockStream,
       ContentType: 'image/png',
       CacheControl: 'max-age=31536000, immutable'

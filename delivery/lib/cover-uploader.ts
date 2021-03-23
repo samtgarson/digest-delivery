@@ -25,7 +25,7 @@ export class CoverUploader {
 
 		return {
 			Bucket: this.bucket,
-			Key: `covers/${this.getBaseName(path)}`,
+			Key: this.getBaseName(path),
 			Body: stream,
 			ContentType: 'image/png',
 			CacheControl: 'max-age=31536000, immutable'
