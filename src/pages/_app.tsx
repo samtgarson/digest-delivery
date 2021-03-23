@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, Session } from '@supabase/supabase-js'
 import { AppProps } from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -19,17 +19,19 @@ const toastOptions = {
   }
 }
 
+const setSessionAndRedirect = async (session: Session) => {
+  await setSession('SIGNED_IN', session)
+  const params = new URLSearchParams(location.search)
+  const redirect = params.get('redirect')
+  redirect && location.assign(redirect)
+}
+
 const AppContent: FC = ({ children }) => {
   useAuth()
   const supabase = useSupabase()
   useEffect(() => {
     const session = supabase.auth.session()
-    if (session) {
-      setSession('SIGNED_IN', session)
-      const params = new URLSearchParams(location.search)
-      const redirect = params.get('redirect')
-      redirect && location.assign(redirect)
-    }
+    if (session) setSessionAndRedirect(session)
   }, [])
 
 
