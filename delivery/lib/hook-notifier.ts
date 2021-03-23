@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { DataClient } from 'common/data-client'
 import { errorLog } from 'common/logger'
-import { stringify } from 'json-stringify-date'
+import { dehydrate } from 'common/util'
 import { DigestEntityWithArticles, Subscription } from 'types/digest'
 
 const dataClient = new DataClient()
@@ -22,7 +22,7 @@ export class HookNotifier {
 
 	private async deliver (digest: DigestEntityWithArticles, sub: Subscription) {
 		try {
-			await axios.post(sub.hook_url, stringify(digest), { headers: { 'Content-Type': 'application/json' } })
+			await axios.post(sub.hook_url, dehydrate(digest), { headers: { 'Content-Type': 'application/json' } })
 		} catch (err) {
 			if (axios.isAxiosError(err) && err.code === '410') {
 				return await this.client.deleteSubscription(sub.user_id, sub.hook_url)

@@ -1,5 +1,5 @@
 import { DataClient } from "common/data-client"
-import { dateString, humaniseDate, hydrate, relativeDate } from "common/util"
+import { dateString, dehydrate, humaniseDate, hydrate, relativeDate } from "common/util"
 import { addDays, startOfDay } from "date-fns"
 
 describe('utils', () => {
@@ -61,6 +61,23 @@ describe('utils', () => {
         const result = hydrate(input)
         expect(result).toEqual(expected)
       })
+    })
+  })
+
+  describe('dehydrate', () => {
+    const dateStr = '2021-03-01T13:00:00-01:00'
+
+    it ('dehydrates with timezones', () => {
+      const input = {
+        a: 'foo',
+        b: 123,
+        c: new Date(dateStr)
+      }
+
+      expect(dehydrate(input)).toEqual(JSON.stringify({
+        ...input,
+        c: '2021-03-01T14:00:00.000Z'
+      }))
     })
   })
 })

@@ -1,5 +1,5 @@
 import { errorLog } from 'common/logger'
-import { stringify } from 'json-stringify-date'
+import { dehydrate } from 'common/util'
 import type { NextApiHandler } from 'next'
 import { DataClient } from '../../../common/data-client'
 import { protectWithApiKey } from '../../lib/api-authenticator'
@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     const result = await data.getDigests(user.id, { perPage, page, includeArticles: true })
 
-    res.status(200).json(stringify(result.data))
+    res.status(200).json(dehydrate(result.data))
   } catch (err) {
     errorLog(err)
     res.status(500).json({ error: { body: err.message } })

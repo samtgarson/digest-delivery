@@ -20,7 +20,7 @@ export const relativeDate = (date: Date | string): string => {
 }
 
 const dateRegex = /^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}/
-export function hydrate (obj: unknown): unknown {
+export const hydrate = (obj: unknown): unknown => {
 	if (Array.isArray(obj)) return obj.map(hydrate)
 	if (typeof obj !== 'object') return obj
 	if (!obj) return obj
@@ -33,4 +33,13 @@ export function hydrate (obj: unknown): unknown {
 				? parseISO(v)
 				: v
 	}), {})
+}
+
+const replacer = (_: string, val: unknown) => {
+	if (val instanceof Date) return formatISO(val)
+	return val
+}
+
+export const dehydrate = (obj: unknown): string => {
+	return JSON.stringify(obj, replacer)
 }
