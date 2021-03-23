@@ -6,10 +6,12 @@ import { Mailer } from "./lib/mailer"
 import { expose } from "threads/worker"
 import type { Deliver } from 'types/worker'
 import { User } from "types/digest"
+import { HookNotifier } from "./lib/hook-notifier"
 
 const compiler = new ArticleCompiler()
 const mailer = new Mailer()
 const data = new DataClient()
+const notifier = new HookNotifier()
 
 export const deliver: Deliver = async (user: User, coverPath: string) => {
 	const logger = withPrefix(user.id)
@@ -34,8 +36,11 @@ export const deliver: Deliver = async (user: User, coverPath: string) => {
 	await mailer.sendEmail(path, user.kindle_address, user.email)
 	logger.log('email sent')
 
-	await data.createDigest(user.id, articles)
+	const { id } = await data.createDigest(user.id, articles)
 	logger.log('created digest')
+
+	await notifier.notify(user.id, id)
+	logger.log('notified hooks')
 }
 
 expose(deliver)

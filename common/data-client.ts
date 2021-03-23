@@ -202,4 +202,15 @@ export class DataClient {
 
 		if (error) throw error
 	}
+
+	async getSubscriptions (userId: string): Promise<Subscription[]> {
+		const { error, data } = await this.supabase
+			.from<Subscription>('subscriptions')
+			.select('*')
+			.eq('user_id', userId)
+
+		if (error) throw error
+
+		return data ?? []
+	}
 }

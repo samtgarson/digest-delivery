@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.840.0",
+    "axios": "^0.21.1",
     "ebook-convert": "^2.0.1",
     "nodemailer": "^6.4.17",
     "puppeteer": "^7.0.x",

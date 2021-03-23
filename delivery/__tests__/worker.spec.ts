@@ -5,6 +5,8 @@ import * as Mailer from '../lib/mailer'
 import * as MockMailer from '../lib/__mocks__/mailer'
 import * as ArticleCompiler from '../lib/article-compiler'
 import * as MockArticleCompiler from '../lib/__mocks__/article-compiler'
+import * as HookNotifier from '../lib/hook-notifier'
+import * as MockHookNotifier from '../lib/__mocks__/hook-notifier'
 import type { Article, User } from 'types/digest'
 import { Digest } from '../lib/digest'
 
@@ -12,10 +14,12 @@ jest.mock('threads/worker')
 jest.mock('../../common/data-client')
 jest.mock('../lib/mailer')
 jest.mock('../lib/article-compiler')
+jest.mock('../lib/hook-notifier')
 
 const { getArticlesMock, createDigestMock } =  DataClient as unknown as typeof MockDataClient
 const { sendEmailMock } =  Mailer as unknown as typeof MockMailer
 const { compileMock } =  ArticleCompiler as unknown as typeof MockArticleCompiler
+const { notifyMock } =  HookNotifier as unknown as typeof MockHookNotifier
 
 describe('queue', () => {
   const articles = [{}] as Article[]
@@ -25,6 +29,7 @@ describe('queue', () => {
   const email = 'email'
   const user = { id: userId, kindle_address: kindleAddress, email } as User
   const coverPath = 'cover path'
+  const digestId = 'digest id'
 
   beforeEach(() => jest.clearAllMocks())
 
@@ -32,6 +37,7 @@ describe('queue', () => {
     beforeEach(async () => {
       getArticlesMock.mockResolvedValue(articles)
       compileMock.mockReturnValue(path)
+      createDigestMock.mockResolvedValue({ id: digestId })
       await deliver(user, coverPath)
     })
 
@@ -49,6 +55,10 @@ describe('queue', () => {
 
     it('creates the digest', () => {
       expect(createDigestMock).toHaveBeenCalledWith(userId, articles)
+    })
+
+    it('notifes the hooks', () => {
+      expect(notifyMock).toHaveBeenCalledWith(userId, digestId)
     })
   })
 
