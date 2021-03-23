@@ -8,6 +8,7 @@ import { Nav } from 'src/components/atoms/nav'
 import { setSession, useAuth } from 'src/lib/use-auth'
 import { SupabaseContextProvider, useSupabase } from 'use-supabase'
 import '../styles/global.css'
+import FiveHundred from './500'
 
 const { publicRuntimeConfig } = getConfig()
 const supabase = createClient(publicRuntimeConfig.supabaseUrl, publicRuntimeConfig.supabaseKey)
@@ -49,7 +50,7 @@ export default function CustomApp ({ Component, pageProps }: AppProps): ReactNod
       </Head>
       <AppContent>
         { pageProps._error
-          ? <p>{ pageProps._error.message }</p>
+          ? <FiveHundred />
           : <Component {...pageProps} />
         }
       </AppContent>

@@ -1,4 +1,5 @@
 import { DataClient } from "common/data-client"
+import { errorLog } from "common/logger"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import { User } from "types/digest"
 
@@ -29,6 +30,7 @@ export const authenticated = <Props>(fn?: AuthedGSSP<Props>) => async (ctx: GetS
 
     return { props: { ...pageResult.props, user } }
   } catch (error) {
+    errorLog(error)
     ctx.res.statusCode = 500
     return { props: { _error: error } }
   }

@@ -31,7 +31,7 @@ export const getServerSideProps = authenticated(async ({ params }, user) => {
 
     return { props: { digest } }
   } catch (err) {
-    if (err.code === '22P02') return { notFound: true }
+    if (err.code === '22P02' || err.message === 'JSON object requested, multiple (or no) rows returned') return { notFound: true }
     throw err
   }
 })
