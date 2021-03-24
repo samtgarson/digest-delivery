@@ -24,7 +24,7 @@ export class HookNotifier {
 		try {
 			await axios.post(sub.hook_url, dehydrate(digest), { headers: { 'Content-Type': 'application/json' } })
 		} catch (err) {
-			if (axios.isAxiosError(err) && err.code === '410') {
+			if (axios.isAxiosError(err) && err.response?.status === 410) {
 				return await this.client.deleteSubscription(sub.user_id, sub.hook_url)
 			}
 
