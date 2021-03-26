@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Anchor } from 'src/components/atoms/btn'
 import { PageWrapper } from 'src/components/atoms/page-wrapper'
+import IntegrationHelp from 'src/components/integration-help'
 import { List } from 'src/components/list'
 import { DigestItem } from 'src/components/list/digest-item'
 import { NextDigestItem } from 'src/components/list/next-digest-item'
@@ -57,10 +58,14 @@ const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextD
       </Link>
     </h2>
     <List className="" data={digests} item={DigestItem} />
+    <IntegrationHelp />
   </PageWrapper>
 }
 
-export const getServerSideProps = authenticated(async (_ctx, user) => {
+export const getServerSideProps = authenticated(async (ctx, user) => {
+  const [param] = ctx.query.params ?? [] as string[]
+  if (![undefined, 'integration-help'].includes(param)) return { notFound: true }
+
   const client = new DataClient()
   const [{ data: digests }, articles, nextDeliveryDate] = await Promise.all([
     client.getDigests(user.id, { perPage: 3 }),

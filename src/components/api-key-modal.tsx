@@ -4,6 +4,8 @@ import { toast } from 'react-hot-toast'
 import "@reach/dialog/styles.css"
 import { Btn } from "./atoms/btn"
 import { reauth } from "src/lib/use-auth"
+import styles from 'src/styles/components/modal.module.scss'
+import cn from 'classnames'
 
 export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, close }) => {
   const [loading, setLoading] = useState(false)
@@ -31,7 +33,7 @@ export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, cl
 
   return <Dialog
     aria-label="Generate an API key"
-    className="rounded-sm text-center px-2 py-4 sm:p-8"
+    className={cn(styles.modal, 'text-center')}
     style={{ minWidth: 300, maxWidth: 400 }}
     isOpen={open}
     onDismiss={close}
@@ -43,11 +45,11 @@ export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, cl
           <p>Your API Key is</p>
           <p className="font-bold underline mb-7 mt-3">{ key }</p>
           <p>Keep it somewhere safe, we can't show it again!</p>
-          <Btn inverted className="mt-4" onClick={done}>Got it</Btn>
+          <Btn outlined className="mt-4" onClick={done}>Got it</Btn>
         </>
         : <>
           <p>Are you sure? This will invalidate any old API keys</p>
-          <Btn inverted type="button" className="block w-48 mx-auto mt-5 mb-3" onClick={run}>Yes, do it</Btn>
+          <Btn outlined type="button" className="block w-48 mx-auto mt-5 mb-3" onClick={run}>Yes, do it</Btn>
           <Btn type="button" className="block w-48 mx-auto" onClick={close}>Never mind</Btn>
         </>
     }

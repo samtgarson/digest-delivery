@@ -1,12 +1,13 @@
 import { Frequency, User } from 'types/digest'
 import React, { FC, useState } from 'react'
-import { CheckCircle, RefreshCw, XCircle } from 'react-feather'
+import { CheckCircle, HelpCircle, RefreshCw, XCircle } from 'react-feather'
 import { Btn } from './atoms/btn'
 import { Form } from './form'
 import { FieldSet } from './form/field-set'
 import { RadioList } from './form/radio-list'
 import { TextInput } from './form/text-input'
 import { ApiKeyModal } from './api-key-modal'
+import Link from 'next/link'
 
 type UserFormProps = {
   user: User
@@ -43,7 +44,11 @@ const ApiKeyRegen: FC = () => {
   const close = () => setConfirm(false)
 
   return <>
-    <p className='mb-3 sm:mb-0'>Your API Key</p>
+    <p className='mb-3 sm:mb-0'>Your API Key
+      <Link href="/dashboard/integration-help" shallow>
+        <a><HelpCircle className="inline-block ml-2 mb-1" height="0.95rem" /></a>
+      </Link>
+    </p>
     <Btn type="button" onClick={() => setConfirm(true)} secondary className="sm:w-60"><RefreshCw height="1em" className="mr-3" />Generate an API Key</Btn>
     <ApiKeyModal open={confirm} close={close} />
   </>

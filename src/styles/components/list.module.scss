@@ -1,12 +1,13 @@
-.orderedList {
-  counter-reset: ordered-list-counter;
+@layer components {
+  .orderedList {
+    counter-reset: ordered-list-counter;
 
-  li {
-    counter-increment: ordered-list-counter;
+    li {
+      counter-increment: ordered-list-counter;
+    }
+  }
+
+  .countable::before {
+    content: counter(ordered-list-counter) ". ";
   }
 }
-
-.countable::before {
-  content: counter(ordered-list-counter) ". ";
-}
-

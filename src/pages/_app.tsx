@@ -2,6 +2,7 @@ import { createClient, Session } from '@supabase/supabase-js'
 import { AppProps } from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
+import { NextRouter, useRouter } from 'next/router'
 import React, { FC, ReactNode, useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { Nav } from 'src/components/atoms/nav'
@@ -19,19 +20,23 @@ const toastOptions = {
   }
 }
 
-const setSessionAndRedirect = async (session: Session) => {
+const setSessionAndRedirect = async (session: Session, router: NextRouter) => {
   await setSession('SIGNED_IN', session)
   const params = new URLSearchParams(location.search)
   const redirect = params.get('redirect')
-  redirect && location.assign(redirect)
+  console.log({ redirect })
+  if (redirect) router.replace(redirect)
 }
 
 const AppContent: FC = ({ children }) => {
   useAuth()
+  const router = useRouter()
   const supabase = useSupabase()
+
   useEffect(() => {
     const session = supabase.auth.session()
-    if (session) setSessionAndRedirect(session)
+    console.log({ session })
+    if (session) setSessionAndRedirect(session, router)
   }, [])
 
 

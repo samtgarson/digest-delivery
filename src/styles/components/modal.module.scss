@@ -1,0 +1,5 @@
+@layer components {
+  .modal {
+    @apply rounded-sm px-2 py-4 sm:p-8;
+  }
+}

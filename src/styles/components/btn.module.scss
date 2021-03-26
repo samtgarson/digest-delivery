@@ -26,6 +26,12 @@
     }
   }
 
+
+  .inverted {
+    background-image: linear-gradient(to left, theme('colors.green') 0, theme('colors.green') 50%,  50%, theme('colors.pink') 100%);
+  }
+
+
   .small {
     @apply p-1;
   }
@@ -35,7 +41,7 @@
     @apply bg-whiteFade;
   }
 
-  .inverted {
+  .outlined {
     @apply border-2 border-blue focus:border-transparent hover:border-pink;
 
     &:hover:focus {
