@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApiKey {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map(name: "user_id") @db.Uuid
+  key       String
+  createdAt DateTime  @default(now()) @map(name: "created_at") @db.Timestamp(6)
+  expiredAt DateTime? @map(name: "expired_at") @db.Timestamp(6)
+  user      User      @relation(fields: [userId], references: [id], map: "api_keys_userId_fkey")
+
+  DueUser   DueUser? @relation(fields: [dueUserId], references: [id])
+  dueUserId String?  @db.Uuid
+  @@map("api_keys")
+}
+
+model Article {
+  id          String   @id(map: "Articles_pkey") @default(uuid()) @db.Uuid
+  title       String
+  content     String
+  createdAt   DateTime @default(now()) @map(name: "created_at") @db.Timestamp(6)
+  author      String?
+  userId      String   @map(name: "user_id") @db.Uuid
+  source      String?
+  originalUrl String?  @map(name: "original_url")
+  digestId    String?  @map(name: "digest_id") @db.Uuid
+  digest      Digest?  @relation(fields: [digestId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  DigestWithMeta   DigestWithMeta? @relation(fields: [digestWithMetaId], references: [id])
+  digestWithMetaId String?         @db.Uuid
+  @@map("articles")
+}
+
+model Digest {
+  id          String    @id @default(uuid()) @db.Uuid
+  deliveredAt DateTime  @default(now()) @map(name: "delivered_at") @db.Timestamp(6)
+  userId      String    @map(name: "user_id") @db.Uuid
+  user        User      @relation(fields: [userId], references: [id])
+  articles    Article[]
+
+  DueUser   DueUser? @relation(fields: [dueUserId], references: [id])
+  dueUserId String?  @db.Uuid
+  @@map("digests")
+}
+
+model Subscription {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map(name: "user_id") @db.Uuid
+  hookUrl   String   @map(name: "hook_url")
+  createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id])
+
+  DueUser   DueUser? @relation(fields: [dueUserId], references: [id])
+  dueUserId String?  @db.Uuid
+  @@map("subscriptions")
+}
+
+model User {
+  id            String         @id @db.Uuid
+  frequency     String         @default("DAILY")
+  active        Boolean        @default(false)
+  kindleAddress String?        @map(name: "kindle_address") @db.Citext
+  email         String
+  apiKeys       ApiKey[]
+  articles      Article[]
+  digests       Digest[]
+  subscriptions Subscription[]
+
+  DigestWithMeta DigestWithMeta[]
+  @@map("users")
+}
+
+model DueUser {
+  id            String  @id @db.Uuid
+  frequency     String  @default("DAILY")
+  active        Boolean @default(false)
+  kindleAddress String? @map(name: "kindle_address") @db.Citext
+  email         String
+
+  @@map("due_users")
+  ApiKey       ApiKey[]
+  Digest       Digest[]
+  Subscription Subscription[]
+}
+
+model DigestWithMeta {
+  id            String    @id @default(uuid()) @db.Uuid
+  deliveredAt   DateTime  @default(now()) @map(name: "delivered_at") @db.Timestamp(6)
+  userId        String    @map(name: "user_id") @db.Uuid
+  user          User      @relation(fields: [userId], references: [id])
+  articles      Article[]
+  articlesCount Int       @map(name: "articles_count")
+
+  @@map("digests_with_meta")
+}

@@ -34,9 +34,9 @@ const FrequencyToggle: FC<UserFormProps> = ({ updateUser, user: { frequency } })
   <RadioList value={frequency} items={items} update={frequency => updateUser({ frequency })} className="sm:text-right flex-grow" />
 </>
 
-const AddressField: FC<UserFormProps> = ({ updateUser, user: { kindle_address: address } }) => <>
+const AddressField: FC<UserFormProps> = ({ updateUser, user: { kindleAddress: address } }) => <>
   <label htmlFor="kindle-address-input" className='mb-3 sm:mb-0'>Your Send to Kindle email is</label>
-  <TextInput id="kindle-address-input" placeholder="bob@kindle.com" value={address} update={kindle_address => updateUser({ kindle_address })} className='w-full sm:w-60' />
+  <TextInput id="kindle-address-input" placeholder="bob@kindle.com" value={address} update={kindleAddress => updateUser({ kindleAddress })} className='w-full sm:w-60' />
 </>
 
 const ApiKeyRegen: FC = () => {

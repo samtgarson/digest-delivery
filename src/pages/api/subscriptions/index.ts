@@ -1,6 +1,6 @@
+import { DataClient } from 'common/data-client'
 import { errorLog } from 'common/logger'
 import { AuthedHandler } from 'types/digest'
-import { DataClient } from 'common/data-client'
 
 const data = new DataClient()
 
@@ -16,7 +16,7 @@ const handler: AuthedHandler = async (req, res, user) => {
     res.status(200).json(subscription)
   } catch (err) {
     errorLog(err)
-    res.status(500).json({ error: { body: err.message } })
+    res.status(500).json({ error: { body: (err as Error).message } })
   }
 }
 

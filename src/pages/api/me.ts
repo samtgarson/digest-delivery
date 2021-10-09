@@ -5,7 +5,7 @@ const handler: NextApiHandler = async (req, res) => {
   const user = await protectWithApiKey(req.headers['authorization'])
   if (!user) return res.status(401).end()
 
-  const { kindle_address, ...publicUser } = user
+  const { kindleAddress, ...publicUser } = user
 
   return res.status(200).json(publicUser)
 }

@@ -27,7 +27,7 @@ describe('queue', () => {
   const userId = 'user id'
   const kindleAddress = 'kindle address'
   const email = 'email'
-  const user = { id: userId, kindle_address: kindleAddress, email } as User
+  const user = { id: userId, kindleAddress: kindleAddress, email } as User
   const coverPath = 'cover path'
   const digestId = 'digest id'
 
@@ -77,7 +77,7 @@ describe('queue', () => {
 
   describe('when there is no kindle address', () => {
     beforeEach(async () => {
-      await deliver({ id: userId, kindle_address: null } as User, coverPath)
+      await deliver({ id: userId, kindleAddress: null } as User, coverPath)
     })
 
     it('does not proceed', async () => {

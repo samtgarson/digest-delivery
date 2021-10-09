@@ -17,17 +17,17 @@ import { Article, DigestEntityWithMeta, User } from 'types/digest'
 
 const calculator = new DeliveryDateCalculator()
 
-const errorMessageFor = (code: string, payload: Partial<User>) => {
-  if (code === '23514' && !!payload.kindle_address) return (
-    <span>Enter a valid <strong>Send to Kindle</strong> email</span>
-  )
+// const errorMessageFor = (code: string, payload: Partial<User>) => {
+//   if (code === '23514' && !!payload.kindleAddress) return (
+//     <span>Enter a valid <strong>Send to Kindle</strong> email</span>
+//   )
 
-  if (code === '42501' && !! payload.active) return (
-    <span>Please provide a <strong>Send to Kindle</strong> email before activating</span>
-  )
+//   if (code === '42501' && !! payload.active) return (
+//     <span>Please provide a <strong>Send to Kindle</strong> email before activating</span>
+//   )
 
-  return 'Something went wrong'
-}
+//   return 'Something went wrong'
+// }
 
 type DashboardProps = { user: User, digests: DigestEntityWithMeta[], articles: Article[], nextDeliveryDate: Date }
 
@@ -37,12 +37,13 @@ const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextD
 
   const updateUser = async (payload: Partial<User>) => {
     try {
-      if (payload.kindle_address === null) payload.active = false
+      if (payload.kindleAddress === null) payload.active = false
       await client.updateUser(user.id, payload)
       setUser({ ...user, ...payload })
     } catch (e) {
-      const msg = errorMessageFor(e.code, payload)
-      toast.error(msg, { icon: null })
+      // TODO: Handle errors
+      // const msg = errorMessageFor(e['code'], payload)
+      toast.error('Something went wrong', { icon: null })
     }
   }
 

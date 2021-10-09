@@ -1,5 +1,5 @@
 import { DataClient } from 'common/data-client'
-import { useSupabase } from "use-supabase"
+import { useSupabase } from 'use-supabase'
 import { reauth } from './use-auth'
 
 function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
@@ -8,8 +8,7 @@ function validKey (target: DataClient, key: string | number | symbol): key is ke
 
 export const useDataClient = (): DataClient => {
   const supabase = useSupabase()
-
-  const client = new DataClient(supabase)
+  const client = new DataClient(undefined, supabase)
 
   return new Proxy(client, {
     get (target, property) {

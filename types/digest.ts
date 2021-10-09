@@ -1,4 +1,7 @@
+import { Article, DigestWithMeta, User } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
+
+export type { Article, Digest as DigestEntity, DigestWithMeta as DigestEntityWithMeta, Subscription, User } from '@prisma/client'
 
 export type AuthedHandler<T = unknown> = (req: NextApiRequest, res: NextApiResponse<T>, user: User) => void | Promise<void>
 
@@ -12,28 +15,14 @@ export enum Frequency {
 	Weekly = 'WEEKLY'
 }
 
-export type ArticleAttributes = {
-	title: string
-	content: string
-	author?: string
-	source?: string
-	original_url?: string
-}
+export type ArticleAttributes = Pick<Article,
+  'title' |
+  'content' |
+  'author' |
+  'source' |
+  'originalUrl'
+>
 
-export type Article = ArticleAttributes & {
-	id: string
-	created_at: Date
-	digest_id?: string
-	user_id: string
-}
-
-export type User = {
-	id: string
-	active: boolean
-	kindle_address: string | null
-	frequency: Frequency
-	email: string
-}
 
 export type ApiKeyEntity = {
 	id: string
@@ -42,22 +31,4 @@ export type ApiKeyEntity = {
 	expired_at?: Date
 }
 
-export type DigestEntity = {
-	id: string
-	delivered_at: Date
-	user_id: string
-}
-
-export type DigestEntityWithMeta = DigestEntity & {
-	articles_count: number
-}
-
-export type DigestEntityWithArticles = DigestEntity & {
-	articles: Article[]
-}
-
-export type Subscription = {
-	id: string
-	hook_url: string
-	user_id: string
-}
+export type DigestEntityWithArticles = DigestWithMeta & { articles: Article[] }

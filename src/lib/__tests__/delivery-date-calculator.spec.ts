@@ -32,10 +32,10 @@ describe('Delivery date calculator', () => {
   })
 
   describe('when there is a previous delivery', () => {
-    const delivered_at = addDays(new Date(), -1)
+    const deliveredAt = addDays(new Date(), -1)
 
     beforeEach(async () => {
-      getDigests.mockResolvedValueOnce({ total: 1, data: [{ delivered_at } as DigestEntityWithMeta] })
+      getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
       result = await sut.calculate(userId)
     })
 
@@ -45,10 +45,10 @@ describe('Delivery date calculator', () => {
     })
 
     describe('but its much older', () => {
-      const delivered_at = addDays(new Date(), -3)
+      const deliveredAt = addDays(new Date(), -3)
 
       beforeEach(async () => {
-        getDigests.mockResolvedValueOnce({ total: 1, data: [{ delivered_at } as DigestEntityWithMeta] })
+        getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
         result = await sut.calculate(userId)
       })
 
@@ -60,10 +60,10 @@ describe('Delivery date calculator', () => {
   })
 
   describe('when the user has chosen weekly', () => {
-    const delivered_at = addDays(new Date(), -3)
+    const deliveredAt = addDays(new Date(), -3)
 
     beforeEach(async () => {
-      getDigests.mockResolvedValueOnce({ total: 1, data: [{ delivered_at } as DigestEntityWithMeta] })
+      getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
       getUser.mockResolvedValue({ frequency: Frequency.Weekly })
       result = await sut.calculate(userId)
     })

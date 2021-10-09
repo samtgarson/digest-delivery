@@ -22,10 +22,10 @@ export class HookNotifier {
 
 	private async deliver (digest: DigestEntityWithArticles, sub: Subscription) {
 		try {
-			await axios.post(sub.hook_url, dehydrate(digest), { headers: { 'Content-Type': 'application/json' } })
+			await axios.post(sub.hookUrl, dehydrate(digest), { headers: { 'Content-Type': 'application/json' } })
 		} catch (err) {
 			if (axios.isAxiosError(err) && err.response?.status === 410) {
-				return await this.client.deleteSubscription(sub.user_id, sub.hook_url)
+				return await this.client.deleteSubscription(sub.userId, sub.hookUrl)
 			}
 
 			errorLog(err)

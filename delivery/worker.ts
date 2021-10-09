@@ -15,8 +15,8 @@ const notifier = new HookNotifier()
 
 export const deliver: Deliver = async (user: User, coverPath: string) => {
 	const logger = withPrefix(user.id)
-	if (!user.kindle_address) {
-		logger.error('No kindle_address')
+	if (!user.kindleAddress) {
+		logger.error('No kindleAddress')
 		return
 	}
 
@@ -33,7 +33,7 @@ export const deliver: Deliver = async (user: User, coverPath: string) => {
 	const path = await compiler.compile(digest, coverPath)
 	logger.log('converted html')
 
-	await mailer.sendEmail(path, user.kindle_address, user.email)
+	await mailer.sendEmail(path, user.kindleAddress, user.email)
 	logger.log('email sent')
 
 	const { id } = await data.createDigest(user.id, articles)

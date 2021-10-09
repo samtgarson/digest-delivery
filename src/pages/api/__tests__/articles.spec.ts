@@ -1,10 +1,10 @@
-import handler from '../articles'
-import { validateArticlesRequest } from 'src/lib/request-validator'
-import { mocked } from 'ts-jest/utils'
 import * as DataClient from 'common/data-client'
 import * as MockDataClient from 'common/__mocks__/data-client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { protectWithApiKey } from 'src/lib/api-authenticator'
+import { validateArticlesRequest } from 'src/lib/request-validator'
+import { mocked } from 'ts-jest/utils'
+import handler from '../articles'
 
 jest.mock('src/lib/request-validator')
 jest.mock('common/data-client')
@@ -17,6 +17,9 @@ describe('index', () => {
   const content = 'body'
   const title = 'title'
   const author = 'author'
+  const originalUrl = 'url'
+  const source = 'source'
+  const attrs = { content, title, author, originalUrl, source }
   const req = { headers: { Authorization: 'api key' } } as unknown as NextApiRequest
   const res = {
     status: jest.fn().mockReturnThis(),
@@ -26,13 +29,13 @@ describe('index', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockValidator.mockReturnValue({ success: true, article: { content, title, author } })
+    mockValidator.mockReturnValue({ success: true, article: attrs })
   })
 
   it('succeeds', async () => {
     await handler(req, res)
 
-    expect(createArticleMock).toHaveBeenCalledWith('user id', { title, content, author })
+    expect(createArticleMock).toHaveBeenCalledWith('user id', attrs)
     expect(res.status).toHaveBeenCalledWith(204)
   })
 

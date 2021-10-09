@@ -1,8 +1,8 @@
-import type { Article } from 'types/digest'
-import { writeFile } from 'fs'
-import { Digest } from '../../lib/digest'
-import { mocked } from 'ts-jest/utils'
 import { parseISO } from 'date-fns'
+import { writeFile } from 'fs'
+import { mocked } from 'ts-jest/utils'
+import type { Article } from 'types/digest'
+import { Digest } from '../../lib/digest'
 
 const userId = 'user id'
 
@@ -13,22 +13,22 @@ jest.mock('common/util', () => ({
   dateString: jest.fn(() => 'iso date')
 }))
 
-const article1: Article = {
+const article1 = {
   id: '1',
-  user_id: userId,
-  created_at: parseISO('2021-03-01T12:00:00Z'),
+  userId: userId,
+  createdAt: parseISO('2021-03-01T12:00:00Z'),
   content: 'content 1',
   title: 'title 1',
   author: 'author 1'
-}
+} as Article
 
-const article2: Article = {
+const article2 = {
   id: '2',
-  user_id: userId,
-  created_at: parseISO('2021-03-01T12:00:00Z'),
+  userId: userId,
+  createdAt: parseISO('2021-03-01T12:00:00Z'),
   content: 'content 2',
   title: 'title 2'
-}
+} as Article
 
 describe('digest', () => {
   const date = new Date()

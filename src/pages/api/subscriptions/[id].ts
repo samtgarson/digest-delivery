@@ -14,7 +14,7 @@ const handler: AuthedHandler = async (req, res, user) => {
     res.status(200).json({})
   } catch (err) {
     errorLog(err)
-    res.status(500).json({ error: { body: err.message } })
+    res.status(500).json({ error: { body: (err as Error).message } })
   }
 }
 

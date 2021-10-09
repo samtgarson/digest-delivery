@@ -17,7 +17,7 @@ export class DeliveryDateCalculator {
     ])
 
     const lastDelivered = lastDigests.total > 0
-      ? new Date(lastDigests.data[0].delivered_at)
+      ? new Date(lastDigests.data[0].deliveredAt)
       : addDays(today, -1)
 
     const days = account?.frequency === Frequency.Weekly ? 7 : 1

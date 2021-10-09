@@ -1,9 +1,8 @@
+import { Prisma, PrismaClient } from '@prisma/client'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
-import { Article, User, ApiKeyEntity, ArticleAttributes, DigestEntity, DigestEntityWithMeta, DigestEntityWithArticles, Subscription } from 'types/digest'
-import { hydrate } from './util'
-
+import { Article, ArticleAttributes, DigestEntity, DigestEntityWithArticles, DigestEntityWithMeta, Subscription, User } from 'types/digest'
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
 
@@ -12,205 +11,135 @@ type PaginationOptions = {
 	page?: number
 }
 
-function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
-  return key in target
-}
+// function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
+//   return key in target
+// }
+
+type Attrs<T> = Omit<T, 'id' | 'createdAt'>
 
 export class DataClient {
+	private client: PrismaClient
 	private supabase: SupabaseClient
 
-	constructor (
-		client?: SupabaseClient
-	) {
-		this.supabase = client ?? createClient(supabaseUrl, supabaseKey)
+	constructor (client = new PrismaClient(), supabase = createClient(supabaseUrl, supabaseKey)) {
+		this.client = client
+		this.supabase = supabase
 
-		return new Proxy(this, {
-			get (target, property) {
-				if (!validKey(target, property)) return undefined
-				if (!(target[property] instanceof Function) || property === 'auth') return target[property]
+		// return new Proxy(this, {
+		// 	get (target, property) {
+		// 		if (!validKey(target, property)) return undefined
+		// 		if (!(target[property] instanceof Function) || property === 'auth') return target[property]
 
-				return new Proxy(target[property], {
-					async apply (method, thisArg, args) {
-						const result = await Reflect.apply(method, thisArg, args)
-						return hydrate(result)
-					}
-				})
-			}
-		})
+		// 		return new Proxy(target[property], {
+		// 			async apply (method, thisArg, args) {
+		// 				const result = await Reflect.apply(method, thisArg, args)
+		// 				return hydrate(result)
+		// 			}
+		// 		})
+		// 	}
+		// })
 	}
 
 	get auth (): SupabaseAuthClient { return this.supabase.auth }
-
 	async createArticle (
-		user_id: string,
+		userId: string,
 		attrs: ArticleAttributes
-	): Promise<void> {
-		const { error } = await this.supabase
-			.from('articles')
-			.insert({ ...attrs, user_id }, { returning: 'minimal' })
-
-		if (error) throw error
+	) {
+    await this.client.article.create({ data: { ...attrs, userId } })
 	}
 
-	async getArticles (userId: string, { unprocessed }: { unprocessed?: boolean } = {}): Promise<Article[]> {
-		let query = this.supabase
-			.from<Article>('articles')
-			.select('*')
-			.order('created_at')
-			.eq('user_id', userId)
-
-		if (unprocessed) query = query.is('digest_id', null)
-
-		const { data, error } = await query
-
-		if (error) throw error
-
-		return data ? data : []
+	async getArticles (userId: string, { unprocessed }: { unprocessed?: boolean } = {}) {
+    const where: Prisma.ArticleWhereInput = { userId: { equals: userId } }
+    if (unprocessed) where.digestId = { equals: null }
+    return this.client.article.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: where
+    })
 	}
 
 	async createDigest (userId: string, articles: Article[]): Promise<DigestEntity> {
-		const { data: digest, error: digestError } = await this.supabase
-			.from<DigestEntity>('digests')
-			.insert({ user_id: userId })
-			.single()
-
-		if (digestError) throw digestError
-		if (!digest) throw new Error('Could not create digest')
-
-		const { error } = await this.supabase
-			.from<Article>('articles')
-			.update({ digest_id: digest.id })
-			.in('id', articles.map(a => a.id))
-
-		if (error) throw error
-
-		return digest
+    return this.client.digest.create({
+      data: { userId, articles: { connect: articles } }
+    })
 	}
 
 	async getUser (id: string): Promise<User | null> {
-		const { data, error } = await this.supabase
-			.from<User>('users')
-			.select('*')
-			.eq('id', id)
-			.single()
-
-		if (error) throw error
-
-		return data
+    return this.client.user.findUnique({ where: { id } })
 	}
 
-	async updateUser (id: string, payload: Partial<Omit<User, 'id'>>): Promise<void> {
-		const { error } = await this.supabase
-			.from<User>('users')
-			.update(payload, { returning: 'minimal' })
-			.eq('id', id)
-			.single()
-
-		if (error) throw error
+	async updateUser (id: string, data: Partial<Attrs<User>>): Promise<void> {
+    await this.client.user.update({ where: { id }, data })
 	}
 
 	async createApiKey (key: ApiKey): Promise<void> {
-		const { error, data } = await this.supabase
-			.from('api_keys')
-			.insert({
-				user_id: key.userId,
-				key: key.encrypted()
-			})
-			.single()
-
-		if (error || !data) throw error
-
-		const { error: expireError } = await this.supabase
-			.from<ApiKeyEntity>('api_keys')
-			.update({ expired_at: new Date() }, { returning: 'minimal' })
-			.eq('user_id', key.userId)
-			.neq('id', data.id)
-
-		if (expireError) throw expireError
+    const newKey = key.encrypted()
+    await this.client.$transaction([
+      this.client.apiKey.create({
+        data: {
+          userId: key.userId,
+          key: newKey
+        }
+      }),
+      this.client.apiKey.updateMany({
+        where: { userId: { equals: key.userId }, key: { not: newKey } },
+        data: { expiredAt: new Date() }
+      })
+    ])
 	}
 
 	async validateApiKey (key: string): Promise<string | void> {
-		const { data } = await this.supabase
-			.from<ApiKeyEntity>('api_keys')
-			.select('user_id')
-			.eq('key', key)
-			.is('expired_at', null)
-			.single()
+    const { userId } = await this.client.apiKey.findFirst({ where: { key, expiredAt: null }, select: { userId: true } }) || {}
 
-		if (data) return data.user_id
+    return userId
 	}
 
 	async getDueUsers (): Promise<User[]> {
-		const { data, error } = await this.supabase
-			.from<User>('due_users')
-			.select('id,kindle_address')
-
-		if (error) throw error
-
-		return data ?? []
+    return this.client.dueUser.findMany()
 	}
 
+  async getDigests (userId: string, opts: PaginationOptions & { includeArticles: true }): Promise<{ data: Array<DigestEntityWithArticles>, total: number }>
+  async getDigests (userId: string, opts: PaginationOptions & { includeArticles?: false }): Promise<{ data: Array<DigestEntityWithMeta>, total: number }>
 	async getDigests (
-		userId: string, { perPage = 10, page = 0, includeArticles = false }:
+		userId: string, { perPage = 10, page = 0, includeArticles }:
 		PaginationOptions & { includeArticles?: boolean }
 		= { perPage: 10, page: 0 }
 	):
-		Promise<{ data: DigestEntityWithMeta[], total: number }>
+		Promise<{ data: Array<DigestEntityWithMeta>, total: number }>
 	{
-		const select = includeArticles ? '*, articles(*)' : '*'
-		const { data, error, count } = await this.supabase
-			.from<DigestEntityWithMeta>('digests_with_meta')
-			.select(select, { count: 'estimated' })
-			.eq('user_id', userId)
-			.order('delivered_at')
-			.range(page * perPage, (page + 1) * perPage)
+    const [data, total] = await this.client.$transaction([
+      this.client.digestWithMeta.findMany({
+        skip: page * perPage,
+        take: perPage,
+        where: { userId },
+        orderBy: { deliveredAt: 'desc' },
+        include: { articles: includeArticles }
+      }),
+      this.client.digestWithMeta.count({
+        where: { userId }
+      })
+    ])
 
-		if (error && error instanceof Error) throw error
-
-		return { data: data || [], total: count || 0 }
+    return { data, total }
 	}
 
 	async getDigest (userId: string, digestId: string): Promise<DigestEntityWithArticles | null> {
-		const { data, error } = await this.supabase
-			.from<DigestEntityWithArticles>('digests')
-			.select('*, articles(*)')
-			.eq('id', digestId)
-			.eq('user_id', userId)
-			.single()
-
-		if (error) throw error
-
-		return data
+    return this.client.digestWithMeta.findFirst({
+      include: { articles: true },
+      where: { id: digestId, userId }
+    })
 	}
 
-	async createSubscription (user_id: string, hook_url: string): Promise<Subscription | null> {
-		const { error, data } = await this.supabase
-			.from<Subscription>('subscriptions')
-			.insert({ user_id, hook_url })
-
-		if (error) throw error
-
-		return data && data[0]
+	async createSubscription (userId: string, hookUrl: string): Promise<Subscription | null> {
+    return this.client.subscription.create({ data: { userId, hookUrl } })
 	}
 
 	async deleteSubscription (userId: string, hookUrl: string): Promise<void> {
-		const { error } = await this.supabase
-			.from('subscriptions')
-			.delete({ returning: 'minimal' })
-			.eq('user_id', userId)
-			.eq('hook_url', hookUrl)
-
-		if (error) throw error
+    await this.client.subscription.deleteMany({
+      where: { userId, hookUrl }
+    })
 	}
 
 	async getSubscriptions (userId: string): Promise<Subscription[]> {
-		const { error, data } = await this.supabase
-			.from<Subscription>('subscriptions')
-			.select('*')
-			.eq('user_id', userId)
-
-		if (error) throw error
-
-		return data ?? []
+    return this.client.subscription.findMany({ where: { userId } })
 	}
 }

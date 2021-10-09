@@ -18,7 +18,7 @@ const handler: NextApiHandler = async (req, res) => {
     res.status(200).json(dehydrate(result.data))
   } catch (err) {
     errorLog(err)
-    res.status(500).json({ error: { body: err.message } })
+    res.status(500).json({ error: { body: (err as Error).message } })
   }
 }
 
