@@ -1,8 +1,8 @@
-import type { NextApiHandler } from 'next'
-import { protectWithApiKey } from '../../lib/api-authenticator'
-import { DataClient } from '../../../common/data-client'
-import { validateArticlesRequest } from '../../lib/request-validator'
 import { errorLog } from 'common/logger'
+import type { NextApiHandler } from 'next'
+import { DataClient } from '../../../common/data-client'
+import { protectWithApiKey } from '../../lib/api-authenticator'
+import { validateArticlesRequest } from '../../lib/request-validator'
 
 const data = new DataClient()
 
@@ -20,7 +20,7 @@ const handler: NextApiHandler = async (req, res) => {
     res.status(204).end()
   } catch (err) {
     errorLog(err)
-    res.status(500).json({ error: { body: err.message } })
+    res.status(500).json({ error: { body: (err as Error).message } })
   }
 }
 

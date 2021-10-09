@@ -23,7 +23,7 @@ export class Mailer {
 		const mailOpts = this.options(path, to, replyTo)
 
 		if (this.cc) mailOpts.cc = this.sender
-		return this.transport.sendMail(mailOpts)
+		this.transport.sendMail(mailOpts)
 	}
 
 	options (path: string, to: string, replyTo: string): Options {

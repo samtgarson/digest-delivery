@@ -19,6 +19,7 @@ export const useDataClient = (): DataClient => {
       return new Proxy(target[property], {
         apply (method, thisArg, args) {
           const result = Reflect.apply(method, thisArg, args)
+          // eslint-disable-next-line promise/prefer-await-to-then
           if (result instanceof Promise) return result.catch(e => {
             if (e.message !== 'JWT expired') throw e
             reauth()
