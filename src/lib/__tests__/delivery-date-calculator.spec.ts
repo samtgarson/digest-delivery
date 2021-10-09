@@ -1,11 +1,11 @@
 import { DataClient } from "common/data-client"
 import { addDays, isSameDay } from "date-fns"
-import { DigestEntityWithMeta, Frequency } from "types/digest"
+import { mockDeep } from "jest-mock-extended"
+import { DigestEntityWithMeta, Frequency, User } from "types/digest"
 import { DeliveryDateCalculator } from "../delivery-date-calculator"
 
-const getDigests = jest.fn<ReturnType<DataClient['getDigests']>, [string]>(async () => ({ total: 0, data: [] }))
-const getUser = jest.fn()
-const dataClient = { getDigests, getUser } as unknown as DataClient
+const dataClient = mockDeep<DataClient>()
+dataClient.getDigests.mockResolvedValue({ total: 0, data: [] })
 
 describe('Delivery date calculator', () => {
   let sut: DeliveryDateCalculator
@@ -19,11 +19,11 @@ describe('Delivery date calculator', () => {
   })
 
   it('fetches the most recent digest', () => {
-    expect(getDigests).toHaveBeenCalledWith(userId, { perPage: 1 })
+    expect(dataClient.getDigests).toHaveBeenCalledWith(userId, { perPage: 1 })
   })
 
   it('fetches the user object', () => {
-    expect(getUser).toHaveBeenCalledWith(userId)
+    expect(dataClient.getUser).toHaveBeenCalledWith(userId)
   })
 
   it('returns today', () => {
@@ -35,7 +35,7 @@ describe('Delivery date calculator', () => {
     const deliveredAt = addDays(new Date(), -1)
 
     beforeEach(async () => {
-      getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
+      dataClient.getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
       result = await sut.calculate(userId)
     })
 
@@ -48,7 +48,7 @@ describe('Delivery date calculator', () => {
       const deliveredAt = addDays(new Date(), -3)
 
       beforeEach(async () => {
-        getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
+        dataClient.getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
         result = await sut.calculate(userId)
       })
 
@@ -63,8 +63,8 @@ describe('Delivery date calculator', () => {
     const deliveredAt = addDays(new Date(), -3)
 
     beforeEach(async () => {
-      getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
-      getUser.mockResolvedValue({ frequency: Frequency.Weekly })
+      dataClient.getDigests.mockResolvedValueOnce({ total: 1, data: [{ deliveredAt } as DigestEntityWithMeta] })
+      dataClient.getUser.mockResolvedValue({ frequency: Frequency.Weekly } as User)
       result = await sut.calculate(userId)
     })
 

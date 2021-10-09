@@ -1,5 +1,5 @@
-import * as DataClient from 'common/data-client'
-import * as MockDataClient from 'common/__mocks__/data-client'
+import { DataClient } from 'common/data-client'
+import { mockDeep } from 'jest-mock-extended'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { protectWithApiKey } from 'src/lib/api-authenticator'
 import { validateArticlesRequest } from 'src/lib/request-validator'
@@ -7,11 +7,10 @@ import { mocked } from 'ts-jest/utils'
 import handler from '../articles'
 
 jest.mock('src/lib/request-validator')
-jest.mock('common/data-client')
 jest.mock('src/lib/api-authenticator', () => ({ protectWithApiKey: jest.fn(() => ({ id: 'user id' })) }))
 
 const mockValidator = mocked(validateArticlesRequest)
-const { createArticleMock } =  DataClient as unknown as typeof MockDataClient
+const dataClient = mockDeep<DataClient>()
 
 describe('index', () => {
   const content = 'body'
@@ -33,19 +32,19 @@ describe('index', () => {
   })
 
   it('succeeds', async () => {
-    await handler(req, res)
+    await handler(req, res, { dataClient })
 
-    expect(createArticleMock).toHaveBeenCalledWith('user id', attrs)
+    expect(dataClient.createArticle).toHaveBeenCalledWith('user id', attrs)
     expect(res.status).toHaveBeenCalledWith(204)
   })
 
   describe('when db fails', () => {
     beforeEach(() => {
-      createArticleMock.mockRejectedValue('oh no')
+      dataClient.createArticle.mockRejectedValue('oh no')
     })
 
     it('fails', async () => {
-      await handler(req, res)
+      await handler(req, res, { dataClient })
 
       expect(res.status).toHaveBeenCalledWith(500)
     })
@@ -59,7 +58,7 @@ describe('index', () => {
     })
 
     it('fails', async () => {
-      await handler(req, res)
+      await handler(req, res, { dataClient })
 
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith({ error: message })
@@ -72,7 +71,7 @@ describe('index', () => {
     })
 
     it('fails', async () => {
-      await handler(req, res)
+      await handler(req, res, { dataClient })
 
       expect(res.status).toHaveBeenCalledWith(401)
     })

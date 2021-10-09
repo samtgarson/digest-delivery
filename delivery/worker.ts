@@ -1,26 +1,29 @@
 import { DataClient } from "common/data-client"
 import { withPrefix } from "common/logger"
+import { expose } from "threads/worker"
+import type { Deliver, DeliveryDependencies } from 'types/worker'
 import { ArticleCompiler } from "./lib/article-compiler"
 import { Digest } from "./lib/digest"
-import { Mailer } from "./lib/mailer"
-import { expose } from "threads/worker"
-import type { Deliver } from 'types/worker'
-import { User } from "types/digest"
 import { HookNotifier } from "./lib/hook-notifier"
+import { Mailer } from "./lib/mailer"
 
-const compiler = new ArticleCompiler()
-const mailer = new Mailer()
-const data = new DataClient()
-const notifier = new HookNotifier()
+const defaultDependencies: DeliveryDependencies = {
+  articleCompiler: new ArticleCompiler(),
+  mailer: new Mailer(),
+  dataClient: new DataClient(),
+  hookNotifier: new HookNotifier()
+}
 
-export const deliver: Deliver = async (user: User, coverPath: string) => {
+export const deliver: Deliver = async (user, coverPath, dependencies = defaultDependencies) => {
+  const { mailer, dataClient, hookNotifier, articleCompiler } = dependencies
+
 	const logger = withPrefix(user.id)
 	if (!user.kindleAddress) {
 		logger.error('No kindleAddress')
 		return
 	}
 
-	const articles = await data.getArticles(user.id, { unprocessed: true })
+	const articles = await dataClient.getArticles(user.id, { unprocessed: true })
 
 	if (!articles.length) {
 		logger.log("no articles")
@@ -30,16 +33,16 @@ export const deliver: Deliver = async (user: User, coverPath: string) => {
 
 	const digest = new Digest(user.id, articles, new Date())
 
-	const path = await compiler.compile(digest, coverPath)
+	const path = await articleCompiler.compile(digest, coverPath)
 	logger.log('converted html')
 
 	await mailer.sendEmail(path, user.kindleAddress, user.email)
 	logger.log('email sent')
 
-	const { id } = await data.createDigest(user.id, articles)
+	const { id } = await dataClient.createDigest(user.id, articles)
 	logger.log('created digest')
 
-	await notifier.notify(user.id, id)
+	await hookNotifier.notify(user.id, id)
 	logger.log('notified hooks')
 }
 

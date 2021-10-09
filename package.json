@@ -87,6 +87,7 @@
   },
   "jest": {
     "preset": "ts-jest",
+    "clearMocks": true,
     "setupFiles": [
       "dotenv/config"
     ],

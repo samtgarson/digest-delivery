@@ -4,15 +4,18 @@ import type { DeliveryWorker } from "types/worker"
 import { CoverGenerator } from "./lib/cover-generator"
 import { CoverUploader } from "./lib/cover-uploader"
 
-const data = new DataClient()
-const coverGenerator = new CoverGenerator()
-const coverUploader = new CoverUploader()
+const defaultDependencies = {
+  dataClient: new DataClient(),
+  coverGenerator: new CoverGenerator(),
+  coverUploader: new CoverUploader()
+}
 
-export const handler = async (deliver: DeliveryWorker): Promise<void> => {
+export const handler = async (deliver: DeliveryWorker, deps = defaultDependencies): Promise<void> => {
+  const { dataClient, coverGenerator, coverUploader } = deps
   log('beginning delivery')
 
   try {
-    const users = await data.getDueUsers()
+    const users = await dataClient.getDueUsers()
     if (users.length === 0) {
       log('no due users today')
       return

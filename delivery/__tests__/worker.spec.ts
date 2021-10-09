@@ -1,25 +1,25 @@
-import { deliver } from '../worker'
-import * as DataClient from '../../common/data-client'
-import * as MockDataClient from '../../common/__mocks__/data-client'
-import * as Mailer from '../lib/mailer'
-import * as MockMailer from '../lib/__mocks__/mailer'
-import * as ArticleCompiler from '../lib/article-compiler'
-import * as MockArticleCompiler from '../lib/__mocks__/article-compiler'
-import * as HookNotifier from '../lib/hook-notifier'
-import * as MockHookNotifier from '../lib/__mocks__/hook-notifier'
-import type { Article, User } from 'types/digest'
+import { DataClient } from 'common/data-client'
+import { ArticleCompiler } from 'delivery/lib/article-compiler'
+import { HookNotifier } from 'delivery/lib/hook-notifier'
+import { Mailer } from 'delivery/lib/mailer'
+import { mockDeep } from 'jest-mock-extended'
+import type { Article, DigestEntity, User } from 'types/digest'
+import { DeliveryDependencies } from 'types/worker'
 import { Digest } from '../lib/digest'
+import { deliver } from '../worker'
 
 jest.mock('threads/worker')
-jest.mock('../../common/data-client')
-jest.mock('../lib/mailer')
-jest.mock('../lib/article-compiler')
-jest.mock('../lib/hook-notifier')
+const mailer = mockDeep<Mailer>()
+const articleCompiler = mockDeep<ArticleCompiler>()
+const dataClient = mockDeep<DataClient>()
+const hookNotifier = mockDeep<HookNotifier>()
 
-const { getArticlesMock, createDigestMock } =  DataClient as unknown as typeof MockDataClient
-const { sendEmailMock } =  Mailer as unknown as typeof MockMailer
-const { compileMock } =  ArticleCompiler as unknown as typeof MockArticleCompiler
-const { notifyMock } =  HookNotifier as unknown as typeof MockHookNotifier
+const dependencies: DeliveryDependencies = {
+  dataClient,
+  mailer,
+  hookNotifier,
+  articleCompiler
+}
 
 describe('queue', () => {
   const articles = [{}] as Article[]
@@ -35,43 +35,43 @@ describe('queue', () => {
 
   describe('when there are articles', () => {
     beforeEach(async () => {
-      getArticlesMock.mockResolvedValue(articles)
-      compileMock.mockReturnValue(path)
-      createDigestMock.mockResolvedValue({ id: digestId })
-      await deliver(user, coverPath)
+      dataClient.getArticles.mockResolvedValue(articles)
+      articleCompiler.compile.mockResolvedValue(path)
+      dataClient.createDigest.mockResolvedValue({ id: digestId } as DigestEntity)
+      await deliver(user, coverPath, dependencies)
     })
 
     it('fetches the unprocessed articles', () => {
-      expect(getArticlesMock).toHaveBeenCalled()
+      expect(dataClient.getArticles).toHaveBeenCalled()
     })
 
     it('compiles the articles', () => {
-      expect(compileMock).toHaveBeenCalledWith(new Digest(userId, articles, expect.any(Date)), coverPath)
+      expect(articleCompiler.compile).toHaveBeenCalledWith(new Digest(userId, articles, expect.any(Date)), coverPath)
     })
 
     it('sends the email', () => {
-      expect(sendEmailMock).toHaveBeenCalledWith(path, kindleAddress, email)
+      expect(mailer.sendEmail).toHaveBeenCalledWith(path, kindleAddress, email)
     })
 
     it('creates the digest', () => {
-      expect(createDigestMock).toHaveBeenCalledWith(userId, articles)
+      expect(dataClient.createDigest).toHaveBeenCalledWith(userId, articles)
     })
 
     it('notifes the hooks', () => {
-      expect(notifyMock).toHaveBeenCalledWith(userId, digestId)
+      expect(hookNotifier.notify).toHaveBeenCalledWith(userId, digestId)
     })
   })
 
   describe('when there are no articles', () => {
     beforeEach(async () => {
-      getArticlesMock.mockResolvedValue([])
-      await deliver(user, coverPath)
+      dataClient.getArticles.mockResolvedValue([])
+      await deliver(user, coverPath, dependencies)
     })
 
     it('does not proceed', async () => {
-      expect(compileMock).not.toHaveBeenCalled()
-      expect(sendEmailMock).not.toHaveBeenCalled()
-      expect(createDigestMock).not.toHaveBeenCalled()
+      expect(articleCompiler.compile).not.toHaveBeenCalled()
+      expect(mailer.sendEmail).not.toHaveBeenCalled()
+      expect(dataClient.createDigest).not.toHaveBeenCalled()
     })
   })
 
@@ -81,10 +81,10 @@ describe('queue', () => {
     })
 
     it('does not proceed', async () => {
-      expect(getArticlesMock).not.toHaveBeenCalled()
-      expect(compileMock).not.toHaveBeenCalled()
-      expect(sendEmailMock).not.toHaveBeenCalled()
-      expect(createDigestMock).not.toHaveBeenCalled()
+      expect(dataClient.getArticles).not.toHaveBeenCalled()
+      expect(articleCompiler.compile).not.toHaveBeenCalled()
+      expect(mailer.sendEmail).not.toHaveBeenCalled()
+      expect(dataClient.createDigest).not.toHaveBeenCalled()
     })
   })
 })
