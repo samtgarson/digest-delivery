@@ -84,10 +84,10 @@ model DueUser {
   kindleAddress String? @map(name: "kindle_address") @db.Citext
   email         String
 
-  @@map("due_users")
   ApiKey       ApiKey[]
   Digest       Digest[]
   Subscription Subscription[]
+  @@map("due_users")
 }
 
 model DigestWithMeta {
