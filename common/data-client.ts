@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from '@prisma/client'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
-import { Article, ArticleAttributes, DigestEntity, DigestEntityWithArticles, DigestEntityWithMeta, Subscription, User } from 'types/digest'
+import { Article, ArticleAttributes, DigestEntity, DigestEntityWithArticles, DigestEntityWithMeta, RawUser, Subscription, User } from 'types/digest'
 const supabaseUrl = process.env.SUPABASE_URL as string
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
 
@@ -94,7 +94,9 @@ export class DataClient {
 	}
 
 	async getDueUsers (): Promise<User[]> {
-    return this.client.dueUser.findMany()
+    const raw = await this.client.$queryRaw<RawUser[]>`select * from get_due_users();`
+
+    return raw.map(({ kindle_address, ...u }) => ({ ...u, kindleAddress: kindle_address }))
 	}
 
   async getDigests (userId: string, opts: PaginationOptions & { includeArticles: true }): Promise<{ data: Array<DigestEntityWithArticles>, total: number }>
@@ -107,14 +109,19 @@ export class DataClient {
 		Promise<{ data: Array<DigestEntityWithMeta>, total: number }>
 	{
     const [data, total] = await this.client.$transaction([
-      this.client.digestWithMeta.findMany({
+      this.client.digest.findMany({
         skip: page * perPage,
         take: perPage,
         where: { userId },
         orderBy: { deliveredAt: 'desc' },
-        include: { articles: includeArticles }
+        include: {
+          articles: includeArticles,
+          _count: {
+            select: { articles: true }
+          }
+        }
       }),
-      this.client.digestWithMeta.count({
+      this.client.digest.count({
         where: { userId }
       })
     ])
@@ -123,8 +130,11 @@ export class DataClient {
 	}
 
 	async getDigest (userId: string, digestId: string): Promise<DigestEntityWithArticles | null> {
-    return this.client.digestWithMeta.findFirst({
-      include: { articles: true },
+    return this.client.digest.findFirst({
+      include: {
+        articles: true,
+        _count: { select: { articles: true } }
+      },
       where: { id: digestId, userId }
     })
 	}

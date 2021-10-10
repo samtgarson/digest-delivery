@@ -15,8 +15,6 @@ model ApiKey {
   expiredAt DateTime? @map(name: "expired_at") @db.Timestamp(6)
   user      User      @relation(fields: [userId], references: [id], map: "api_keys_userId_fkey")
 
-  DueUser   DueUser? @relation(fields: [dueUserId], references: [id])
-  dueUserId String?  @db.Uuid
   @@map("api_keys")
 }
 
@@ -33,8 +31,6 @@ model Article {
   digest      Digest?  @relation(fields: [digestId], references: [id])
   user        User     @relation(fields: [userId], references: [id])
 
-  DigestWithMeta   DigestWithMeta? @relation(fields: [digestWithMetaId], references: [id])
-  digestWithMetaId String?         @db.Uuid
   @@map("articles")
 }
 
@@ -45,8 +41,6 @@ model Digest {
   user        User      @relation(fields: [userId], references: [id])
   articles    Article[]
 
-  DueUser   DueUser? @relation(fields: [dueUserId], references: [id])
-  dueUserId String?  @db.Uuid
   @@map("digests")
 }
 
@@ -57,8 +51,6 @@ model Subscription {
   createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamp(6)
   user      User     @relation(fields: [userId], references: [id])
 
-  DueUser   DueUser? @relation(fields: [dueUserId], references: [id])
-  dueUserId String?  @db.Uuid
   @@map("subscriptions")
 }
 
@@ -66,37 +58,12 @@ model User {
   id            String         @id @db.Uuid
   frequency     String         @default("DAILY")
   active        Boolean        @default(false)
-  kindleAddress String?        @map(name: "kindle_address") @db.Citext
+  kindleAddress String?        @map(name: "kindle_address")
   email         String
   apiKeys       ApiKey[]
   articles      Article[]
   digests       Digest[]
   subscriptions Subscription[]
 
-  DigestWithMeta DigestWithMeta[]
   @@map("users")
-}
-
-model DueUser {
-  id            String  @id @db.Uuid
-  frequency     String  @default("DAILY")
-  active        Boolean @default(false)
-  kindleAddress String? @map(name: "kindle_address") @db.Citext
-  email         String
-
-  ApiKey       ApiKey[]
-  Digest       Digest[]
-  Subscription Subscription[]
-  @@map("due_users")
-}
-
-model DigestWithMeta {
-  id            String    @id @default(uuid()) @db.Uuid
-  deliveredAt   DateTime  @default(now()) @map(name: "delivered_at") @db.Timestamp(6)
-  userId        String    @map(name: "user_id") @db.Uuid
-  user          User      @relation(fields: [userId], references: [id])
-  articles      Article[]
-  articlesCount Int       @map(name: "articles_count")
-
-  @@map("digests_with_meta")
 }

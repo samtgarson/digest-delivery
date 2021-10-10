@@ -1,7 +1,8 @@
-create view due_users as
-  select distinct users.id,
-    dates.last_delivered,
-    users.kindle_address
+create or replace function get_due_users ()
+  returns setof users
+as $$
+begin
+  return query select distinct users.*
   from users
     left join (
       select
@@ -21,12 +22,6 @@ create view due_users as
       end
     or dates.last_delivered is null
   );
+end; $$
 
-create view digests_with_meta as
-  select digests.id,
-    digests.delivered_at,
-    digests.user_id,
-    count(articles.id) as articles_count
-  from digests
-  left join articles on articles.digest_id = digests.id
-  group by digests.id;
+language 'plpgsql';
