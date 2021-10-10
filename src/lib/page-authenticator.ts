@@ -1,26 +1,19 @@
 import { DataClient } from "common/data-client"
 import { errorLog } from "common/logger"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
+import { getSession } from "next-auth/react"
 import { User } from "types/digest"
 
+const client = new DataClient()
 type AuthedGSSP<P> = (ctx: GetServerSidePropsContext, user: User) => Promise<GetServerSidePropsResult<P>>
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const authenticated = <Props>(fn?: AuthedGSSP<Props>) => async (ctx: GetServerSidePropsContext) => {
-  const { req, resolvedUrl } = ctx
-  const client = new DataClient()
-  const { user: auth } = await client.auth.api.getUserByCookie(req)
+  const { resolvedUrl } = ctx
+  const { userId } = await getSession(ctx) || {}
+  const user = userId && await client.getUser(userId)
 
-  if (!auth) return { redirect: { destination: `/login?redirect=${resolvedUrl}`, permanent: false } }
-
-  let user: User | null
-  try {
-    user = await client.getUser(auth.id)
-  } catch (e) {
-    return { redirect: { destination: '/logout', permanent: false } }
-  }
-
-  if (!user) return { redirect: { destination: '/logout', permanent: false } }
+  if (!user) return { redirect: { destination: `/login?redirect=${resolvedUrl}`, permanent: false } }
 
   if (!fn) return { props: { user } }
 

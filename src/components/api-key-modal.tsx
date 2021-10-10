@@ -1,11 +1,10 @@
-import React, { FC, useState, useCallback } from "react"
 import { Dialog } from "@reach/dialog"
-import { toast } from 'react-hot-toast'
 import "@reach/dialog/styles.css"
-import { Btn } from "./atoms/btn"
-import { reauth } from "src/lib/use-auth"
-import styles from 'src/styles/components/modal.module.scss'
 import cn from 'classnames'
+import React, { FC, useCallback, useState } from "react"
+import { toast } from 'react-hot-toast'
+import styles from 'src/styles/components/modal.module.scss'
+import { Btn } from "./atoms/btn"
 
 export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, close }) => {
   const [loading, setLoading] = useState(false)
@@ -16,7 +15,8 @@ export const ApiKeyModal: FC<{ open: boolean, close: () => void }> = ({ open, cl
     const res = await fetch('/api/api-keys', { method: 'POST', credentials: 'same-origin' })
 
     if (!res.ok) {
-      if (res.status === 401) return reauth()
+      // TODO: reauth
+      if (res.status === 401) return console.log('reauth')
       toast('Something went wrong, try again soon.')
       return close()
     }

@@ -11,39 +11,31 @@ import { DigestItem } from 'src/components/list/digest-item'
 import { NextDigestItem } from 'src/components/list/next-digest-item'
 import { UserForm } from 'src/components/user-form'
 import { DeliveryDateCalculator } from 'src/lib/delivery-date-calculator'
+import { InternalApiClient } from 'src/lib/internal-api-client'
 import { authenticated } from 'src/lib/page-authenticator'
-import { useDataClient } from 'src/lib/use-data-client'
 import { Article, DigestEntityWithMeta, User } from 'types/digest'
 
 const calculator = new DeliveryDateCalculator()
+const client = new InternalApiClient()
 
-// const errorMessageFor = (code: string, payload: Partial<User>) => {
-//   if (code === '23514' && !!payload.kindleAddress) return (
-//     <span>Enter a valid <strong>Send to Kindle</strong> email</span>
-//   )
-
-//   if (code === '42501' && !! payload.active) return (
-//     <span>Please provide a <strong>Send to Kindle</strong> email before activating</span>
-//   )
-
-//   return 'Something went wrong'
-// }
-
-type DashboardProps = { user: User, digests: DigestEntityWithMeta[], articles: Article[], nextDeliveryDate: Date }
+type DashboardProps = {
+  user: User
+  digests: DigestEntityWithMeta[]
+  articles: Article[]
+  nextDeliveryDate: Date
+}
 
 const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextDeliveryDate }) => {
-  const client = useDataClient()
   const [user, setUser] = useState(u)
 
   const updateUser = async (payload: Partial<User>) => {
-    try {
-      if (payload.kindleAddress === null) payload.active = false
-      await client.updateUser(user.id, payload)
+    if (payload.kindleAddress === null) payload.active = false
+    const { ok, error } = await client.updateUser(payload)
+    if (!ok) {
+      const msg = error || 'Something went wrong'
+      toast.error(msg, { icon: null })
+    } else {
       setUser({ ...user, ...payload })
-    } catch (e) {
-      // TODO: Handle errors
-      // const msg = errorMessageFor(e['code'], payload)
-      toast.error('Something went wrong', { icon: null })
     }
   }
 
@@ -52,13 +44,16 @@ const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextD
     <UserForm user={user} updateUser={updateUser} />
     <h2 className="subtitle mt-14">Your Next Digest</h2>
     <NextDigestItem delivery={nextDeliveryDate} count={articles.length} active={user.active} />
-    <h2 className="subtitle mt-14">
-      Recent Digests
-      <Link passHref href="/digests">
-        <Anchor naked small className="float-right text-sm uppercase">See all</Anchor>
-      </Link>
-    </h2>
-    <List className="" data={digests} item={DigestItem} />
+    { digests.length > 0 && <>
+      <h2 className="subtitle mt-14">
+        Recent Digests
+        <Link passHref href="/digests">
+          <Anchor naked small className="float-right text-sm uppercase">See all</Anchor>
+        </Link>
+      </h2>
+      <List className="" data={digests} item={DigestItem} />
+      </>
+    }
     <IntegrationHelp />
   </PageWrapper>
 }

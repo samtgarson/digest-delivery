@@ -1,46 +1,33 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
-import { SupabaseAuthClient } from '@supabase/supabase-js/dist/main/lib/SupabaseAuthClient'
 import { ApiKey } from 'src/lib/api-key'
 import { Article, ArticleAttributes, DigestEntity, DigestEntityWithArticles, DigestEntityWithMeta, RawUser, Subscription, User } from 'types/digest'
-const supabaseUrl = process.env.SUPABASE_URL as string
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY as string
 
 type PaginationOptions = {
 	perPage?: number
 	page?: number
 }
 
-// function validKey (target: DataClient, key: string | number | symbol): key is keyof DataClient {
-//   return key in target
-// }
+// https://www.prisma.io/docs/support/help-articles/nextjs-prisma-client-dev-practices
+declare global {
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined
+}
+const createDefaultClient = () => {
+  if (global.prisma) return global.prisma
+  const client = new PrismaClient()
+  if (process.env.NODE_ENV === 'development') global.prisma = client
+  return client
+}
 
 type Attrs<T> = Omit<T, 'id' | 'createdAt'>
 
 export class DataClient {
 	private client: PrismaClient
-	private supabase: SupabaseClient
 
-	constructor (client = new PrismaClient(), supabase = createClient(supabaseUrl, supabaseKey)) {
-		this.client = client
-		this.supabase = supabase
-
-		// return new Proxy(this, {
-		// 	get (target, property) {
-		// 		if (!validKey(target, property)) return undefined
-		// 		if (!(target[property] instanceof Function) || property === 'auth') return target[property]
-
-		// 		return new Proxy(target[property], {
-		// 			async apply (method, thisArg, args) {
-		// 				const result = await Reflect.apply(method, thisArg, args)
-		// 				return hydrate(result)
-		// 			}
-		// 		})
-		// 	}
-		// })
+	constructor (client?: PrismaClient) {
+		this.client = client || createDefaultClient()
 	}
 
-	get auth (): SupabaseAuthClient { return this.supabase.auth }
 	async createArticle (
 		userId: string,
 		attrs: ArticleAttributes
@@ -67,8 +54,8 @@ export class DataClient {
     return this.client.user.findUnique({ where: { id } })
 	}
 
-	async updateUser (id: string, data: Partial<Attrs<User>>): Promise<void> {
-    await this.client.user.update({ where: { id }, data })
+	async updateUser (id: string, data: Partial<Attrs<User>>): Promise<User> {
+    return this.client.user.update({ where: { id }, data })
 	}
 
 	async createApiKey (key: ApiKey): Promise<void> {
@@ -87,10 +74,13 @@ export class DataClient {
     ])
 	}
 
-	async validateApiKey (key: string): Promise<string | void> {
-    const { userId } = await this.client.apiKey.findFirst({ where: { key, expiredAt: null }, select: { userId: true } }) || {}
+	async validateApiKey (key: string): Promise<User | void> {
+    const { user } = await this.client.apiKey.findFirst({
+      where: { key, expiredAt: null },
+      include: { user: true }
+    }) || {}
 
-    return userId
+    return user
 	}
 
 	async getDueUsers (): Promise<User[]> {

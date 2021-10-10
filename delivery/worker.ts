@@ -1,20 +1,20 @@
 import { DataClient } from "common/data-client"
 import { withPrefix } from "common/logger"
+import { Mailer } from "common/mailer"
 import { expose } from "threads/worker"
 import type { Deliver, DeliveryDependencies } from 'types/worker'
 import { ArticleCompiler } from "./lib/article-compiler"
 import { Digest } from "./lib/digest"
 import { HookNotifier } from "./lib/hook-notifier"
-import { Mailer } from "./lib/mailer"
 
-const defaultDependencies: DeliveryDependencies = {
+const defaultDependencies = (): DeliveryDependencies => ({
   articleCompiler: new ArticleCompiler(),
   mailer: new Mailer(),
   dataClient: new DataClient(),
   hookNotifier: new HookNotifier()
-}
+})
 
-export const deliver: Deliver = async (user, coverPath, dependencies = defaultDependencies) => {
+export const deliver: Deliver = async (user, coverPath, dependencies = defaultDependencies()) => {
   const { mailer, dataClient, hookNotifier, articleCompiler } = dependencies
 
 	const logger = withPrefix(user.id)
@@ -36,7 +36,7 @@ export const deliver: Deliver = async (user, coverPath, dependencies = defaultDe
 	const path = await articleCompiler.compile(digest, coverPath)
 	logger.log('converted html')
 
-	await mailer.sendEmail(path, user.kindleAddress, user.email)
+	await mailer.sendDigestEmail(path, user.kindleAddress, user.email)
 	logger.log('email sent')
 
 	const { id } = await dataClient.createDigest(user.id, articles)

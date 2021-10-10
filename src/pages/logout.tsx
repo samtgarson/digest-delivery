@@ -1,13 +1,12 @@
 import { NextPage } from "next"
+import { signOut } from "next-auth/react"
 import { useEffect } from "react"
-import { useSupabase } from "use-supabase"
 
 
 const Logout: NextPage = () => {
-  const supabase = useSupabase()
 
   useEffect(() => {
-    supabase.auth.signOut()
+    signOut({ callbackUrl: '/' })
   }, [])
 
   return null

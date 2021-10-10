@@ -1,6 +1,6 @@
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { FC } from "react"
-import { useUser } from "use-supabase"
 import { Anchor } from "./btn"
 import { Icon } from './icon'
 
@@ -13,8 +13,8 @@ const NavLink: FC<{ href: string }> = ({ children, href }) => (
 )
 
 export const Nav: FC = () => {
-  const user = useUser()
-  const homeLink = user ? '/dashboard' : '/'
+  const { status } = useSession()
+  const homeLink = status === 'authenticated' ? '/dashboard' : '/'
 
   return <nav className="px-3 py-3 flex justify-between mb-6">
     <Link href={homeLink} passHref>
@@ -23,12 +23,13 @@ export const Nav: FC = () => {
         <span className="hidden sm:inline-block">Digest Delivery</span>
       </Anchor>
     </Link>
-    { user
-      ? <NavLink href="/logout">
+    { status === 'authenticated'
+      && <NavLink href="/logout">
           Sign Out
-          <img className="h-7 rounded-sm ml-3" src={user?.user_metadata.avatar_url} />
       </NavLink>
-      : <>
+    }
+    { status === 'unauthenticated'
+      && <>
         <NavLink href="/#about">About</NavLink>
         <NavLink href="/login">Sign In</NavLink>
       </>

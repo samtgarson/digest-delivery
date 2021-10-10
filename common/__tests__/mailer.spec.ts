@@ -1,5 +1,5 @@
 import Mail from 'nodemailer/lib/mailer'
-import { Mailer } from '../../lib/mailer'
+import { Mailer } from '../mailer'
 
 describe('Mailer', () => {
   const mockTransport = { sendMail: jest.fn() } as unknown as jest.Mocked<Mail>
@@ -8,17 +8,10 @@ describe('Mailer', () => {
   const replyTo = 'email'
   const path = 'path/filename.png'
 
-  it('instantiates with default dependencies', () => {
-    const mailer = new Mailer()
-
-    expect(mailer['transport']).toBeInstanceOf(Mail)
-    expect(mailer['sender']).toEqual(process.env.MAILER_SENDER)
-  })
-
   it('sends a mail', () => {
     const mailer = new Mailer(mockTransport, sender, false)
 
-    mailer.sendEmail(path, recipient, replyTo)
+    mailer.sendDigestEmail(path, recipient, replyTo)
 
     expect(mockTransport.sendMail).toHaveBeenCalledWith({
       attachments: [
@@ -39,7 +32,7 @@ describe('Mailer', () => {
   it('can include CC', () => {
     const mailer = new Mailer(mockTransport, sender, true)
 
-    mailer.sendEmail(path, recipient, replyTo)
+    mailer.sendDigestEmail(path, recipient, replyTo)
 
     expect(mockTransport.sendMail).toHaveBeenCalledWith({
       attachments: [

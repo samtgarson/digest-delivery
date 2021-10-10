@@ -1,7 +1,7 @@
 import { DataClient } from 'common/data-client'
+import { Mailer } from 'common/mailer'
 import { ArticleCompiler } from 'delivery/lib/article-compiler'
 import { HookNotifier } from 'delivery/lib/hook-notifier'
-import { Mailer } from 'delivery/lib/mailer'
 import type { FunctionThread } from 'threads'
 import { User } from './digest'
 

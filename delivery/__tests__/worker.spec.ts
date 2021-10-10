@@ -1,7 +1,7 @@
 import { DataClient } from 'common/data-client'
+import { Mailer } from 'common/mailer'
 import { ArticleCompiler } from 'delivery/lib/article-compiler'
 import { HookNotifier } from 'delivery/lib/hook-notifier'
-import { Mailer } from 'delivery/lib/mailer'
 import { mockDeep } from 'jest-mock-extended'
 import type { Article, DigestEntity, User } from 'types/digest'
 import { DeliveryDependencies } from 'types/worker'
@@ -50,7 +50,7 @@ describe('queue', () => {
     })
 
     it('sends the email', () => {
-      expect(mailer.sendEmail).toHaveBeenCalledWith(path, kindleAddress, email)
+      expect(mailer.sendDigestEmail).toHaveBeenCalledWith(path, kindleAddress, email)
     })
 
     it('creates the digest', () => {
@@ -70,20 +70,20 @@ describe('queue', () => {
 
     it('does not proceed', async () => {
       expect(articleCompiler.compile).not.toHaveBeenCalled()
-      expect(mailer.sendEmail).not.toHaveBeenCalled()
+      expect(mailer.sendDigestEmail).not.toHaveBeenCalled()
       expect(dataClient.createDigest).not.toHaveBeenCalled()
     })
   })
 
   describe('when there is no kindle address', () => {
     beforeEach(async () => {
-      await deliver({ id: userId, kindleAddress: null } as User, coverPath)
+      await deliver({ id: userId, kindleAddress: null } as User, coverPath, dependencies)
     })
 
     it('does not proceed', async () => {
       expect(dataClient.getArticles).not.toHaveBeenCalled()
       expect(articleCompiler.compile).not.toHaveBeenCalled()
-      expect(mailer.sendEmail).not.toHaveBeenCalled()
+      expect(mailer.sendDigestEmail).not.toHaveBeenCalled()
       expect(dataClient.createDigest).not.toHaveBeenCalled()
     })
   })

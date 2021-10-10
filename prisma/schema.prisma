@@ -55,15 +55,48 @@ model Subscription {
 }
 
 model User {
-  id            String         @id @db.Uuid
+  id            String         @id @db.Uuid @default(uuid())
   frequency     String         @default("DAILY")
   active        Boolean        @default(false)
   kindleAddress String?        @map(name: "kindle_address")
-  email         String
+  email         String         @unique
+  emailVerified DateTime?
   apiKeys       ApiKey[]
   articles      Article[]
   digests       Digest[]
   subscriptions Subscription[]
+  accounts      Account[]
 
   @@map("users")
+}
+
+model Account {
+  id                 String  @id @default(uuid())
+  userId             String  @db.Uuid
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
