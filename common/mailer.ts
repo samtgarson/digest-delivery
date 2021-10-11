@@ -1,16 +1,7 @@
-import { config, SES } from 'aws-sdk'
+import { SES } from 'aws-sdk'
 import * as nodemailer from 'nodemailer'
 import { Options } from 'nodemailer/lib/mailer'
 import { basename } from 'path'
-
-if (process.env.DD_AWS_ACCESS_KEY_ID && process.env.DD_AWS_SECRET_ACCESS_KEY) {
-  config.update({
-  'credentials': {
-     'accessKeyId': process.env.DD_AWS_ACCESS_KEY_ID,
-     'secretAccessKey': process.env.DD_AWS_SECRET_ACCESS_KEY
-    }
-  })
-}
 
 const developmentSmtpUrl = process.env.SMTP_URL
 const senderEmail = process.env.MAILER_SENDER

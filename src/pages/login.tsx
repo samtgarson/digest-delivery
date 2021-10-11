@@ -1,33 +1,27 @@
 import { GetServerSideProps, NextPage } from "next"
 import { getSession, signIn } from "next-auth/react"
 import Head from "next/head"
-import { useState } from "react"
+import React, { useState } from "react"
 import { Btn } from "src/components/atoms/btn"
 import { BlobWrapper } from "src/components/blob-wrapper"
-import { FieldSet } from "src/components/form/field-set"
-import { TextInput } from "src/components/form/text-input"
 
-const Login: NextPage<{ callbackUrl: string }> = () => {
-  const [email, setEmail] = useState<string | null>(null)
-  const [done, setDone] = useState<string | boolean>(false)
-  // const [signInError, setError] = useState<string>()
-  const doSignIn = async () => {
-    const { error } = await signIn<'email'>('email', { email, redirect: false }) || {}
-    setDone(error || true)
+const googleIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png"
+const Login: NextPage<{ callbackUrl: string }> = ({ callbackUrl }) => {
+  const [loading, setLoading] = useState(false)
+
+  const doSignIn = () => {
+    setLoading(true)
+    signIn('google', { callbackUrl })
   }
 
   return <BlobWrapper>
     <Head><title>Login | Digest Delivery</title></Head>
     <h1 className="mb-4 text-3xl">Sign In</h1>
-    { done === true ?
-    <p>Check your email for a login link</p>
-      : <>
-      <FieldSet>
-        <TextInput value={email} update={e => setEmail(e)} />
-      </FieldSet>
-      <Btn onClick={() => email?.length && doSignIn() }>Send me an email</Btn>
-      </>
-  }
+    <p className="mb-4">Use your Google account to access your Digest Delivery dashboard.</p>
+    <Btn onClick={doSignIn} loading={loading}>
+      <img src={googleIcon} className="p-1 bg-white rounded-full h-7 w-7 mr-2" />
+      <span>Continue with Google</span>
+    </Btn>
   </BlobWrapper>
 }
 
@@ -37,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query: { red
   if (user) return { redirect: { destination: '/dashboard', permanent: false } }
 
   const host = `${process.env.BASE_SCHEME}://${process.env.BASE_URL}`
-  const callbackUrl = new URL(`/auth?redirect=${redirect}`, host).toString()
+  const callbackUrl = new URL(redirect as string, host).toString()
   return { props: { callbackUrl } }
 }
 export default Login

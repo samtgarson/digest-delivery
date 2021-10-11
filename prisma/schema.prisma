@@ -55,11 +55,13 @@ model Subscription {
 }
 
 model User {
-  id            String         @id @db.Uuid @default(uuid())
+  id            String         @id @default(uuid()) @db.Uuid
   frequency     String         @default("DAILY")
   active        Boolean        @default(false)
   kindleAddress String?        @map(name: "kindle_address")
   email         String         @unique
+  name          String?
+  image         String?
   emailVerified DateTime?
   apiKeys       ApiKey[]
   articles      Article[]

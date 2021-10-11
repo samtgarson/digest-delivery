@@ -1,11 +1,9 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import { withPrefix } from "common/logger"
-import { Mailer } from "common/mailer"
 import NextAuth from "next-auth"
-import EmailProvider from 'next-auth/providers/email'
+import GoogleProvider from 'next-auth/providers/google'
 
-const mailer = new Mailer()
 const prisma = new PrismaClient()
 const logger = withPrefix('next-auth')
 
@@ -16,10 +14,9 @@ export default NextAuth({
     jwt: true
   },
   providers: [
-    EmailProvider({
-      async sendVerificationRequest ({ identifier, url }) {
-        await mailer.sendSignInEmail(identifier, url)
-      }
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
     })
   ],
   callbacks: {
