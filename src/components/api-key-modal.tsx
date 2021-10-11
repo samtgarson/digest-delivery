@@ -1,7 +1,7 @@
 import { Dialog } from "@reach/dialog"
 import "@reach/dialog/styles.css"
 import cn from 'classnames'
-import React, { FC, useCallback, useState } from "react"
+import { FC, useCallback, useState } from "react"
 import { toast } from 'react-hot-toast'
 import styles from 'src/styles/components/modal.module.scss'
 import { Btn } from "./atoms/btn"

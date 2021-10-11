@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { BlobCanvas } from './blob-canvas'
 
 export const BlobWrapper: FC = ({ children }) => (

@@ -1,11 +1,11 @@
+import cn from 'classnames'
+import { decode } from "html-entities"
 import Link from "next/link"
-import React, { FC } from "react"
+import { FC } from "react"
 import { Link as LinkIcon } from "react-feather"
+import styles from 'src/styles/components/list.module.scss'
 import { Article } from "types/digest"
 import { Anchor } from "../atoms/btn"
-import cn from 'classnames'
-import styles from 'src/styles/components/list.module.scss'
-import { decode } from "html-entities"
 
 type ArticleItemProps = {
   data: Article

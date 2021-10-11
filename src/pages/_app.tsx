@@ -1,7 +1,7 @@
 import { getSession, SessionProvider } from "next-auth/react"
 import { AppContext, AppProps } from 'next/app'
 import Head from 'next/head'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { Nav } from 'src/components/atoms/nav'
 import '../styles/global.css'

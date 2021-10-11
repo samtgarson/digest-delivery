@@ -1,7 +1,7 @@
 import { DataClient } from 'common/data-client'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Anchor } from 'src/components/atoms/btn'
 import { PageWrapper } from 'src/components/atoms/page-wrapper'

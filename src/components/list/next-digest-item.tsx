@@ -1,9 +1,9 @@
-import React, { FC } from "react"
+import { relativeDate } from "common/util"
 import Link from 'next/link'
+import { FC } from "react"
 import { ChevronRight, Loader } from "react-feather"
 import { Anchor } from "../atoms/btn"
 import { articleCountLabel } from "./digest-item"
-import { relativeDate } from "common/util"
 
 const titleize = (str: string) => str[0].toUpperCase() + str.substring(1)
 

@@ -1,6 +1,6 @@
 import { humaniseDate } from "common/util"
 import Link from "next/link"
-import React, { FC } from "react"
+import { FC } from "react"
 import { ChevronRight } from "react-feather"
 import { DigestEntityWithMeta } from "types/digest"
 import { Anchor } from "../atoms/btn"

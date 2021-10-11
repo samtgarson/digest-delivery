@@ -1,13 +1,13 @@
-import { Frequency, User } from 'types/digest'
-import React, { FC, useState } from 'react'
+import Link from 'next/link'
+import { FC, useState } from 'react'
 import { CheckCircle, HelpCircle, RefreshCw, XCircle } from 'react-feather'
+import { Frequency, User } from 'types/digest'
+import { ApiKeyModal } from './api-key-modal'
 import { Btn } from './atoms/btn'
 import { Form } from './form'
 import { FieldSet } from './form/field-set'
 import { RadioList } from './form/radio-list'
 import { TextInput } from './form/text-input'
-import { ApiKeyModal } from './api-key-modal'
-import Link from 'next/link'
 
 type UserFormProps = {
   user: User

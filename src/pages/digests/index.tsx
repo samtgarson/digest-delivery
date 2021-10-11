@@ -1,6 +1,5 @@
 import { DataClient } from "common/data-client"
 import { NextPage } from "next"
-import React from "react"
 import { Frown } from "react-feather"
 import { PageWrapper } from "src/components/atoms/page-wrapper"
 import { List } from "src/components/list"
