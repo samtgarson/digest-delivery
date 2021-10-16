@@ -1,8 +1,9 @@
 import { GetServerSideProps, NextPage } from "next"
-import { getSession, signIn } from "next-auth/react"
+import { signIn } from "next-auth/react"
 import Head from "next/head"
 import { Btn } from "src/components/atoms/btn"
 import { BlobWrapper } from "src/components/blob-wrapper"
+import { getUser } from "src/lib/get-user"
 
 const googleIcon = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png"
 const Login: NextPage<{ callbackUrl: string }> = ({ callbackUrl }) => {
@@ -22,9 +23,9 @@ const Login: NextPage<{ callbackUrl: string }> = ({ callbackUrl }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query: { redirect = '/dashboard' } }) => {
-  const { user } = await getSession({ req }) || {}
+  const session = await getUser({ req })
 
-  if (user) return { redirect: { destination: '/dashboard', permanent: false } }
+  if (session) return { redirect: { destination: '/dashboard', permanent: false } }
 
   const host = `${process.env.BASE_SCHEME}://${process.env.BASE_URL}`
   const callbackUrl = new URL(redirect as string, host).toString()

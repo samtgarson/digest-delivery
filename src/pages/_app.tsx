@@ -1,5 +1,4 @@
-import { getSession, SessionProvider } from "next-auth/react"
-import { AppContext, AppProps } from 'next/app'
+import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -19,24 +18,14 @@ export default function CustomApp ({ Component, pageProps: { session, ...pagePro
     <Head>
       <title>Digest Delivery</title>
     </Head>
-    <SessionProvider session={session}>
-      <Head>
-        <link rel="shortcut icon" href="/favicon.png" />
-      </Head>
-      <Nav />
-      { pageProps._error
-        ? <FiveHundred />
-        : <Component {...pageProps} />
-      }
-      <Toaster toastOptions={toastOptions} />
-    </SessionProvider>
-  </div>
-}
-
-export const getInitialProps = async ({ ctx }: AppContext) => {
-  return {
-    props: {
-      session: await getSession(ctx)
+    <Head>
+      <link rel="shortcut icon" href="/favicon.png" />
+    </Head>
+    <Nav />
+    { pageProps._error
+      ? <FiveHundred />
+      : <Component {...pageProps} />
     }
-  }
+    <Toaster toastOptions={toastOptions} />
+  </div>
 }

@@ -12,20 +12,21 @@ declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined
 }
-const createDefaultClient = () => {
-  if (global.prisma) return global.prisma
-  const client = new PrismaClient()
-  if (process.env.NODE_ENV === 'development') global.prisma = client
-  return client
-}
 
 type Attrs<T> = Omit<T, 'id' | 'createdAt'>
 
 export class DataClient {
 	private client: PrismaClient
 
+  static createDefaultClient () {
+    if (global.prisma) return global.prisma
+    const client = new PrismaClient()
+    if (process.env.NODE_ENV === 'development') global.prisma = client
+    return client
+  }
+
 	constructor (client?: PrismaClient) {
-		this.client = client || createDefaultClient()
+		this.client = client || DataClient.createDefaultClient()
 	}
 
 	async createArticle (

@@ -1,8 +1,8 @@
 import { DataClient } from "common/data-client"
 import { NextApiRequest } from "next"
-import { getSession } from "next-auth/react"
 import { User } from "types/digest"
 import { ApiKey } from "./api-key"
+import { getUser } from "./get-user"
 
 const client = new DataClient()
 
@@ -13,7 +13,7 @@ export const protectWithApiKey = async (key?: string): Promise<null | User> => {
 }
 
 export const authenticate = async (req: NextApiRequest, internal = false) => {
-  const { userId } = await getSession({ req }) || {}
+  const { userId } = await getUser({ req })
   if (userId) {
     const user = await client.getUser(userId)
     if (user) return { user, external: false }
