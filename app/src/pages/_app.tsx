@@ -1,3 +1,4 @@
+import { SessionProvider } from 'next-auth/react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { ReactNode } from 'react'
@@ -14,7 +15,7 @@ const toastOptions = {
 }
 
 export default function CustomApp ({ Component, pageProps: { session, ...pageProps } }: AppProps): ReactNode {
-  return <div>
+  return <SessionProvider>
     <Head>
       <title>Digest Delivery</title>
     </Head>
@@ -24,8 +25,8 @@ export default function CustomApp ({ Component, pageProps: { session, ...pagePro
     <Nav />
     { pageProps._error
       ? <FiveHundred />
-      : <Component {...pageProps} />
+      :<Component {...pageProps} />
     }
     <Toaster toastOptions={toastOptions} />
-  </div>
+  </SessionProvider>
 }

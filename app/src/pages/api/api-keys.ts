@@ -1,7 +1,7 @@
+import { ApiKey } from "common/api-key"
 import { DataClient } from "common/data-client"
 import { NextApiHandler } from "next"
 import { authenticate } from "src/lib/api-authenticator"
-import { ApiKey } from "src/lib/api-key"
 
 const client = new DataClient()
 

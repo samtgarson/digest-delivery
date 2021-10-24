@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import { ApiKey } from 'src/lib/api-key'
 import { Article, ArticleAttributes, DigestEntity, DigestEntityWithArticles, DigestEntityWithMeta, RawUser, Subscription, User } from 'types/digest'
+import { ApiKey } from './api-key'
 
 type PaginationOptions = {
 	perPage?: number

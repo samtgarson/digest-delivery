@@ -1,7 +1,7 @@
+import { ApiKey } from "common/api-key"
 import { DataClient } from "common/data-client"
 import { NextApiRequest } from "next"
 import { User } from "types/digest"
-import { ApiKey } from "./api-key"
 import { getUser } from "./get-user"
 
 const client = new DataClient()
