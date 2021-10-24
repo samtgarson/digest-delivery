@@ -1,0 +1,11 @@
+.card {
+  @apply p-3 rounded shadow bg-white;
+}
+
+.dark {
+  @apply text-white bg-dark shadow-lg;
+}
+
+.big {
+  @apply rounded-xl p-5;
+}

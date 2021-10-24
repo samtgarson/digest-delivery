@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer base {
+  html,
+  body,
+  button {
+    font-family: 'Inter', sans-serif;
+    @apply text-dark antialiased font-normal;
+  }
+}
+
+@layer components {
+  .loader,
+  .loader-dark {
+    position: absolute;
+  }
+
+  .loader::after,
+  .loader-dark::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    animation: spin 1s infinite linear;
+    border-width: theme('borderWidth.2');
+    border-color: theme('colors.dark');
+    border-top-color: theme('colors.darkFade');
+    @apply w-4 h-4 rounded-full -ml-2 -mt-2;
+  }
+
+  .loader-dark::after {
+    border-color: theme('colors.white');
+    border-top-color: theme('colors.whiteFade');
+  }
+}

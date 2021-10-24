@@ -1,0 +1,40 @@
+.button {
+  @apply py-2.5 px-3.5 text-dark font-bold rounded-md transition-transform transform hover:scale-105 active:scale-95;
+}
+
+.secondary {
+  @apply bg-bg text-dark;
+}
+
+.primary {
+  @apply bg-dark text-white;
+}
+
+.outlined {
+  @apply border-2 border-dark text-dark;
+}
+
+.accent {
+  @apply bg-accent text-dark;
+}
+
+.inverted {
+  @apply bg-white text-dark;
+}
+
+.inverted-secondary {
+  @apply bg-white bg-opacity-20 text-white;
+}
+
+.disabled,
+.loading {
+  @apply cursor-default pointer-events-none;
+}
+
+.disabled {
+  @apply opacity-50;
+}
+
+.loading {
+  @apply text-opacity-0;
+}

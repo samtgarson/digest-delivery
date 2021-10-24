@@ -1,0 +1,7 @@
+.nav {
+  @apply flex items-center text-sm;
+}
+
+.logo {
+  @apply mr-auto w-44;
+}

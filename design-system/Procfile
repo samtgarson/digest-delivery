@@ -1,0 +1,2 @@
+storybook: npm run storybook
+vite: node_modules/.bin/nodemon -e tsx,mdx,ts,css -w lib -w docs -x "npm run" build
