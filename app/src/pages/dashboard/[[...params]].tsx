@@ -25,7 +25,12 @@ type DashboardProps = {
   nextDeliveryDate: Date
 }
 
-const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextDeliveryDate }) => {
+const Dashboard: NextPage<DashboardProps> = ({
+  user: u,
+  digests,
+  articles,
+  nextDeliveryDate
+}) => {
   const [user, setUser] = useState(u)
 
   const updateUser = async (payload: Partial<User>) => {
@@ -39,28 +44,38 @@ const Dashboard: NextPage<DashboardProps> = ({ user: u, digests, articles, nextD
     }
   }
 
-  return <PageWrapper title="Dashboard">
-    <h1 className="title">Your Digest</h1>
-    <UserForm user={user} updateUser={updateUser} />
-    <h2 className="subtitle mt-14">Your Next Digest</h2>
-    <NextDigestItem delivery={nextDeliveryDate} count={articles.length} active={user.active} />
-    { digests.length > 0 && <>
-      <h2 className="subtitle mt-14">
-        Recent Digests
-        <Link passHref href="/digests">
-          <Anchor naked small className="float-right text-sm uppercase">See all</Anchor>
-        </Link>
-      </h2>
-      <List className="" data={digests} item={DigestItem} />
-      </>
-    }
-    <IntegrationHelp />
-  </PageWrapper>
+  return (
+    <PageWrapper title='Dashboard'>
+      <h1 className='title'>Your Digest</h1>
+      <UserForm user={user} updateUser={updateUser} />
+      <h2 className='subtitle mt-14'>Your Next Digest</h2>
+      <NextDigestItem
+        delivery={nextDeliveryDate}
+        count={articles.length}
+        active={user.active}
+      />
+      {digests.length > 0 && (
+        <>
+          <h2 className='subtitle mt-14'>
+            Recent Digests
+            <Link passHref href='/digests'>
+              <Anchor naked small className='float-right text-sm uppercase'>
+                See all
+              </Anchor>
+            </Link>
+          </h2>
+          <List className='' data={digests} item={DigestItem} />
+        </>
+      )}
+      <IntegrationHelp />
+    </PageWrapper>
+  )
 }
 
 export const getServerSideProps = authenticated(async (ctx, user) => {
-  const [param] = ctx.query.params ?? [] as string[]
-  if (![undefined, 'integration-help'].includes(param)) return { notFound: true }
+  const [param] = ctx.query.params ?? ([] as string[])
+  if (![undefined, 'integration-help'].includes(param))
+    return { notFound: true }
 
   const client = new DataClient()
   const [{ data: digests }, articles, nextDeliveryDate] = await Promise.all([

@@ -11,5 +11,9 @@ export type DeliveryDependencies = {
   dataClient: DataClient
   hookNotifier: HookNotifier
 }
-export type Deliver = (user: User, coverPath: string, dependencies?: DeliveryDependencies) => Promise<void>
+export type Deliver = (
+  user: User,
+  coverPath: string,
+  dependencies?: DeliveryDependencies
+) => Promise<void>
 export type DeliveryWorker = FunctionThread<Parameters<Deliver>, void>

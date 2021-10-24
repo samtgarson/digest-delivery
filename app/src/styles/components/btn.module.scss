@@ -1,11 +1,17 @@
 @layer components {
   .button {
     @apply py-2 rounded-sm px-7 cursor-pointer overflow-hidden no-underline focus:ring-2 focus:ring-pink focus:outline-none items-center justify-center;
-    background-image: linear-gradient(to left, theme('colors.white') 0, theme('colors.white') 50%,  50%, theme('colors.pink') 100%);
+    background-image: linear-gradient(
+      to left,
+      theme('colors.white') 0,
+      theme('colors.white') 50%,
+      50%,
+      theme('colors.pink') 100%
+    );
     background-position: right -2px center;
     background-repeat: no-repeat;
     background-size: 210% 100%;
-    transition: color .2s ease, background .2s ease, border .2s ease;
+    transition: color 0.2s ease, background 0.2s ease, border 0.2s ease;
     display: inline-flex;
 
     & + & {
@@ -19,18 +25,28 @@
   }
 
   .naked {
-    background-image: linear-gradient(to left, transparent 0, transparent 50%,  50%, theme('colors.whiteFade') 100%);
+    background-image: linear-gradient(
+      to left,
+      transparent 0,
+      transparent 50%,
+      50%,
+      theme('colors.whiteFade') 100%
+    );
 
     &:hover {
       @apply text-current;
     }
   }
 
-
   .inverted {
-    background-image: linear-gradient(to left, theme('colors.green') 0, theme('colors.green') 50%,  50%, theme('colors.pink') 100%);
+    background-image: linear-gradient(
+      to left,
+      theme('colors.green') 0,
+      theme('colors.green') 50%,
+      50%,
+      theme('colors.pink') 100%
+    );
   }
-
 
   .small {
     @apply p-1;

@@ -21,4 +21,3 @@ const handler: AuthedHandler = async (req, res, user) => {
 }
 
 export default handler
-

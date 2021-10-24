@@ -5,7 +5,7 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head />
-        <body id="main">
+        <body id='main'>
           <Main />
           <NextScript />
         </body>

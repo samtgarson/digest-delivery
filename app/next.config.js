@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const transpileModules = require('next-transpile-modules')
 const { resolve } = require('path')
 

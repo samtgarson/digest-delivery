@@ -6,10 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -20,18 +17,11 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ES6",
-    "typeRoots": [
-      "node_modules/@types",
-      "types/stubs"
-    ],
+    "typeRoots": ["node_modules/@types", "types/stubs"],
     "paths": {
       "@digest-delivery/*": "./*"
     }
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["**/*"]
 }

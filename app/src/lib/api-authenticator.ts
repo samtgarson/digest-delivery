@@ -1,15 +1,15 @@
-import { ApiKey } from "@digest-delivery/common/api-key"
-import { DataClient } from "@digest-delivery/common/data-client"
-import { NextApiRequest } from "next"
-import { User } from "types/digest"
-import { getUser } from "./get-user"
+import { ApiKey } from '@digest-delivery/common/api-key'
+import { DataClient } from '@digest-delivery/common/data-client'
+import { NextApiRequest } from 'next'
+import { User } from 'types/digest'
+import { getUser } from './get-user'
 
 const client = new DataClient()
 
 export const protectWithApiKey = async (key?: string): Promise<null | User> => {
   if (!key) return null
   const encryptedKey = ApiKey.encrypt(key)
-  return await client.validateApiKey(encryptedKey) || null
+  return (await client.validateApiKey(encryptedKey)) || null
 }
 
 export const authenticate = async (req: NextApiRequest, internal = false) => {

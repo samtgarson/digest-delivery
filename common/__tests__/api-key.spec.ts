@@ -1,5 +1,5 @@
-import { createHash } from "crypto"
-import { ApiKey } from "../api-key"
+import { createHash } from 'crypto'
+import { ApiKey } from '../api-key'
 
 describe('API Key', () => {
   let key: ApiKey

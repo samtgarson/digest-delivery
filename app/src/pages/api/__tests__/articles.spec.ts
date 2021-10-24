@@ -7,7 +7,9 @@ import { mocked } from 'ts-jest/utils'
 import handler from '../articles'
 
 jest.mock('src/lib/request-validator')
-jest.mock('src/lib/api-authenticator', () => ({ protectWithApiKey: jest.fn(() => ({ id: 'user id' })) }))
+jest.mock('src/lib/api-authenticator', () => ({
+  protectWithApiKey: jest.fn(() => ({ id: 'user id' }))
+}))
 
 const mockValidator = mocked(validateArticlesRequest)
 const dataClient = mockDeep<DataClient>()
@@ -19,7 +21,9 @@ describe('index', () => {
   const originalUrl = 'url'
   const source = 'source'
   const attrs = { content, title, author, originalUrl, source }
-  const req = { headers: { Authorization: 'api key' } } as unknown as NextApiRequest
+  const req = {
+    headers: { Authorization: 'api key' }
+  } as unknown as NextApiRequest
   const res = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
@@ -77,4 +81,3 @@ describe('index', () => {
     })
   })
 })
-

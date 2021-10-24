@@ -2,10 +2,10 @@ import { Article, Digest, User } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export type {
-    Article,
-    Digest as DigestEntity,
-    Subscription,
-    User
+  Article,
+  Digest as DigestEntity,
+  Subscription,
+  User
 } from '@prisma/client'
 
 export type AuthedHandler<T = unknown> = (

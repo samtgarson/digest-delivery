@@ -37,7 +37,9 @@ describe('queue', () => {
     beforeEach(async () => {
       dataClient.getArticles.mockResolvedValue(articles)
       articleCompiler.compile.mockResolvedValue(path)
-      dataClient.createDigest.mockResolvedValue({ id: digestId } as DigestEntity)
+      dataClient.createDigest.mockResolvedValue({
+        id: digestId
+      } as DigestEntity)
       await deliver(user, coverPath, dependencies)
     })
 
@@ -46,11 +48,18 @@ describe('queue', () => {
     })
 
     it('compiles the articles', () => {
-      expect(articleCompiler.compile).toHaveBeenCalledWith(new Digest(userId, articles, expect.any(Date)), coverPath)
+      expect(articleCompiler.compile).toHaveBeenCalledWith(
+        new Digest(userId, articles, expect.any(Date)),
+        coverPath
+      )
     })
 
     it('sends the email', () => {
-      expect(mailer.sendDigestEmail).toHaveBeenCalledWith(path, kindleAddress, email)
+      expect(mailer.sendDigestEmail).toHaveBeenCalledWith(
+        path,
+        kindleAddress,
+        email
+      )
     })
 
     it('creates the digest', () => {
@@ -77,7 +86,11 @@ describe('queue', () => {
 
   describe('when there is no kindle address', () => {
     beforeEach(async () => {
-      await deliver({ id: userId, kindleAddress: null } as User, coverPath, dependencies)
+      await deliver(
+        { id: userId, kindleAddress: null } as User,
+        coverPath,
+        dependencies
+      )
     })
 
     it('does not proceed', async () => {

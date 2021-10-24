@@ -8,7 +8,7 @@ export default {
     variant: 'secondary',
     children: 'Digest Delivery'
   },
-  render(props: ButtonBaseProps) {
+  render (props: ButtonBaseProps) {
     return (
       <div className={props.variant?.includes('inverted') ? 'bg-dark p-4' : ''}>
         <Button {...props} />

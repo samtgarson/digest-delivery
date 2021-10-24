@@ -41,15 +41,17 @@ describe('cover generator', () => {
   })
 
   it('creates a blob', () => {
-    expect(mocked(svg)).toHaveBeenCalledWith({
-      'extraPoints': 2,
-      'randomness': 8,
-      'seed': expect.any(Number),
-      'size': 500
-    },
-    {
-      'fill': '#73F9BD'
-    })
+    expect(mocked(svg)).toHaveBeenCalledWith(
+      {
+        extraPoints: 2,
+        randomness: 8,
+        seed: expect.any(Number),
+        size: 500
+      },
+      {
+        fill: '#73F9BD'
+      }
+    )
   })
 
   it('returns the path', async () => {
@@ -66,7 +68,12 @@ describe('cover generator', () => {
 
   it('creates a page', () => {
     expect(browser.newPage).toHaveBeenCalled()
-    expect(page.setContent).toHaveBeenCalledWith('<body><p>human date</p><svg blob /></body>', { waitUntil: 'networkidle0' })
+    expect(page.setContent).toHaveBeenCalledWith(
+      '<body><p>human date</p><svg blob /></body>',
+      {
+        waitUntil: 'networkidle0'
+      }
+    )
   })
 
   it('screenshots the body', () => {
@@ -81,7 +88,9 @@ describe('cover generator', () => {
     })
 
     it('throws an error', async () => {
-      return expect(() => generator.generate(date)).rejects.toEqual(expect.any(Error))
+      return expect(() => generator.generate(date)).rejects.toEqual(
+        expect.any(Error)
+      )
     })
   })
 })

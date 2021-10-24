@@ -4,7 +4,7 @@ import { Logo, LogoProps } from '../..'
 export default {
   title: 'Components/Logo',
   component: Logo,
-  render(props) {
+  render (props) {
     return <Logo className='h-32' {...props} />
   }
 } as Meta<LogoProps>

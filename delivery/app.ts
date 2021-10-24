@@ -1,8 +1,8 @@
-import { DataClient } from "@digest-delivery/common/data-client"
-import { errorLog, log } from "@digest-delivery/common/logger"
-import type { DeliveryWorker } from "types/worker"
-import { CoverGenerator } from "./lib/cover-generator"
-import { CoverUploader } from "./lib/cover-uploader"
+import { DataClient } from '@digest-delivery/common/data-client'
+import { errorLog, log } from '@digest-delivery/common/logger'
+import type { DeliveryWorker } from 'types/worker'
+import { CoverGenerator } from './lib/cover-generator'
+import { CoverUploader } from './lib/cover-uploader'
 
 const defaultDependencies = {
   dataClient: new DataClient(),
@@ -10,7 +10,10 @@ const defaultDependencies = {
   coverUploader: new CoverUploader()
 }
 
-export const handler = async (deliver: DeliveryWorker, deps = defaultDependencies): Promise<void> => {
+export const handler = async (
+  deliver: DeliveryWorker,
+  deps = defaultDependencies
+): Promise<void> => {
   const { dataClient, coverGenerator, coverUploader } = deps
   log('beginning delivery')
 
@@ -37,4 +40,3 @@ export const handler = async (deliver: DeliveryWorker, deps = defaultDependencie
     throw err
   }
 }
-

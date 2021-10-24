@@ -20,11 +20,11 @@ const defaultMailer = () => {
 if (!senderEmail) throw new Error('Missing SENDER')
 
 export class Mailer {
-	constructor (
-		private transport = defaultMailer(),
-		private sender = senderEmail,
-		private cc: boolean = !!process.env.SEND_CC
-	) {}
+  constructor (
+    private transport = defaultMailer(),
+    private sender = senderEmail,
+    private cc: boolean = !!process.env.SEND_CC
+  ) {}
 
   async sendSignInEmail (email: string, url: string): Promise<void> {
     this.transport.sendMail({
@@ -35,24 +35,27 @@ export class Mailer {
     })
   }
 
-	async sendDigestEmail (path: string, to: string, replyTo: string): Promise<void> {
-		const mailOpts = this.digestOptions(path, to, replyTo)
+  async sendDigestEmail (
+    path: string,
+    to: string,
+    replyTo: string
+  ): Promise<void> {
+    const mailOpts = this.digestOptions(path, to, replyTo)
 
-		if (this.cc) mailOpts.cc = this.sender
-		this.transport.sendMail(mailOpts)
-	}
+    if (this.cc) mailOpts.cc = this.sender
+    this.transport.sendMail(mailOpts)
+  }
 
-	digestOptions (path: string, to: string, replyTo: string): Options {
-		return {
-			to,
-			replyTo: replyTo,
-			from: this.sender,
-			subject: 'convert',
-			text: "This is an automated message",
-			attachments: [
-				{ path, filename: basename(path), contentType: 'image/png' }
-			]
-		}
-	}
+  digestOptions (path: string, to: string, replyTo: string): Options {
+    return {
+      to,
+      replyTo: replyTo,
+      from: this.sender,
+      subject: 'convert',
+      text: 'This is an automated message',
+      attachments: [
+        { path, filename: basename(path), contentType: 'image/png' }
+      ]
+    }
+  }
 }
-

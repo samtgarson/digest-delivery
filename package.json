@@ -21,7 +21,7 @@
   "homepage": "https://github.com/digest-delivery/daily-digest#readme",
   "scripts": {
     "lint": "eslint . --ignore-path .gitignore",
-    "format": "prettier --write lib; npm run lint -- --fix",
+    "format": "prettier --write . --ignore-path .gitignore; npm run lint -- --fix",
     "test": "DOTENV_CONFIG_PATH=.env.example jest"
   },
   "devDependencies": {

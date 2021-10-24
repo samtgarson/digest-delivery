@@ -1,12 +1,11 @@
 :root {
-  --green: #73F9BD;
-  --blue: #2714FF;
+  --green: #73f9bd;
+  --blue: #2714ff;
   --pink: #ff66d8;
   --white: white;
   --white-fade: rgba(255, 255, 255, 0.2);
   --blue-fade: rgba(39, 20, 255, 0.5);
 }
-
 
 @tailwind base;
 @tailwind components;
@@ -18,7 +17,7 @@
     font-style: normal;
     font-weight: normal;
     font-display: swap;
-    src: url("/fonts/font-book.woff") format("woff");
+    src: url('/fonts/font-book.woff') format('woff');
   }
 
   @font-face {
@@ -26,7 +25,7 @@
     font-style: normal;
     font-weight: bold;
     font-display: swap;
-    src: url("/fonts/font-medium.woff") format("woff");
+    src: url('/fonts/font-medium.woff') format('woff');
   }
 
   html,

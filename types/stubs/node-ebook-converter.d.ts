@@ -16,6 +16,6 @@ declare module 'ebook-convert' {
     verbose: boolean
   }
 
-  function convert (options: ConvertOptions, cb: (err?: Error) => void)
+  function convert(options: ConvertOptions, cb: (err?: Error) => void)
   export default convert
 }

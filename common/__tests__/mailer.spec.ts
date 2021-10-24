@@ -16,7 +16,7 @@ describe('Mailer', () => {
     expect(mockTransport.sendMail).toHaveBeenCalledWith({
       attachments: [
         {
-          contentType: "image/png",
+          contentType: 'image/png',
           filename: 'filename.png',
           path
         }
@@ -24,7 +24,7 @@ describe('Mailer', () => {
       from: sender,
       replyTo,
       text: expect.any(String),
-      subject: "convert",
+      subject: 'convert',
       to: recipient
     })
   })
@@ -37,7 +37,7 @@ describe('Mailer', () => {
     expect(mockTransport.sendMail).toHaveBeenCalledWith({
       attachments: [
         {
-          contentType: "image/png",
+          contentType: 'image/png',
           filename: 'filename.png',
           path
         }
@@ -46,9 +46,8 @@ describe('Mailer', () => {
       replyTo,
       cc: sender,
       text: expect.any(String),
-      subject: "convert",
+      subject: 'convert',
       to: recipient
     })
   })
 })
-

@@ -12,7 +12,9 @@ const handler: NextApiHandler = async (req, res) => {
     const attrs = { ...user, ...req.body }
 
     if (attrs.active && !attrs.kindleAddress) {
-      return res.status(422).json({ error: 'Please provide a Kindle address before activating.' })
+      return res
+        .status(422)
+        .json({ error: 'Please provide a Kindle address before activating.' })
     }
     const updated = await client.updateUser(user.id, req.body)
     return res.status(200).json(updated)

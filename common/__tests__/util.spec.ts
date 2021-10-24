@@ -1,6 +1,12 @@
-import { DataClient } from "@digest-delivery/common/data-client"
-import { dateString, dehydrate, humaniseDate, hydrate, relativeDate } from "@digest-delivery/common/util"
-import { addDays, startOfDay } from "date-fns"
+import { DataClient } from '@digest-delivery/common/data-client'
+import {
+  dateString,
+  dehydrate,
+  humaniseDate,
+  hydrate,
+  relativeDate
+} from '@digest-delivery/common/util'
+import { addDays, startOfDay } from 'date-fns'
 
 describe('utils', () => {
   describe('relativeDate', () => {
@@ -22,25 +28,23 @@ describe('utils', () => {
   })
 
   describe('humaniseDate', () => {
-    [
-      '2021-03-01T12:00:00Z',
-      new Date('2021-03-01T12:00:00Z')
-    ].forEach(date => {
-      it(`humanises a ${typeof date}`, () => {
-        expect(humaniseDate(date)).toEqual('1 Mar 2021')
-      })
-    })
+    ['2021-03-01T12:00:00Z', new Date('2021-03-01T12:00:00Z')].forEach(
+      date => {
+        it(`humanises a ${typeof date}`, () => {
+          expect(humaniseDate(date)).toEqual('1 Mar 2021')
+        })
+      }
+    )
   })
 
   describe('dateString', () => {
-    [
-      '2021-03-01T12:00:00Z',
-      new Date('2021-03-01T12:00:00Z')
-    ].forEach(date => {
-      it(`formats a ${typeof date}`, () => {
-        expect(dateString(date)).toEqual('2021-03-01')
-      })
-    })
+    ['2021-03-01T12:00:00Z', new Date('2021-03-01T12:00:00Z')].forEach(
+      date => {
+        it(`formats a ${typeof date}`, () => {
+          expect(dateString(date)).toEqual('2021-03-01')
+        })
+      }
+    )
   })
 
   describe('hydrate', () => {
@@ -49,10 +53,13 @@ describe('utils', () => {
     const cases = {
       null: [null, null],
       strings: ['1234', '1234'],
-      arrays: [['1234', { a: [1, 2] }], ['1234', { a: [1, 2] }]],
+      arrays: [
+        ['1234', { a: [1, 2] }],
+        ['1234', { a: [1, 2] }]
+      ],
       objects_with_dates: [
         { a: complex, b: '2021-01-01T12:00:00' },
-        { a: complex, b: new Date('2021-01-01T12:00:00' ) }
+        { a: complex, b: new Date('2021-01-01T12:00:00') }
       ]
     }
 
@@ -67,17 +74,19 @@ describe('utils', () => {
   describe('dehydrate', () => {
     const dateStr = '2021-03-01T13:00:00-01:00'
 
-    it ('dehydrates with timezones', () => {
+    it('dehydrates with timezones', () => {
       const input = {
         a: 'foo',
         b: 123,
         c: new Date(dateStr)
       }
 
-      expect(dehydrate(input)).toEqual(JSON.stringify({
-        ...input,
-        c: '2021-03-01T14:00:00.000Z'
-      }))
+      expect(dehydrate(input)).toEqual(
+        JSON.stringify({
+          ...input,
+          c: '2021-03-01T14:00:00.000Z'
+        })
+      )
     })
   })
 })

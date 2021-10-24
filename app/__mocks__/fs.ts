@@ -1,2 +1,4 @@
-// eslint-disable-next-line promise/prefer-await-to-callbacks
-export const writeFile = jest.fn((_path: string, _content: string, cb: (err?: Error) => void) => cb())
+export const writeFile = jest.fn(
+  // eslint-disable-next-line promise/prefer-await-to-callbacks
+  (_path: string, _content: string, cb: (err?: Error) => void) => cb()
+)

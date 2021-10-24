@@ -1,7 +1,7 @@
 import { FC, HTMLAttributes, useEffect, useRef, useState } from 'react'
 import * as blobs2Animate from 'blobs/v2/animate'
 
-const SIZE=400
+const SIZE = 400
 
 const renderBlob = (ctx: CanvasRenderingContext2D) => {
   let goAgain = true
@@ -18,7 +18,7 @@ const renderBlob = (ctx: CanvasRenderingContext2D) => {
 
   const generateBlob = (duration = 3000): blobs2Animate.CanvasKeyframe => ({
     duration,
-    timingFunction: "ease",
+    timingFunction: 'ease',
     callback: loopAnimation,
     blobOptions: {
       randomness: 5,
@@ -29,12 +29,14 @@ const renderBlob = (ctx: CanvasRenderingContext2D) => {
   })
 
   const loopAnimation = () => {
-      animation.transition(generateBlob())
+    animation.transition(generateBlob())
   }
 
   animation.transition(generateBlob(0))
 
-  return () => { goAgain = false }
+  return () => {
+    goAgain = false
+  }
 }
 
 export const BlobCanvas: FC<HTMLAttributes<HTMLCanvasElement>> = attrs => {
@@ -50,7 +52,7 @@ export const BlobCanvas: FC<HTMLAttributes<HTMLCanvasElement>> = attrs => {
 
     if (!canvasRef.current) return
 
-    const canvas = canvasRef.current.getContext("2d")
+    const canvas = canvasRef.current.getContext('2d')
     if (!canvas) return
 
     return renderBlob(canvas)

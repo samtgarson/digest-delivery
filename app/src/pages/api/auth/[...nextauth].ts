@@ -1,7 +1,7 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { DataClient } from "common/data-client"
-import { withPrefix } from "common/logger"
-import NextAuth from "next-auth"
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { DataClient } from 'common/data-client'
+import { withPrefix } from 'common/logger'
+import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
 const prisma = DataClient.createDefaultClient()

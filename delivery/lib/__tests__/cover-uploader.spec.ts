@@ -1,8 +1,8 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
-import type { S3 } from "aws-sdk"
-import type { createReadStream } from "fs"
-import { mocked } from "ts-jest/utils"
-import { CoverUploader } from "../cover-uploader"
+import type { S3 } from 'aws-sdk'
+import type { createReadStream } from 'fs'
+import { mocked } from 'ts-jest/utils'
+import { CoverUploader } from '../cover-uploader'
 
 describe('Cover uploader', () => {
   let sut: CoverUploader
@@ -10,9 +10,14 @@ describe('Cover uploader', () => {
   const filename = 'file name'
   const path = 'path'
 
-  const s3Client = { upload: jest.fn().mockReturnThis(), promise: jest.fn() } as unknown as S3
+  const s3Client = {
+    upload: jest.fn().mockReturnThis(),
+    promise: jest.fn()
+  } as unknown as S3
   const mockStream = { on: jest.fn() }
-  const createStream = jest.fn(() => mockStream) as unknown as typeof createReadStream
+  const createStream = jest.fn(
+    () => mockStream
+  ) as unknown as typeof createReadStream
   const basename = jest.fn(() => filename)
 
   beforeEach(async () => {

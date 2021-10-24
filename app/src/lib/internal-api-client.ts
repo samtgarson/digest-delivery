@@ -1,4 +1,4 @@
-import { User } from "types/digest"
+import { User } from 'types/digest'
 
 export class InternalApiClient {
   async updateUser (attrs: Partial<User>) {

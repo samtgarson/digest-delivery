@@ -3,4 +3,3 @@ description: 'Delivers the digest'
 runs:
   using: 'docker'
   image: 'action.Dockerfile'
-

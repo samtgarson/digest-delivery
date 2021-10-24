@@ -11,22 +11,34 @@ describe('validate request', () => {
     it('returns the content', () => {
       const result = validateArticlesRequest(req)
 
-      expect(result).toEqual({ success: true, article: { content, title, author } })
+      expect(result).toEqual({
+        success: true,
+        article: { content, title, author }
+      })
     })
   })
 
   describe('when invalid', () => {
     it('has the correct status code', () => {
-      const result = validateArticlesRequest({ body: { title: 'foo' } } as NextApiRequest)
+      const result = validateArticlesRequest({
+        body: { title: 'foo' }
+      } as NextApiRequest)
 
-      expect(result).toEqual({ success: false, status: 400, message: 'Missing required params' })
+      expect(result).toEqual({
+        success: false,
+        status: 400,
+        message: 'Missing required params'
+      })
     })
 
     it('has the correct status code', () => {
       const result = validateArticlesRequest({} as NextApiRequest)
 
-      expect(result).toEqual({ success: false, status: 400, message: 'Missing request body' })
+      expect(result).toEqual({
+        success: false,
+        status: 400,
+        message: 'Missing request body'
+      })
     })
   })
 })
-

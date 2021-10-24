@@ -60,8 +60,8 @@ const defaultTemplate = `
 const defaultOutputDir = process.env.OUTPUT_DIR
 
 export class CoverGenerator {
-	constructor (
-		private outputDir = defaultOutputDir,
+  constructor (
+    private outputDir = defaultOutputDir,
     private template = defaultTemplate,
     private chromePath = process.env.CHROME_PATH
   ) {}
@@ -98,15 +98,14 @@ export class CoverGenerator {
   private generateBlob () {
     return blobs.svg(
       {
-          seed: Math.random(),
-          extraPoints: 2,
-          randomness: 8,
-          size: 500
+        seed: Math.random(),
+        extraPoints: 2,
+        randomness: 8,
+        size: 500
       },
       {
-          fill: "#73F9BD"
+        fill: '#73F9BD'
       }
     )
   }
 }
-
