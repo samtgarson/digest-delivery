@@ -1,4 +1,4 @@
-import { DataClient } from 'common/data-client'
+import { DataClient } from '@digest-delivery/common/data-client'
 import { CoverGenerator } from 'delivery/lib/cover-generator'
 import { CoverUploader } from 'delivery/lib/cover-uploader'
 import { mockDeep } from 'jest-mock-extended'

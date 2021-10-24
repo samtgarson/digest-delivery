@@ -14,7 +14,7 @@ jest.mock('blobs/v2', () => ({
   svg: jest.fn(() => '<svg blob />')
 }))
 
-jest.mock('common/util', () => ({
+jest.mock('@digest-delivery/common/util', () => ({
   humaniseDate: jest.fn(() => 'human date'),
   dateString: jest.fn(() => 'date string')
 }))

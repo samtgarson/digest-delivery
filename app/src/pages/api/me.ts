@@ -1,4 +1,4 @@
-import { DataClient } from 'common/data-client'
+import { DataClient } from '@digest-delivery/common/data-client'
 import type { NextApiHandler } from 'next'
 import { authenticate } from 'src/lib/api-authenticator'
 

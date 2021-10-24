@@ -1,13 +1,22 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config()
+const transpileModules = require('next-transpile-modules')
+const { resolve } = require('path')
 
-module.exports = {
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('dotenv').config({
+    config: resolve(__dirname, '../.env')
+  })
+}
+
+/**
+ * @type {import('next').NextConfig}
+ */
+const config = {
   webpack: (config, { webpack }) => {
-    // Note: we provide webpack above so you should not `require` it
-    // Perform customizations to webpack config
     config.plugins.push(new webpack.IgnorePlugin(/\/__tests__\//))
-
-    // Important: return the modified config
     return config
   }
 }
+
+const withTranspile = transpileModules(['@digest-delivery/common'])
+module.exports = withTranspile(config)

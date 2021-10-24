@@ -1,6 +1,6 @@
-import { DataClient } from "common/data-client"
-import { withPrefix } from "common/logger"
-import { Mailer } from "common/mailer"
+import { DataClient } from "@digest-delivery/common/data-client"
+import { withPrefix } from "@digest-delivery/common/logger"
+import { Mailer } from "@digest-delivery/common/mailer"
 import { expose } from "threads/worker"
 import type { Deliver, DeliveryDependencies } from 'types/worker'
 import { ArticleCompiler } from "./lib/article-compiler"

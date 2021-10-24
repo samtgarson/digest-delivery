@@ -8,7 +8,7 @@ const userId = 'user id'
 
 const writeFileMock = mocked(writeFile)
 jest.mock('fs')
-jest.mock('common/util', () => ({
+jest.mock('@digest-delivery/common/util', () => ({
   humaniseDate: jest.fn(() => 'locale string'),
   dateString: jest.fn(() => 'iso date')
 }))

@@ -1,6 +1,6 @@
 import { writeFile } from "fs"
 import { Compilable, Article } from "types/digest"
-import { dateString, humaniseDate } from "common/util"
+import { dateString, humaniseDate } from "@digest-delivery/common/util"
 
 export class Digest implements Compilable {
 	constructor (private userId: string, private articles: Article[], private date: Date) {}

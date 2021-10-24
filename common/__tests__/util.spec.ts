@@ -1,5 +1,5 @@
-import { DataClient } from "common/data-client"
-import { dateString, dehydrate, humaniseDate, hydrate, relativeDate } from "common/util"
+import { DataClient } from "@digest-delivery/common/data-client"
+import { dateString, dehydrate, humaniseDate, hydrate, relativeDate } from "@digest-delivery/common/util"
 import { addDays, startOfDay } from "date-fns"
 
 describe('utils', () => {

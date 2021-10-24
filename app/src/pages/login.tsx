@@ -23,9 +23,9 @@ const Login: NextPage<{ callbackUrl: string }> = ({ callbackUrl }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query: { redirect = '/dashboard' } }) => {
-  const session = await getUser({ req })
+  const { loggedIn } = await getUser({ req })
 
-  if (session) return { redirect: { destination: '/dashboard', permanent: false } }
+  if (loggedIn) return { redirect: { destination: '/dashboard', permanent: false } }
 
   const host = `${process.env.BASE_SCHEME}://${process.env.BASE_URL}`
   const callbackUrl = new URL(redirect as string, host).toString()

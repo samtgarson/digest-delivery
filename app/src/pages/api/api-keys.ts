@@ -1,5 +1,5 @@
-import { ApiKey } from "common/api-key"
-import { DataClient } from "common/data-client"
+import { ApiKey } from "@digest-delivery/common/api-key"
+import { DataClient } from "@digest-delivery/common/data-client"
 import { NextApiHandler } from "next"
 import { authenticate } from "src/lib/api-authenticator"
 

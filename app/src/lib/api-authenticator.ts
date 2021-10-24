@@ -1,5 +1,5 @@
-import { ApiKey } from "common/api-key"
-import { DataClient } from "common/data-client"
+import { ApiKey } from "@digest-delivery/common/api-key"
+import { DataClient } from "@digest-delivery/common/data-client"
 import { NextApiRequest } from "next"
 import { User } from "types/digest"
 import { getUser } from "./get-user"

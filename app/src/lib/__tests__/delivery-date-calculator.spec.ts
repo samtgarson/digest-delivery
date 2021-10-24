@@ -1,8 +1,9 @@
-import { DataClient } from "common/data-client"
+import { DataClient } from "@digest-delivery/common/data-client"
 import { addDays, isSameDay } from "date-fns"
 import { mockDeep } from "jest-mock-extended"
-import { DigestEntityWithMeta, Frequency, User } from "types/digest"
+import { DigestEntityWithMeta, User } from "types/digest"
 import { DeliveryDateCalculator } from "../delivery-date-calculator"
+import { Frequency } from "../util/frequency"
 
 const dataClient = mockDeep<DataClient>()
 dataClient.getDigests.mockResolvedValue({ total: 0, data: [] })

@@ -1,4 +1,4 @@
-import { humaniseDate } from "common/util"
+import { humaniseDate } from "@digest-delivery/common/util"
 import Link from "next/link"
 import { FC } from "react"
 import { ChevronRight } from "react-feather"

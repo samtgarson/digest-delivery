@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { DataClient } from 'common/data-client'
-import { errorLog } from 'common/logger'
-import { dehydrate } from 'common/util'
+import { DataClient } from '@digest-delivery/common/data-client'
+import { errorLog } from '@digest-delivery/common/logger'
+import { dehydrate } from '@digest-delivery/common/util'
 import { DigestEntityWithArticles, Subscription } from 'types/digest'
 
 const dataClient = new DataClient()

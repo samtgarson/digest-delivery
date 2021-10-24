@@ -1,8 +1,8 @@
-import { errorLog } from 'common/logger'
+import { DataClient } from '@digest-delivery/common/data-client'
+import { errorLog } from '@digest-delivery/common/logger'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { DataClient } from '../../../common/data-client'
-import { protectWithApiKey } from '../../lib/api-authenticator'
-import { validateArticlesRequest } from '../../lib/request-validator'
+import { protectWithApiKey } from 'src/lib/api-authenticator'
+import { validateArticlesRequest } from 'src/lib/request-validator'
 
 const dataClient = new DataClient()
 const defaultDependencies = { dataClient }

@@ -1,6 +1,6 @@
-import { DataClient } from "common/data-client"
+import { DataClient } from "@digest-delivery/common/data-client"
 import { addDays, isFuture, isToday, startOfDay } from "date-fns"
-import { Frequency } from "types/digest"
+import { Frequency } from "./util/frequency"
 
 const dataClient = new DataClient()
 

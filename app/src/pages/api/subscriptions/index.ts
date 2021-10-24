@@ -1,5 +1,5 @@
-import { DataClient } from 'common/data-client'
-import { errorLog } from 'common/logger'
+import { DataClient } from '@digest-delivery/common/data-client'
+import { errorLog } from '@digest-delivery/common/logger'
 import { AuthedHandler } from 'types/digest'
 
 const data = new DataClient()

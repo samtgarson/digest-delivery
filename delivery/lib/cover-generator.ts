@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 import * as blobs from 'blobs/v2'
-import { dateString, humaniseDate } from 'common/util'
+import { dateString, humaniseDate } from '@digest-delivery/common/util'
 
 const defaultTemplate = `
 <html>

@@ -1,5 +1,5 @@
-import { DataClient } from "common/data-client"
-import { relativeDate } from "common/util"
+import { DataClient } from "@digest-delivery/common/data-client"
+import { relativeDate } from "@digest-delivery/common/util"
 import { NextPage } from "next"
 import { PageWrapper } from "src/components/atoms/page-wrapper"
 import { List } from "src/components/list"

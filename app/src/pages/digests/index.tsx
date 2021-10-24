@@ -1,4 +1,4 @@
-import { DataClient } from "common/data-client"
+import { DataClient } from "@digest-delivery/common/data-client"
 import { NextPage } from "next"
 import { Frown } from "react-feather"
 import { PageWrapper } from "src/components/atoms/page-wrapper"

@@ -1,11 +1,13 @@
 {
-  "name": "@digest-delivery/digest-delivery",
+  "name": "@digest-delivery/core",
   "version": "0.1.0",
   "description": "Digests delivery daily",
   "private": true,
   "workspaces": [
     "delivery",
-    "app"
+    "app",
+    "design-system",
+    "common"
   ],
   "repository": {
     "type": "git",
@@ -17,6 +19,11 @@
     "url": "https://github.com/digest-delivery/daily-digest/issues"
   },
   "homepage": "https://github.com/digest-delivery/daily-digest#readme",
+  "scripts": {
+    "lint": "eslint . --ignore-path .gitignore",
+    "format": "prettier --write lib; npm run lint -- --fix",
+    "test": "DOTENV_CONFIG_PATH=.env.example jest"
+  },
   "devDependencies": {
     "@samtgarson/eslint-config": "^2.6.0",
     "@types/jest": "^27.0.2",
@@ -73,12 +80,5 @@
       "/\\.next/"
     ]
   },
-  "babel": {
-    "presets": [
-      "next/babel"
-    ],
-    "plugins": [
-      "babel-plugin-superjson-next"
-    ]
-  }
+  "prettier": "@samtgarson/eslint-config/prettier"
 }

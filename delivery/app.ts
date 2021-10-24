@@ -1,5 +1,5 @@
-import { DataClient } from "common/data-client"
-import { errorLog, log } from "common/logger"
+import { DataClient } from "@digest-delivery/common/data-client"
+import { errorLog, log } from "@digest-delivery/common/logger"
 import type { DeliveryWorker } from "types/worker"
 import { CoverGenerator } from "./lib/cover-generator"
 import { CoverUploader } from "./lib/cover-uploader"

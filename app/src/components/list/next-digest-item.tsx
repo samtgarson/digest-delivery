@@ -1,4 +1,4 @@
-import { relativeDate } from "common/util"
+import { relativeDate } from "@digest-delivery/common/util"
 import Link from 'next/link'
 import { FC } from "react"
 import { ChevronRight, Loader } from "react-feather"
