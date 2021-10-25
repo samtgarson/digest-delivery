@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@digest-delivery/common": "*",
     "axios": "^0.21.1",
     "ebook-convert": "^2.0.1",
     "puppeteer": "^7.0.x",
