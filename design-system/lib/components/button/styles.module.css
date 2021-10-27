@@ -1,29 +1,33 @@
 .button {
-  @apply py-2.5 px-3.5 text-dark font-bold rounded-md transition-transform transform hover:scale-105 active:scale-95;
-}
-
-.secondary {
-  @apply bg-bg text-dark;
+  @apply py-2.5 px-3.5 text-dark font-bold rounded-md transition transform whitespace-nowrap active:scale-95;
 }
 
 .primary {
-  @apply bg-dark text-white;
+  @apply bg-dark text-white hover:bg-opacity-75;
+}
+
+.secondary {
+  @apply bg-bg text-dark hover:bg-dark hover:bg-opacity-10;
 }
 
 .outlined {
-  @apply border-2 border-dark text-dark;
+  @apply border-2 border-dark text-dark hover:bg-bg;
 }
 
 .accent {
-  @apply bg-accent text-dark;
+  @apply bg-accent text-dark hover:bg-opacity-75;
+}
+
+.naked {
+  @apply hover:bg-bg;
 }
 
 .inverted {
-  @apply bg-white text-dark;
+  @apply bg-white text-dark hover:bg-opacity-75;
 }
 
 .inverted-secondary {
-  @apply bg-white bg-opacity-20 text-white;
+  @apply bg-white bg-opacity-20 text-white hover:bg-opacity-30;
 }
 
 .disabled,

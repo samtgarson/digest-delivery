@@ -1,0 +1,15 @@
+.section {
+  @apply p-4 sm:p-6;
+}
+
+.default {
+  @apply bg-white;
+}
+
+.bg {
+  @apply bg-bg;
+}
+
+.container {
+  @apply mx-auto max-w-4xl;
+}

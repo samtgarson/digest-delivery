@@ -8,6 +8,14 @@ export type NavBarProps = HTMLAttributes<HTMLElement> & {
   children?: ReactNode
 }
 
+export const NavItem: VFC<
+  { children: ReactNode } & HTMLAttributes<HTMLDivElement>
+> = ({ children, className, ...props }) => (
+  <div className={cn(className, styles.navItem)} {...props}>
+    {children}
+  </div>
+)
+
 export const NavBar: VFC<NavBarProps> = ({
   avatar,
   className,
@@ -20,6 +28,11 @@ export const NavBar: VFC<NavBarProps> = ({
         <Logo small />
       </a>
       {children}
+      {avatar && (
+        <NavItem>
+          <img src={avatar} className={styles.avatar} />
+        </NavItem>
+      )}
     </nav>
   )
 }

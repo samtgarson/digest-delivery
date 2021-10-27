@@ -5,3 +5,11 @@
 .logo {
   @apply mr-auto w-44;
 }
+
+.avatar {
+  @apply rounded-full h-8;
+}
+
+.nav-item {
+  @apply ml-3;
+}

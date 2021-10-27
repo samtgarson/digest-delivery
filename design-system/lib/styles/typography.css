@@ -1,0 +1,5 @@
+@layer utilities {
+  .caption {
+    @apply tracking-wider text-sm font-bold uppercase;
+  }
+}

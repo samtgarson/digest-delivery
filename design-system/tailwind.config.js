@@ -12,12 +12,20 @@ module.exports = {
       dark: '#070052',
       white: '#fff',
       accent: '#1BF493',
-      whiteFade: 'rgba(255, 255, 255, .3)',
-      darkFade: 'rgba(7, 0, 82, .2)'
+      'white-fade': 'rgba(255, 255, 255, .3)',
+      'dark-fade': 'rgba(7, 0, 82, .2)'
     },
     fontWeight: {
       normal: 400,
       bold: 600
+    },
+    fontSize: {
+      sm: ['.875rem', '1.35rem'],
+      base: ['1rem', '1.5rem'],
+      lg: ['1.45rem', '2rem'],
+      '2xl': ['2.25rem', '3rem'],
+      '3xl': ['3.25rem', '4.25rem'],
+      '4xl': ['4.5rem', '5.5rem']
     }
   },
   variants: {
