@@ -1,17 +1,17 @@
 import { Meta } from '@storybook/react'
-import { Button, NavBar, NavBarProps, NavItem } from '../..'
+import { Button, NavBar, NavBarProps } from '../..'
 
 export default {
   title: 'Components/NavBar',
   component: NavBar,
   args: {
     children: [
-      <NavItem>
+      <NavBar.Item>
         <Button variant='naked'>About</Button>
-      </NavItem>,
-      <NavItem>
+      </NavBar.Item>,
+      <NavBar.Item>
         <Button variant='primary'>Sign In</Button>
-      </NavItem>
+      </NavBar.Item>
     ]
   }
 } as Meta<NavBarProps>
@@ -23,12 +23,12 @@ export const SignedIn = {
     avatar:
       'https://pbs.twimg.com/profile_images/1119623988907520000/1qPAc0l3_400x400.jpg',
     children: [
-      <NavItem>
+      <NavBar.Item>
         <Button variant='naked'>Dashboard</Button>
-      </NavItem>,
-      <NavItem>
+      </NavBar.Item>,
+      <NavBar.Item>
         <Button variant='naked'>Sign Out</Button>
-      </NavItem>
+      </NavBar.Item>
     ]
   }
 }

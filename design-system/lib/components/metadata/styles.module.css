@@ -1,0 +1,11 @@
+.table {
+  @apply w-full;
+}
+
+.key {
+  @apply mr-3 pb-3;
+}
+
+.val {
+  @apply text-right font-bold;
+}

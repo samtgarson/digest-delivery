@@ -8,9 +8,11 @@ export default {
     variant: 'secondary',
     children: 'Digest Delivery'
   },
-  render (props: ButtonBaseProps) {
+  render(props: ButtonBaseProps) {
     return (
-      <div className={props.variant?.includes('inverted') ? 'bg-dark p-4' : ''}>
+      <div
+        className={props.variant?.includes('inverted') ? 'bg-dark p-4' : 'p-4'}
+      >
         <Button {...props} />
         <Button {...props} className='mx-2' disabled />
         <Button {...props} loading />
@@ -32,6 +34,8 @@ export const Outlined = {
 export const Accent = { args: { variant: 'accent' } }
 
 export const Naked = { args: { variant: 'naked' } }
+
+export const NakedInverted = { args: { variant: 'naked-inverted' } }
 
 export const Inverted = { args: { variant: 'inverted' } }
 

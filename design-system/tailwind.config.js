@@ -30,7 +30,8 @@ module.exports = {
   },
   variants: {
     extend: {
-      scale: ['active', 'hover']
+      scale: ['active', 'hover'],
+      margin: ['last']
     }
   },
   plugins: []

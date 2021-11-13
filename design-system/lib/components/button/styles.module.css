@@ -30,6 +30,15 @@
   @apply bg-white bg-opacity-20 text-white hover:bg-opacity-30;
 }
 
+.naked-inverted {
+  @apply text-white hover:bg-white hover:bg-opacity-20;
+}
+
+.naked,
+.naked-inverted {
+  @apply p-0;
+}
+
 .disabled,
 .loading {
   @apply cursor-default pointer-events-none;

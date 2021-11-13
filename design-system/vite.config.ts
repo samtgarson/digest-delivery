@@ -1,7 +1,7 @@
 import path from 'path'
 import { defineConfig } from 'vite'
+import svgrPlugin from 'vite-plugin-svgr'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   esbuild: {
     jsxInject: `import * as React from 'react'`
@@ -28,5 +28,12 @@ export default defineConfig({
     modules: {
       localsConvention: 'dashes'
     }
-  }
+  },
+  plugins: [
+    svgrPlugin({
+      svgrOptions: {
+        dimensions: false
+      }
+    })
+  ]
 })

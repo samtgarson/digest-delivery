@@ -8,20 +8,11 @@ export type NavBarProps = HTMLAttributes<HTMLElement> & {
   children?: ReactNode
 }
 
-export const NavItem: VFC<
-  { children: ReactNode } & HTMLAttributes<HTMLDivElement>
-> = ({ children, className, ...props }) => (
-  <div className={cn(className, styles.navItem)} {...props}>
-    {children}
-  </div>
-)
+type NavBar = VFC<NavBarProps> & {
+  Item: VFC<{ children: ReactNode } & HTMLAttributes<HTMLDivElement>>
+}
 
-export const NavBar: VFC<NavBarProps> = ({
-  avatar,
-  className,
-  children,
-  ...props
-}) => {
+export const NavBar: NavBar = ({ avatar, className, children, ...props }) => {
   return (
     <nav {...props} className={cn(className, styles.nav)}>
       <a className={styles.logo}>
@@ -29,10 +20,16 @@ export const NavBar: VFC<NavBarProps> = ({
       </a>
       {children}
       {avatar && (
-        <NavItem>
+        <NavBar.Item>
           <img src={avatar} className={styles.avatar} />
-        </NavItem>
+        </NavBar.Item>
       )}
     </nav>
   )
 }
+
+NavBar.Item = ({ children, className, ...props }) => (
+  <div className={cn(className, styles.navItem)} {...props}>
+    {children}
+  </div>
+)

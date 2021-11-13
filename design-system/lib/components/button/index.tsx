@@ -22,6 +22,7 @@ export type ButtonBaseProps = {
     | 'primary'
     | 'secondary'
     | 'naked'
+    | 'naked-inverted'
     | 'accent'
     | 'inverted'
     | 'inverted-secondary'
@@ -54,12 +55,14 @@ export const Button = forwardRef<
     ...restProps
   } = props
   const classNames = useMemo(() => {
-    const dark = ['inverted-secondary', 'primary'].includes(variant)
+    const dark = ['inverted-secondary', 'primary', 'naked-inverted'].includes(
+      variant
+    )
     return cx('button', variant, className, {
       loading,
       disabled,
-      loader: loading && !dark,
-      'loader-dark': loading && dark
+      spinner: loading && !dark,
+      'spinner-dark': loading && dark
     })
   }, [loading, variant, disabled])
 

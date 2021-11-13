@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-@import 'styles/loader.css';
+@import 'styles/spinner.css';
 @import 'styles/typography.css';
 
 @tailwind base;
@@ -11,8 +11,8 @@
   body,
   button {
     font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    line-height: 150%;
+    font-size: 14px;
+    line-height: 20px;
     @apply text-dark antialiased font-normal;
   }
 }

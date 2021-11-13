@@ -1,0 +1,11 @@
+.list {
+  @apply list-none;
+}
+
+.item {
+  @apply mb-1 last:mb-0;
+}
+
+.card {
+  @apply flex items-start sm:items-center w-full flex-col sm:flex-row;
+}

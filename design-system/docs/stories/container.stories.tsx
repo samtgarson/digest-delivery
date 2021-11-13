@@ -1,7 +1,7 @@
 import { Container } from '../..'
 
 export default {
-  title: 'Components/Container',
+  title: 'Furniture/Container',
   component: Container,
   args: {
     children: (

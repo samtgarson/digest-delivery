@@ -1,0 +1,15 @@
+.footer {
+  @apply bg-dark text-white flex flex-col justify-center items-center px-2 sm:px-4 py-12;
+}
+
+.logo {
+  @apply w-28 mb-12;
+}
+
+.link-wrapper {
+  @apply flex flex-col sm:flex-row text-sm;
+}
+
+.link {
+  @apply sm:mx-4 mb-2 sm:mb-0;
+}
